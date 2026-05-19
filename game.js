@@ -515,7 +515,7 @@ const R={
     if(GS.hovR!==null&&UI.selCard!==null){
       const r=GS.hovR,c2=GS.hovC;
       if(r>=0&&r<ROWS2&&c2>=0&&c2<COLS){
-        const ok=GRID[r][c2]===0&&!GS.towers.find(t=>t.row===r&&t.col===c2);
+        const ok=GRID[r][c2]===0&&!towerAt(r,c2);
         const px=MAP_OX+c2*TS,py=MAP_OY+r*TS;
         ctx.fillStyle=ok?'rgba(255,255,255,.12)':'rgba(239,83,80,.12)';ctx.fillRect(px,py,TS,TS);
         ctx.strokeStyle=ok?'#ffffff':'#EF5350';ctx.lineWidth=2;ctx.strokeRect(px+1,py+1,TS-2,TS-2);
@@ -583,8 +583,8 @@ class Ore{
     for(let i=0;i<12;i++)GS.particles.push(new Particle(this.x,this.y,this.color,i,12));
     let pm=1;
     for(const t of GS.towers){
-      if(t.type==='buff'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS)pm+=.30*t._lm();
-      if(t.type==='twinhub'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS)pm+=.05*t._lm();
+      if(t.type==='buff'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS)pm+=.30*t._lm()*t._megaMult();
+      if(t.type==='twinhub'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS)pm+=.05*t._lm()*t._megaMult();
     }
     const pr=Math.round(this.reward*pm);
     GS.port+=pr;GS.totalPort+=pr;GS.portHist.push({t:GS.time,v:pr});
@@ -628,17 +628,19 @@ class Tower{
     this.cx=R.tx(col);this.cy=R.ty(row);
     this.angle=-Math.PI/2;this.cooldown=0;this._aoeT=0;this._animT=0;this._firingT=0;
     this._tDmg=0;this._tSpd=0;this._armAngle=-Math.PI/2;this._focusTgt=null;this._soundT=0;
+    this.isMega=false;this.megaCells=[];
   }
   _lm(){return LVL[this.level-1].mult;}
-  _calcTwin(){this._tDmg=0;this._tSpd=0;for(const t of GS.towers)if(t.type==='twinhub'&&t.uid!==this.uid&&Math.hypot(t.cx-this.cx,t.cy-this.cy)<=t.getRange()*TS){this._tDmg+=.18*t._lm();this._tSpd+=.18*t._lm();}}
-  getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm();}
+  _megaMult(){return this.isMega?5:1;}
+  _calcTwin(){this._tDmg=0;this._tSpd=0;for(const t of GS.towers)if(t.type==='twinhub'&&t.uid!==this.uid&&Math.hypot(t.cx-this.cx,t.cy-this.cy)<=t.getRange()*TS){this._tDmg+=.18*t._lm()*t._megaMult();this._tSpd+=.18*t._lm()*t._megaMult();}}
+  getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
-  getRange(){return TWR[this.tId].range;}
+  getRange(){return TWR[this.tId].range*(this.isMega?1.3:1);}
   update(dt,ores){
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
-    if(tp==='slowfield'){const rng=this.getRange()*TS;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applySlow(.25*this._lm(),.22);return;}
-    if(tp==='scan'){const rng=this.getRange()*TS;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applyAmp(.22*this._lm(),3.2);return;}
+    if(tp==='slowfield'){const rng=this.getRange()*TS;const sr=Math.min(.25*this._lm()*this._megaMult(),.9);for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applySlow(sr,.22);return;}
+    if(tp==='scan'){const rng=this.getRange()*TS;const ar=.22*this._lm()*Math.min(this._megaMult(),3);for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applyAmp(ar,3.2);return;}
     if(tp==='buff'||tp==='twinhub')return;
     if(tp==='focus'){
       if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
@@ -675,6 +677,32 @@ class Tower{
 
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
+    if(this.isMega){
+      const pulse=.7+Math.sin(Date.now()*.004)*.3;
+      ctx.save();ctx.strokeStyle='#FFD700';ctx.lineWidth=3;ctx.shadowColor='#FFD700';ctx.shadowBlur=14;ctx.globalAlpha=pulse;
+      ctx.strokeRect(this.cx-TS+2,this.cy-TS+2,TS*2-4,TS*2-4);
+      ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
+      ctx.save();ctx.translate(this.cx,this.cy);ctx.scale(2,2);
+      if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
+      else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
+      else switch(this.type){
+        case'aoe':this._dAOE(ctx,r,t,f);break;case'focus':this._dSlow(ctx,r,t,f);break;case'slow':this._dSlow(ctx,r,t,f);break;
+        case'pierce':this._dPierce(ctx,r,t,f);break;case'chain':this._dChain(ctx,r,t,f);break;
+        case'slowfield':this._dSlowField(ctx,r,t);break;case'scan':this._dScan(ctx,r,t);break;
+        case'buff':this._dRefinery(ctx,r,t);break;case'twinhub':this._dTwinHub(ctx,r,t);break;
+      }
+      ctx.restore();
+      if(this.type==='focus'&&this._focusTgt&&this._focusTgt.alive&&this._firingT>0){
+        ctx.save();const p2=.6+Math.sin(Date.now()*.02)*.4;
+        ctx.strokeStyle=this.color;ctx.lineWidth=3+p2;ctx.shadowColor=this.color;ctx.shadowBlur=14+p2*4;
+        ctx.globalAlpha=.9;ctx.setLineDash([6,3]);
+        ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+        ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
+      }
+      if(this.level>1){ctx.fillStyle=this.color;ctx.font=`900 ${Math.floor(r*.42)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('★'.repeat(this.level-1),this.cx,this.cy+r*.9);}
+      ctx.save();ctx.fillStyle='#FFD700';ctx.font='bold 9px sans-serif';ctx.textAlign='right';ctx.textBaseline='top';ctx.shadowColor='#000';ctx.shadowBlur=4;ctx.fillText('×5',this.cx+TS-4,this.cy-TS+4);ctx.shadowBlur=0;ctx.restore();
+      return;
+    }
     ctx.save();ctx.translate(this.cx,this.cy);
     if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
     else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
@@ -958,6 +986,39 @@ class Particle{constructor(x,y,col,i,n){this.x=x;this.y=y;this.col=col;const a=(
 class Popup{constructor(x,y,text,col){this.x=x;this.y=y;this.text=text;this.col=col;this.life=this.max=1.3;this.vy=-40;}update(dt){this.y+=this.vy*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=Math.min(1,this.life/this.max*1.5);ctx.globalAlpha=p;ctx.font='bold 13px sans-serif';ctx.fillStyle=this.col;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(this.text,this.x,this.y);ctx.globalAlpha=1;}}
 
 // ═══════════════════════════════════════════════════════
+// 합체 시스템
+// ═══════════════════════════════════════════════════════
+function towerAt(r,c){return GS.towers.find(t=>t.isMega?t.megaCells.some(([tr,tc])=>tr===r&&tc===c):t.row===r&&t.col===c)||null;}
+function checkMerge(){
+  let found=true;
+  while(found){
+    found=false;
+    outer:for(let r=0;r<ROWS2-1;r++){
+      for(let c=0;c<COLS-1;c++){
+        const tA=towerAt(r,c),tB=towerAt(r,c+1),tC=towerAt(r+1,c),tD=towerAt(r+1,c+1);
+        if(!tA||!tB||!tC||!tD)continue;
+        if(tA===tB||tA===tC||tA===tD||tB===tC||tB===tD||tC===tD)continue;
+        if(tA.isMega||tB.isMega||tC.isMega||tD.isMega)continue;
+        if(tA.tId!==tB.tId||tB.tId!==tC.tId||tC.tId!==tD.tId)continue;
+        if(UI.selTwr===tA||UI.selTwr===tB||UI.selTwr===tC||UI.selTwr===tD)UI.desel();
+        GS.towers=GS.towers.filter(t=>t!==tA&&t!==tB&&t!==tC&&t!==tD);
+        const mega=new Tower(tA.tId,r,c);
+        mega.isMega=true;
+        mega.megaCells=[[r,c],[r,c+1],[r+1,c],[r+1,c+1]];
+        mega.level=Math.max(tA.level,tB.level,tC.level,tD.level);
+        mega.cx=R.tx(c)+TS/2;mega.cy=R.ty(r)+TS/2;
+        mega.basePrice=tA.basePrice*4;
+        mega.upgCost=tA.upgCost+tB.upgCost+tC.upgCost+tD.upgCost;
+        GS.towers.push(mega);
+        SFX.upgrade();
+        UI.showBanner('합체! 초대형 '+TWR[tA.tId].name+' 가동!','#FFD700');
+        found=true;break outer;
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
 // 웨이브 생성
 // ═══════════════════════════════════════════════════════
 function makeWave(w){
@@ -1069,7 +1130,7 @@ const UI={
 
   _tap(row,col){
     // 설치된 유닛 클릭 시 — 새 유닛 선택 중이어도 바로 정보창 표시
-    const found=GS.towers.find(t=>t.row===row&&t.col===col);
+    const found=towerAt(row,col);
     if(found){
       if(this.selTwr===found){this.desel();return;}
       this.selCard=null;
@@ -1136,7 +1197,7 @@ const UI={
     const stEl=document.getElementById('hstab');stEl.textContent=st;
     stEl.className='hv'+(st<=25?' d':st<=50?' w':' g');
     document.getElementById('sfill').style.width=st+'%';
-    document.getElementById('sfill').style.background=st>50?'#6fcf7f':st>25?'#FFA726':'#EF5350';
+    document.getElementById('sfill').style.background=st>50?'#42A5F5':st>25?'#1E88E5':'#1565C0';
     const tt=Math.floor(GS.time);
     document.getElementById('htime').textContent=`${Math.floor(tt/60)}:${String(tt%60).padStart(2,'0')}`;
     document.getElementById('hwave').textContent='W'+GS.wave;
@@ -1286,11 +1347,12 @@ const G={
   place(row,col){
     if(!GS.running)return;const id=UI.selCard;if(!id)return;
     if(GRID[row][col]===1){UI.showBanner('경로 위에 설치 불가','#EF5350');return;}
-    if(GS.towers.find(t=>t.row===row&&t.col===col)){UI.showBanner('이미 설치됨','#EF5350');return;}
+    if(towerAt(row,col)){UI.showBanner('이미 설치됨','#EF5350');return;}
     const cost=TWR[id].price;
     if(!GS.eggActive&&GS.port<cost){UI.showBanner('포트가 부족합니다!','#EF5350');return;}
     if(!GS.eggActive)GS.port-=cost;
     GS.towers.push(new Tower(id,row,col));SFX.place();UI.updHUD();UI.showBanner(TWR[id].name+' 설치','#00BCD4');
+    checkMerge();
   },
 
   togglePause(){
