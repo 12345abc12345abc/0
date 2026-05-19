@@ -274,7 +274,7 @@ const TWR={
   // ◈480  유틸 — 처리 효율 증폭 +22%
   scanner:     {name:'비전 스캐너',   price:480,  color:'#FFEB3B',type:'scan',     dmg:0,   spd:0,    range:3.4, desc:'범위 내 원석 처리 효율 +22%. 중첩 가능.'},
   // ◈700  집중 레이저 — 단일 대상 지속 공정
-  magnetCannon:{name:'마그넷 캐논',   price:700,  color:'#FF7043',type:'focus',    dmg:28,  spd:0,    range:3.0, desc:'단일 대상 집중 레이저 지속 처리. 초중반 공정 라인의 핵심 설비.'},
+  magnetCannon:{name:'마그넷 레이저',   price:700,  color:'#FF7043',type:'focus',    dmg:28,  spd:0,    range:3.0, desc:'단일 대상 집중 레이저 지속 처리. 초중반 공정 라인의 핵심 설비.'},
   // ◈1050 유틸 — 포트 수익 +35%
   refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.5, desc:'범위 내 처치 시 포트 +35%. 중첩 가능. 경제 공정의 핵심.'},
   // ◈1500 DPS≈35×범위(전체) — 코너 광역
