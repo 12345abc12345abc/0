@@ -270,21 +270,21 @@ const TWR={
   // ◈150  유틸 — 이동속도 30% 감소, 범위 소형
   conveyor:    {name:'컨베이어',       price:150,  color:'#78909C',type:'slowfield',dmg:0,   spd:0,    range:2.2, desc:'범위 내 원석 이동속도 30% 감소. 중첩 가능.'},
   // ◈320  DPS≈20
-  coreShooter: {name:'코어 슈터',     price:320,  color:'#00E676',type:'single',   dmg:20,  spd:1.0,  range:3.0, desc:'가장 멀리 진행한 원석 우선 타겟. 안정적인 포탑.'},
-  // ◈480  유틸 — 피해 증폭 +22%
-  scanner:     {name:'비전 스캐너',   price:480,  color:'#FFEB3B',type:'scan',     dmg:0,   spd:0,    range:3.4, desc:'범위 내 원석 받는 피해 +22%. 중첩 가능.'},
+  coreShooter: {name:'코어 슈터',     price:320,  color:'#00E676',type:'single',   dmg:20,  spd:1.0,  range:3.0, desc:'가장 멀리 진행한 원석 우선 처리. 안정적인 공정 설비.'},
+  // ◈480  유틸 — 처리 효율 증폭 +22%
+  scanner:     {name:'비전 스캐너',   price:480,  color:'#FFEB3B',type:'scan',     dmg:0,   spd:0,    range:3.4, desc:'범위 내 원석 처리 효율 +22%. 중첩 가능.'},
   // ◈700  집중 레이저 — 단일 대상 지속 공정
-  magnetCannon:{name:'마그넷 캐논',   price:700,  color:'#FF7043',type:'focus',    dmg:28,  spd:0,    range:3.0, desc:'단일 대상 집중 레이저 지속 피해. 초중반 공정 라인의 핵심 설비.'},
+  magnetCannon:{name:'마그넷 캐논',   price:700,  color:'#FF7043',type:'focus',    dmg:28,  spd:0,    range:3.0, desc:'단일 대상 집중 레이저 지속 처리. 초중반 공정 라인의 핵심 설비.'},
   // ◈1050 유틸 — 포트 수익 +35%
   refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.5, desc:'범위 내 처치 시 포트 +35%. 중첩 가능. 경제 공정의 핵심.'},
   // ◈1500 DPS≈35×범위(전체) — 코너 광역
-  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F50057',type:'aoe',      dmg:22,  spd:1.6,  range:2.4, desc:'범위 내 전체 원석 동시 지속 피해. 코너 최강.'},
+  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F50057',type:'aoe',      dmg:22,  spd:1.6,  range:2.4, desc:'범위 내 전체 원석 동시 지속 처리. 코너 최강 설비.'},
   // ◈2100 DPS≈62×연쇄(최대 3타) — 단일 최강급 연쇄
-  chainBolt:   {name:'체인 볼트',     price:2100, color:'#D500F9',type:'chain',    dmg:28,  spd:0.75, range:3.2, desc:'첫 타겟 후 2개 연쇄 번개 + 감전 지속 피해 2.5초.'},
+  chainBolt:   {name:'체인 볼트',     price:2100, color:'#D500F9',type:'chain',    dmg:28,  spd:0.75, range:3.2, desc:'첫 처리 후 2개 연쇄 번개 + 감전 지속 처리 2.5초.'},
   // ◈2800 유틸 — 인접 장비 전체 강화
   twinHub:     {name:'트윈 허브',     price:2800, color:'#1DE9B6',type:'twinhub',  dmg:0,   spd:0,    range:3.8, desc:'인접 장비 공정력+18% 속도+18%. 중첩 가능.'},
   // ◈3800 DPS≈100×관통(최대 6타) — 최고 단일 화력
-  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#FF1744',type:'pierce',   dmg:100, spd:0.42, range:4.0, desc:'직선 관통 최대 6개. 타당 100 피해. 최강 포탑.'},
+  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#FF1744',type:'pierce',   dmg:100, spd:0.42, range:4.0, desc:'직선 관통 최대 6개. 처리당 100. 최고 공정 설비.'},
 };
 const LVL=[{mult:1},{mult:1.25,cm:.65},{mult:1.55,cm:1.1},{mult:1.9,cm:1.7},{mult:2.4,cm:2.6}];
 
@@ -740,13 +740,13 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 포탑, 기본방향 위(↑)
+  // 코어슈터: 설비, 기본방향 위(↑)
   _dCS(ctx,r,t,f){
     const col=this.color;
     this._base(ctx,r,col,'circle');
     ctx.strokeStyle='#ffffff15';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.65,0,Math.PI*2);ctx.stroke();
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // 포탑 몸체 (중앙 아래쪽)
+    // 설비 몸체 (중앙 아래쪽)
     ctx.fillStyle='#2e2e2e';ctx.strokeStyle='#666';ctx.lineWidth=1.2;
     ctx.beginPath();ctx.roundRect(-r*.22,-r*.18,r*.44,r*.36,r*.06);ctx.fill();ctx.stroke();
     // 포신 (위쪽 = 발사 방향)
@@ -1202,7 +1202,7 @@ const UI={
     const stEl=document.getElementById('hstab');stEl.textContent=st;
     stEl.className='hv'+(st<=25?' d':st<=50?' w':' g');
     document.getElementById('sfill').style.width=st+'%';
-    document.getElementById('sfill').style.background=st>50?'#42A5F5':st>25?'#1E88E5':'#1565C0';
+    document.getElementById('sfill').style.background=st>50?'#FF4500':st>25?'#FF5722':'#BF360C';
     const tt=Math.floor(GS.time);
     document.getElementById('htime').textContent=`${Math.floor(tt/60)}:${String(tt%60).padStart(2,'0')}`;
     document.getElementById('hwave').textContent='W'+GS.wave;
@@ -1225,7 +1225,7 @@ const UI={
     const el=document.getElementById('clrovly');el.style.display='block';
     const t=Math.floor(GS.time);
     const eggRow=GS.eggActive
-      ?`<div class="clr-row" style="border-color:#FF450033;"><span class="clr-lbl">포트 무한 사용 클리어</span></div>`
+      ?`<div style="text-align:center;padding:11px 0 13px;margin-bottom:6px;background:#FF450018;border:1.5px solid #FF4500;border-radius:6px;"><span style="color:#FF4500;font-size:14px;font-weight:900;letter-spacing:1px;text-shadow:0 0 12px #FF450099;">포트 무한 사용 클리어</span></div>`
       :``;
     document.getElementById('clr-stats').innerHTML=`
       ${eggRow}
@@ -1330,7 +1330,7 @@ const G={
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
       if(GS.wave>=100){GS.running=false;UI.showClear();return;}
-      UI.showBanner(`★ W${GS.wave} 클리어! +◈${bonus.toLocaleString()}`,'#00E5FF');UI.updHUD();
+      UI.showBanner(`★ W${GS.wave} 클리어! +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
       if(GS.autoWave){GS.autoActive=true;GS.autoTimer=5;}
     }
     for(const t of GS.towers)t.update(dt,GS.ores);
@@ -1346,7 +1346,7 @@ const G={
     GS.autoActive=false;document.getElementById('acd').textContent='';
     GS.wave++;GS.oreQ=makeWave(GS.wave);GS.spawnT=0;GS.waveActive=true;
     SFX.waveStart();
-    UI.updHUD();UI.showBanner(`웨이브 ${GS.wave} 시작!`,'#00E5FF');
+    UI.updHUD();UI.showBanner(`웨이브 ${GS.wave} 시작!`,'#FF4500');
   },
 
   place(row,col){
