@@ -261,8 +261,8 @@ const ORE={
   core:    {name:'코어 원석',   color:'#E8F4FF',hp:1800,spd:12, reward:190, dmg:20, grade:4,special:'boss'},
 };
 
-const TWR_ORDER=['pixelArm','conveyor','coreShooter','scanner','refinery',
-                 'magnetCannon','laserGrid','chainBolt','twinHub','plasmaCutter'];
+const TWR_ORDER=['pixelArm','conveyor','coreShooter','scanner','magnetCannon',
+                 'refinery','laserGrid','chainBolt','twinHub','plasmaCutter'];
 const TWR={
   // 가격 ∝ DPS 순서로 정렬. DPS = dmg × spd (공격형 기준)
   // ◈80   DPS≈11  → 기본 진입
@@ -273,10 +273,10 @@ const TWR={
   coreShooter: {name:'코어 슈터',     price:320,  color:'#00E676',type:'single',   dmg:20,  spd:1.0,  range:3.0, desc:'가장 멀리 진행한 원석 우선 타겟. 안정적인 포탑.'},
   // ◈480  유틸 — 피해 증폭 +22%
   scanner:     {name:'비전 스캐너',   price:480,  color:'#FFEB3B',type:'scan',     dmg:0,   spd:0,    range:3.4, desc:'범위 내 원석 받는 피해 +22%. 중첩 가능.'},
-  // ◈700  유틸 — 포트 수익 +30%
-  refinery:    {name:'포트 정제소',   price:700,  color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.2, desc:'범위 내 처치 시 포트 +30%. 중첩 가능.'},
-  // ◈1050 DPS≈22 + 35% 감속
-  magnetCannon:{name:'마그넷 캐논',   price:1050, color:'#FF7043',type:'focus',    dmg:42,  spd:0,    range:3.2, desc:'단일 대상 집중 레이저 지속 피해. 범위 내 가장 앞 적을 계속 공략.'},
+  // ◈700  집중 레이저 — 단일 대상 지속 공정
+  magnetCannon:{name:'마그넷 캐논',   price:700,  color:'#FF7043',type:'focus',    dmg:28,  spd:0,    range:3.0, desc:'단일 대상 집중 레이저 지속 피해. 초중반 공정 라인의 핵심 설비.'},
+  // ◈1050 유틸 — 포트 수익 +35%
+  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.5, desc:'범위 내 처치 시 포트 +35%. 중첩 가능. 경제 공정의 핵심.'},
   // ◈1500 DPS≈35×범위(전체) — 코너 광역
   laserGrid:   {name:'레이저 그리드', price:1500, color:'#F50057',type:'aoe',      dmg:22,  spd:1.6,  range:2.4, desc:'범위 내 전체 원석 동시 지속 피해. 코너 최강.'},
   // ◈2100 DPS≈62×연쇄(최대 3타) — 단일 최강급 연쇄
@@ -339,20 +339,25 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W1:×1 W10:×2.6 W25:×6.2 W50:×16 W75:×34 W100:×64
+  // W1:×1 W10:×2.4 W30:×6.4 W50:×12 | W65:×45 W80:×128 W90:×228 W100:×403
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.18;
-  if(w<=25)return hpS(10)+(w-10)*0.24;
-  if(w<=50)return hpS(25)+(w-25)*0.39;
-  if(w<=75)return hpS(50)+(w-50)*0.72;
-  return hpS(75)+(w-75)*1.20;
+  if(w<=10)return 1.0+(w-1)*0.15;
+  if(w<=30)return hpS(10)+(w-10)*0.20;
+  if(w<=50)return hpS(30)+(w-30)*0.30;
+  if(w<=65)return hpS(50)+(w-50)*2.2;
+  if(w<=80)return hpS(65)+(w-65)*5.5;
+  if(w<=90)return hpS(80)+(w-80)*10.0;
+  return hpS(90)+(w-90)*17.5;
 }
 function spdS(w){
-  return 1+Math.min(w-1,99)*0.006;
+  if(w<=50)return 1+Math.min(w-1,49)*0.006;
+  return 1.294+(w-50)*0.015;
 }
 function countS(w){
   if(w<=3)return 4+w;
-  return Math.floor(6+w*0.88);
+  if(w<=50)return Math.floor(6+w*0.88);
+  if(w<=75)return Math.floor(50+(w-50)*1.6);
+  return Math.floor(90+(w-75)*3.0);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -583,7 +588,7 @@ class Ore{
     for(let i=0;i<12;i++)GS.particles.push(new Particle(this.x,this.y,this.color,i,12));
     let pm=1;
     for(const t of GS.towers){
-      if(t.type==='buff'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS)pm+=.30*t._lm()*t._megaMult();
+      if(t.type==='buff'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS)pm+=.35*t._lm()*t._megaMult();
       if(t.type==='twinhub'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS)pm+=.05*t._lm()*t._megaMult();
     }
     const pr=Math.round(this.reward*pm);
@@ -1105,7 +1110,7 @@ const UI={
     tags+=`<span class="mc-tag">범위 <b>${d.range}</b></span>`;
     if(d.type==='focus')tags+=`<span class="mc-tag">집중 레이저</span>`;
     if(d.type==='scan')tags+=`<span class="mc-tag">증폭 <b>+22%</b></span>`;
-    if(d.type==='buff')tags+=`<span class="mc-tag">포트 <b>+30%</b></span>`;
+    if(d.type==='buff')tags+=`<span class="mc-tag">포트 <b>+35%</b></span>`;
     if(d.type==='chain')tags+=`<span class="mc-tag">연쇄 <b>3개</b></span>`;
     if(d.type==='pierce')tags+=`<span class="mc-tag">관통 <b>6개</b></span>`;
     if(d.type==='twinhub')tags+=`<span class="mc-tag">버프 <b>+18%/+18%</b></span>`;
@@ -1157,7 +1162,7 @@ const UI={
     s+=`<div class="tis">범위<span>${d.range}</span></div>`;
     if(tower.type==='focus')s+=`<div class="tis">집중 레이저<span>지속</span></div>`;
     if(tower.type==='scan')s+=`<div class="tis">증폭<span>+${(22*tower._lm()).toFixed(0)}%</span></div>`;
-    if(tower.type==='buff')s+=`<div class="tis">포트<span>+${(30*tower._lm()).toFixed(0)}%</span></div>`;
+    if(tower.type==='buff')s+=`<div class="tis">포트<span>+${(35*tower._lm()).toFixed(0)}%</span></div>`;
     if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>6개</span></div>`;
     if(tower.type==='twinhub'){s+=`<div class="tis">공정+<span>${(18*tower._lm()).toFixed(0)}%</span></div>`;s+=`<div class="tis">속도+<span>${(18*tower._lm()).toFixed(0)}%</span></div>`;}
