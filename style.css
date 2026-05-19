@@ -154,24 +154,34 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   border-left:1px solid #ffffff12;
 }
 #wbtn{
-  width:76px;height:66px;
-  background:#222;border:1.5px solid #ffffff22;border-radius:9px;
-  cursor:pointer;color:#eee;
+  width:76px;height:120px;
+  background:#1a1a1a;border:1.5px solid #FF450044;border-radius:9px;
+  cursor:pointer;color:#FF4500;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;font-size:11px;font-weight:900;transition:all .15s;
+  gap:4px;font-size:12px;font-weight:900;transition:all .15s;
+  position:relative;overflow:hidden;
 }
+#wbtn::before{content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,#FF450014,transparent);pointer-events:none;}
+#wbtn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:#FF4500;opacity:.55;border-radius:0 0 7px 7px;}
 #wbtn:active{transform:scale(.94);}
 #wbtn.dis{opacity:.3;pointer-events:none;}
-#wbtn .wi{font-size:22px;line-height:1;}
-#wnum{font-size:8.5px;color:#666;font-weight:700;}
+#wbtn .wi{font-size:30px;line-height:1;}
+#wnum{font-size:9px;color:#FF450099;font-weight:700;}
 #abtn{
-  width:76px;padding:6px 4px;border-radius:7px;
-  background:#1a1a1a;border:1px solid #ffffff14;
-  cursor:pointer;font-size:8px;color:#666;text-align:center;
-  font-weight:800;transition:all .15s;line-height:1.5;
+  width:76px;height:68px;border-radius:9px;
+  background:#1a1a1a;border:1.5px solid #ffffff14;
+  cursor:pointer;font-size:9px;color:#555;text-align:center;
+  font-weight:800;transition:all .15s;line-height:1.6;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
 }
-#abtn.on{background:#2a2a2a;border-color:#aaa;color:#eee;}
-#acd{font-size:8px;color:#FFA726;text-align:center;min-height:12px;
+#abtn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:#FF4500;opacity:0;border-radius:0 0 7px 7px;transition:opacity .15s;}
+#abtn.on{border-color:#FF450066;color:#FF4500;box-shadow:0 0 10px #FF450022;}
+#abtn.on::after{opacity:.5;}
+#acd{font-size:9px;color:#FF4500;text-align:center;min-height:12px;
   line-height:1.3;font-weight:700;padding:0 2px;}
 
 /* ══ 오버레이 ══ */
