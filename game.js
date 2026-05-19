@@ -123,22 +123,34 @@ const SFX={
   // ── 웨이브 시작음 ────────────────────────────────
   waveStart(){
     if(!this._on)return;
-    // 공장 알람 + 올라가는 사이렌
-    const ctx=this._ctx||new(window.AudioContext||window.webkitAudioContext)();
-    if(!this._ctx){this._ctx=ctx;this._master=ctx.createGain();this._master.gain.value=.38;this._master.connect(ctx.destination);}
-    this._resume();
-    const now=ctx.currentTime;
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type='sawtooth';
-    o.frequency.setValueAtTime(180,now);
-    o.frequency.linearRampToValueAtTime(360,now+.25);
-    o.frequency.linearRampToValueAtTime(240,now+.45);
-    g.gain.setValueAtTime(.28,now);
-    g.gain.linearRampToValueAtTime(.0001,now+.5);
-    o.connect(g);g.connect(this._master);
-    o.start(now);o.stop(now+.5);
-    // 베이스 비프
-    this._osc('square',110,.3,.12);
+    this._init();this._resume();
+    const ctx=this._ctx,now=ctx.currentTime;
+    // 킥 드럼 — 주파수 하강 타격음
+    const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*.18),ctx.sampleRate);
+    const bd=buf.getChannelData(0);
+    for(let i=0;i<bd.length;i++){const t=i/ctx.sampleRate;bd[i]=Math.sin(2*Math.PI*160*Math.exp(-t*20)*t*6)*Math.exp(-t*9);}
+    const ks=ctx.createBufferSource();ks.buffer=buf;
+    const kg=ctx.createGain();kg.gain.value=.6;
+    ks.connect(kg);kg.connect(this._master);ks.start(now);
+    // 상승 신스
+    const o1=ctx.createOscillator(),g1=ctx.createGain();
+    o1.type='sawtooth';
+    o1.frequency.setValueAtTime(60,now+.04);
+    o1.frequency.exponentialRampToValueAtTime(720,now+.28);
+    g1.gain.setValueAtTime(.28,now+.04);
+    g1.gain.exponentialRampToValueAtTime(.0001,now+.42);
+    o1.connect(g1);g1.connect(this._master);o1.start(now+.04);o1.stop(now+.45);
+    // 금속 노이즈 burst
+    this._noise(.05,.25,3800);
+    // 경고 비프 ×2
+    for(let i=0;i<2;i++){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='square';o.frequency.value=330;
+      const t=now+.12+i*.17;
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.16,t+.02);
+      g.gain.setValueAtTime(.16,t+.07);g.gain.linearRampToValueAtTime(.0001,t+.12);
+      o.connect(g);g.connect(this._master);o.start(t);o.stop(t+.16);
+    }
   },
 
   // ── 클리어음 ─────────────────────────────────────
@@ -239,14 +251,14 @@ applyScale();window.addEventListener('resize',applyScale);
 // 데이터
 // ═══════════════════════════════════════════════════════
 const ORE={
-  normal:  {name:'일반 원석',   color:'#9E9E9E',hp:18,  spd:44, reward:12,  dmg:2,  grade:1},
-  fast:    {name:'고속 원석',   color:'#FF9800',hp:10,  spd:90, reward:14,  dmg:2,  grade:1},
-  multi:   {name:'다중 원석',   color:'#29B6F6',hp:35,  spd:46, reward:28,  dmg:3,  grade:2,special:'split'},
-  dense:   {name:'고밀도 원석', color:'#5C6BC0',hp:110, spd:26, reward:44,  dmg:5,  grade:3},
-  pure:    {name:'고순도 원석', color:'#FFD700',hp:28,  spd:44, reward:70,  dmg:4,  grade:2},
-  unstable:{name:'불안정 원석', color:'#4CAF50',hp:48,  spd:74, reward:52,  dmg:10, grade:2,special:'bigdmg'},
-  compres: {name:'압축 원석',   color:'#CE93D8',hp:380, spd:20, reward:110, dmg:8,  grade:3},
-  core:    {name:'코어 원석',   color:'#E8F4FF',hp:1800,spd:12, reward:380, dmg:20, grade:4,special:'boss'},
+  normal:  {name:'일반 원석',   color:'#9E9E9E',hp:18,  spd:44, reward:6,   dmg:2,  grade:1},
+  fast:    {name:'고속 원석',   color:'#FF9800',hp:10,  spd:90, reward:8,   dmg:2,  grade:1},
+  multi:   {name:'다중 원석',   color:'#29B6F6',hp:35,  spd:46, reward:15,  dmg:3,  grade:2,special:'split'},
+  dense:   {name:'고밀도 원석', color:'#5C6BC0',hp:110, spd:26, reward:22,  dmg:5,  grade:3},
+  pure:    {name:'고순도 원석', color:'#FFD700',hp:28,  spd:44, reward:35,  dmg:4,  grade:2},
+  unstable:{name:'불안정 원석', color:'#4CAF50',hp:48,  spd:74, reward:26,  dmg:10, grade:2,special:'bigdmg'},
+  compres: {name:'압축 원석',   color:'#CE93D8',hp:380, spd:20, reward:55,  dmg:8,  grade:3},
+  core:    {name:'코어 원석',   color:'#E8F4FF',hp:1800,spd:12, reward:190, dmg:20, grade:4,special:'boss'},
 };
 
 const TWR_ORDER=['pixelArm','conveyor','coreShooter','scanner','refinery',
@@ -264,11 +276,11 @@ const TWR={
   // ◈700  유틸 — 포트 수익 +30%
   refinery:    {name:'포트 정제소',   price:700,  color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.2, desc:'범위 내 처치 시 포트 +30%. 중첩 가능.'},
   // ◈1050 DPS≈22 + 35% 감속
-  magnetCannon:{name:'마그넷 캐논',   price:1050, color:'#FF7043',type:'slow',     dmg:26,  spd:0.85, range:3.2, desc:'명중 시 35% 감속 4초 적용. 공격력도 준수.'},
+  magnetCannon:{name:'마그넷 캐논',   price:1050, color:'#FF7043',type:'focus',    dmg:42,  spd:0,    range:3.2, desc:'단일 대상 집중 레이저 지속 피해. 범위 내 가장 앞 적을 계속 공략.'},
   // ◈1500 DPS≈35×범위(전체) — 코너 광역
   laserGrid:   {name:'레이저 그리드', price:1500, color:'#F50057',type:'aoe',      dmg:22,  spd:1.6,  range:2.4, desc:'범위 내 전체 원석 동시 지속 피해. 코너 최강.'},
   // ◈2100 DPS≈62×연쇄(최대 3타) — 단일 최강급 연쇄
-  chainBolt:   {name:'체인 볼트',     price:2100, color:'#D500F9',type:'chain',    dmg:52,  spd:0.75, range:3.2, desc:'첫 타겟 후 2개 추가 연쇄 번개 (80%/60%).'},
+  chainBolt:   {name:'체인 볼트',     price:2100, color:'#D500F9',type:'chain',    dmg:28,  spd:0.75, range:3.2, desc:'첫 타겟 후 2개 연쇄 번개 + 감전 지속 피해 2.5초.'},
   // ◈2800 유틸 — 인접 장비 전체 강화
   twinHub:     {name:'트윈 허브',     price:2800, color:'#1DE9B6',type:'twinhub',  dmg:0,   spd:0,    range:3.8, desc:'인접 장비 공정력+18% 속도+18%. 중첩 가능.'},
   // ◈3800 DPS≈100×관통(최대 6타) — 최고 단일 화력
@@ -294,14 +306,14 @@ function mk(r,c){if(r>=0&&r<ROWS2&&c>=0&&c<COLS)GRID[r][c]=1;}
 function ap(r,c){if(!PATH.length||(PATH[PATH.length-1].r!==r||PATH[PATH.length-1].c!==c))PATH.push({r,c});}
 
 // S자 경로 — 시작: 좌상단(0,0), 종료: 우하단(12,13)
-// 수직 세그먼트 3칸, 수평 세그먼트 전체 폭(0→13) 균일
-for(let r=0;r<=3;r++){mk(r,0);ap(r,0);}        // 아래로
-for(let c=0;c<=13;c++){mk(3,c);ap(3,c);}        // 오른쪽으로
-for(let r=3;r<=6;r++){mk(r,13);ap(r,13);}       // 아래로
-for(let c=13;c>=0;c--){mk(6,c);ap(6,c);}       // 왼쪽으로
-for(let r=6;r<=9;r++){mk(r,0);ap(r,0);}         // 아래로
-for(let c=0;c<=13;c++){mk(9,c);ap(9,c);}        // 오른쪽으로
-for(let r=9;r<=12;r++){mk(r,13);ap(r,13);}      // 아래로
+// 위아래 설치영역 2줄, 중앙 설치영역 3줄씩
+for(let r=0;r<=2;r++){mk(r,0);ap(r,0);}         // 아래로
+for(let c=0;c<=13;c++){mk(2,c);ap(2,c);}         // 오른쪽으로
+for(let r=2;r<=6;r++){mk(r,13);ap(r,13);}        // 아래로
+for(let c=13;c>=0;c--){mk(6,c);ap(6,c);}        // 왼쪽으로
+for(let r=6;r<=10;r++){mk(r,0);ap(r,0);}         // 아래로
+for(let c=0;c<=13;c++){mk(10,c);ap(10,c);}       // 오른쪽으로
+for(let r=10;r<=12;r++){mk(r,13);ap(r,13);}      // 아래로
 
 const ENTRY={r:0,c:0},EXIT={r:12,c:13};
 
@@ -327,22 +339,20 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W1: ×1, W10: ×2, W25: ×4, W50: ×9, W75: ×18, W100: ×35
+  // W1:×1 W10:×2.6 W25:×6.2 W50:×16 W75:×34 W100:×64
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.11;
-  if(w<=25)return hpS(10)+(w-10)*0.13;
-  if(w<=50)return hpS(25)+(w-25)*0.20;
-  if(w<=75)return hpS(50)+(w-50)*0.36;
-  return hpS(75)+(w-75)*0.68;
+  if(w<=10)return 1.0+(w-1)*0.18;
+  if(w<=25)return hpS(10)+(w-10)*0.24;
+  if(w<=50)return hpS(25)+(w-25)*0.39;
+  if(w<=75)return hpS(50)+(w-50)*0.72;
+  return hpS(75)+(w-75)*1.20;
 }
 function spdS(w){
-  // 속도는 천천히 오름 — W100에서 최대 1.5배
-  return 1+Math.min(w-1,99)*0.005;
+  return 1+Math.min(w-1,99)*0.006;
 }
 function countS(w){
-  // W1: 5마리, W50: 30마리, W100: 55마리
   if(w<=3)return 4+w;
-  return Math.floor(7+w*0.95);
+  return Math.floor(6+w*0.88);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -538,6 +548,7 @@ class Ore{
     this.x=R.tx(PATH[0].c);this.y=R.ty(PATH[0].r);
     this.alive=true;this.escaped=false;
     this.slowTimer=0;this._sR=0;this.ampRatio=0;this.ampTimer=0;
+    this.shockTimer=0;this.shockDps=0;
     this.flashT=0;this.spin=Math.random()*Math.PI*2;
     const sz=[0,TS*.21,TS*.26,TS*.32,TS*.40];this.radius=sz[this.grade]||TS*.21;
   }
@@ -545,6 +556,13 @@ class Ore{
     if(!this.alive)return;
     if(this.slowTimer>0){this.slowTimer-=dt;if(this.slowTimer<=0){this.spd=this.baseSpd;this._sR=0;}}
     if(this.ampTimer>0)this.ampTimer-=dt;if(this.flashT>0)this.flashT-=dt;
+    if(this.shockTimer>0){
+      this.shockTimer-=dt;
+      let sd=this.shockDps*dt;if(this.ampTimer>0)sd*=(1+this.ampRatio);
+      this.hp-=sd;this.flashT=.04;
+      if(this.hp<=0&&this.alive){this.alive=false;this._die();}
+      if(this.shockTimer<=0)this.shockDps=0;
+    }
     let mv=this.spd*dt;
     while(mv>0&&this.pathIdx<PATH.length-1){
       const fr=PATH[this.pathIdx],to=PATH[this.pathIdx+1];
@@ -574,6 +592,7 @@ class Ore{
   }
   applySlow(ratio,dur){this._sR=Math.max(this._sR,ratio);this.spd=this.baseSpd*(1-this._sR);if(this.slowTimer<dur)this.slowTimer=dur;}
   applyAmp(ratio,dur){this.ampRatio=Math.max(this.ampRatio,ratio);if(this.ampTimer<dur)this.ampTimer=dur;}
+  applyShock(dps,dur){this.shockDps=Math.max(this.shockDps,dps);if(this.shockTimer<dur)this.shockTimer=dur;}
   draw(ctx,gt){
     if(!this.alive)return;
     const r=this.radius,spRate=[0,.85,.62,.44,.28][this.grade]||.7,sp=this.spin+gt*spRate;
@@ -608,7 +627,7 @@ class Tower{
     this.basePrice=d.price;this.level=1;this.upgCost=0;
     this.cx=R.tx(col);this.cy=R.ty(row);
     this.angle=-Math.PI/2;this.cooldown=0;this._aoeT=0;this._animT=0;this._firingT=0;
-    this._tDmg=0;this._tSpd=0;this._armAngle=-Math.PI/2;
+    this._tDmg=0;this._tSpd=0;this._armAngle=-Math.PI/2;this._focusTgt=null;this._soundT=0;
   }
   _lm(){return LVL[this.level-1].mult;}
   _calcTwin(){this._tDmg=0;this._tSpd=0;for(const t of GS.towers)if(t.type==='twinhub'&&t.uid!==this.uid&&Math.hypot(t.cx-this.cx,t.cy-this.cy)<=t.getRange()*TS){this._tDmg+=.18*t._lm();this._tSpd+=.18*t._lm();}}
@@ -621,6 +640,17 @@ class Tower{
     if(tp==='slowfield'){const rng=this.getRange()*TS;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applySlow(.25*this._lm(),.22);return;}
     if(tp==='scan'){const rng=this.getRange()*TS;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applyAmp(.22*this._lm(),3.2);return;}
     if(tp==='buff'||tp==='twinhub')return;
+    if(tp==='focus'){
+      if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
+      if(!this._focusTgt)this._focusTgt=this._findTgt(ores);
+      if(this._focusTgt){
+        this._focusTgt.takeDmg(this.getDmg()*dt);
+        this.angle=Math.atan2(this._focusTgt.y-this.cy,this._focusTgt.x-this.cx);
+        this._firingT=.18;
+        this._soundT-=dt;if(this._soundT<=0){SFX.shoot('magnetCannon');this._soundT=.38;}
+      }
+      return;
+    }
     if(tp==='aoe'){
       this._aoeT+=dt;const iv=1/Math.max(.1,this.getSpd());
       if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;let hit=false;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng){o.takeDmg(this.getDmg()*iv);hit=true;}if(hit){this._firingT=.22;GS.effects.push(new RingEff(this.cx,this.cy,this.getRange()*TS,this.color));SFX.shoot('aoe');}}return;}
@@ -639,9 +669,9 @@ class Tower{
     this._fire(tgt);this.cooldown=1;this._firingT=.15;SFX.shoot(this.tId);
   }
   _findTgt(ores){const rng=this.getRange()*TS;let best=null,bestP=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(this.tId==='pixelArm'&&o.type==='fast'){best=o;break;}const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}return best;}
-  _fire(tgt){GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),{color:this.color,slow:this.type==='slow'?{ratio:.35,dur:4.0}:null}));}
+  _fire(tgt){const sz=this.tId==='pixelArm'?.45:1;GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),{color:this.color,slow:null,size:sz}));}
   _firePierce(ores){const rng=this.getRange()*TS;let best=null,bestP=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);const dx=Math.cos(this.angle),dy=Math.sin(this.angle);let hit=0;for(const o of ores){if(!o.alive||hit>=6)continue;const ex=o.x-this.cx,ey=o.y-this.cy,dot=ex*dx+ey*dy;if(dot<0||dot>rng)continue;if(Math.abs(ex*dy-ey*dx)<TS*.5){o.takeDmg(this.getDmg());hit++;}}GS.effects.push(new LaserEff(this.cx,this.cy,this.angle,rng,this.color));}
-  _fireChain(ores){const rng=this.getRange()*TS;const first=this._findTgt(ores);if(!first)return;this.angle=Math.atan2(first.y-this.cy,first.x-this.cx);const targets=[first];let last=first;for(let i=1;i<3;i++){let nx=null,bd=rng*1.6;for(const o of ores){if(!o.alive||targets.includes(o))continue;const d=Math.hypot(o.x-last.x,o.y-last.y);if(d<bd){bd=d;nx=o;}}if(!nx)break;targets.push(nx);last=nx;}const base=this.getDmg(),mults=[1,.80,.60];for(let i=0;i<targets.length;i++){targets[i].takeDmg(base*mults[i]);if(i>0)GS.effects.push(new BoltEff(targets[i-1].x,targets[i-1].y,targets[i].x,targets[i].y,this.color));}GS.effects.push(new BoltEff(this.cx,this.cy,targets[0].x,targets[0].y,this.color));}
+  _fireChain(ores){const rng=this.getRange()*TS;const first=this._findTgt(ores);if(!first)return;this.angle=Math.atan2(first.y-this.cy,first.x-this.cx);const targets=[first];let last=first;for(let i=1;i<3;i++){let nx=null,bd=rng*1.6;for(const o of ores){if(!o.alive||targets.includes(o))continue;const d=Math.hypot(o.x-last.x,o.y-last.y);if(d<bd){bd=d;nx=o;}}if(!nx)break;targets.push(nx);last=nx;}const base=this.getDmg(),mults=[1,.80,.60];const shockDps=base*0.5,shockDur=2.5;for(let i=0;i<targets.length;i++){targets[i].takeDmg(base*mults[i]);targets[i].applyShock(shockDps*mults[i],shockDur);if(i>0)GS.effects.push(new BoltEff(targets[i-1].x,targets[i-1].y,targets[i].x,targets[i].y,this.color));}GS.effects.push(new BoltEff(this.cx,this.cy,targets[0].x,targets[0].y,this.color));}
 
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
@@ -649,12 +679,21 @@ class Tower{
     if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
     else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
     else switch(this.type){
-      case'aoe':this._dAOE(ctx,r,t,f);break;case'slow':this._dSlow(ctx,r,t,f);break;
+      case'aoe':this._dAOE(ctx,r,t,f);break;case'focus':this._dSlow(ctx,r,t,f);break;case'slow':this._dSlow(ctx,r,t,f);break;
       case'pierce':this._dPierce(ctx,r,t,f);break;case'chain':this._dChain(ctx,r,t,f);break;
       case'slowfield':this._dSlowField(ctx,r,t);break;case'scan':this._dScan(ctx,r,t);break;
       case'buff':this._dRefinery(ctx,r,t);break;case'twinhub':this._dTwinHub(ctx,r,t);break;
     }
     ctx.restore();
+    if(this.type==='focus'&&this._focusTgt&&this._focusTgt.alive&&this._firingT>0){
+      ctx.save();
+      const pulse=.6+Math.sin(Date.now()*.02)*.4;
+      ctx.strokeStyle=this.color;ctx.lineWidth=2+pulse;
+      ctx.shadowColor=this.color;ctx.shadowBlur=10+pulse*4;
+      ctx.globalAlpha=.8;ctx.setLineDash([5,3]);
+      ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+      ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
+    }
     if(this.level>1){ctx.fillStyle=this.color;ctx.font=`900 ${Math.floor(r*.3)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('★'.repeat(this.level-1),this.cx,this.cy+r*.56);}
   }
   _base(ctx,r,col,sh='circle'){
@@ -880,7 +919,7 @@ class Tower{
 // ═══════════════════════════════════════════════════════
 // 이펙트
 // ═══════════════════════════════════════════════════════
-class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>7)this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*.48;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,3.2-i*.3,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}
+class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.size=opts.size||1;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>7)this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;const sz=this.size;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*.48;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,(3.2-i*.3)*sz,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6*sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}
 class RingEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.32;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.48;ctx.strokeStyle=this.col;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.28-p*.28),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;}}
 class LaserEff{constructor(x,y,dir,len,col){this.x=x;this.y=y;this.dir=dir;this.len=len;this.col=col;this.life=this.max=.2;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.82;ctx.shadowColor=this.col;ctx.shadowBlur=11;ctx.strokeStyle=this.col;ctx.lineWidth=3.5+p*2;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(this.dir)*this.len,this.y+Math.sin(this.dir)*this.len);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class BoltEff{
@@ -923,8 +962,8 @@ class Popup{constructor(x,y,text,col){this.x=x;this.y=y;this.text=text;this.col=
 // ═══════════════════════════════════════════════════════
 function makeWave(w){
   const pool=getPool(w),count=countS(w),q=[];
-  for(let i=0;i<count;i++)q.push({type:pool[Math.floor(Math.random()*pool.length)],delay:i*.66});
-  if(w%10===0&&w>0)q.push({type:'core',delay:q.length*.66});
+  for(let i=0;i<count;i++)q.push({type:pool[Math.floor(Math.random()*pool.length)],delay:i*.88});
+  if(w%10===0&&w>0)q.push({type:'core',delay:q.length*.88});
   return q;
 }
 
@@ -964,7 +1003,7 @@ const UI={
     if(id==='coreShooter')dummy._dCS(ctx,r,0,false);
     else if(id==='pixelArm')dummy._dPA(ctx,r,0,false);
     else switch(TWR[id].type){
-      case'aoe':dummy._dAOE(ctx,r,0,false);break;case'slow':dummy._dSlow(ctx,r,0,false);break;
+      case'aoe':dummy._dAOE(ctx,r,0,false);break;case'focus':dummy._dSlow(ctx,r,0,false);break;case'slow':dummy._dSlow(ctx,r,0,false);break;
       case'pierce':dummy._dPierce(ctx,r,0,false);break;case'chain':dummy._dChain(ctx,r,0,false);break;
       case'slowfield':dummy._dSlowField(ctx,r,0);break;case'scan':dummy._dScan(ctx,r,0);break;
       case'buff':dummy._dRefinery(ctx,r,0);break;case'twinhub':dummy._dTwinHub(ctx,r,0);break;
@@ -1003,7 +1042,7 @@ const UI={
     if(d.dmg>0)tags+=`<span class="mc-tag">공정력 <b>${d.dmg}</b></span>`;
     if(d.spd>0)tags+=`<span class="mc-tag">속도 <b>${d.spd}/초</b></span>`;
     tags+=`<span class="mc-tag">범위 <b>${d.range}</b></span>`;
-    if(d.type==='slow')tags+=`<span class="mc-tag">감속 <b>35%</b></span>`;
+    if(d.type==='focus')tags+=`<span class="mc-tag">집중 레이저</span>`;
     if(d.type==='scan')tags+=`<span class="mc-tag">증폭 <b>+22%</b></span>`;
     if(d.type==='buff')tags+=`<span class="mc-tag">포트 <b>+30%</b></span>`;
     if(d.type==='chain')tags+=`<span class="mc-tag">연쇄 <b>3개</b></span>`;
@@ -1055,7 +1094,7 @@ const UI={
     if(d.dmg>0)s+=`<div class="tis">공정력<span>${tower.getDmg().toFixed(1)}</span></div>`;
     if(d.spd>0)s+=`<div class="tis">속도<span>${tower.getSpd().toFixed(1)}/초</span></div>`;
     s+=`<div class="tis">범위<span>${d.range}</span></div>`;
-    if(tower.type==='slow')s+=`<div class="tis">감속<span>35%</span></div>`;
+    if(tower.type==='focus')s+=`<div class="tis">집중 레이저<span>지속</span></div>`;
     if(tower.type==='scan')s+=`<div class="tis">증폭<span>+${(22*tower._lm()).toFixed(0)}%</span></div>`;
     if(tower.type==='buff')s+=`<div class="tis">포트<span>+${(30*tower._lm()).toFixed(0)}%</span></div>`;
     if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
@@ -1120,7 +1159,7 @@ const UI={
     const el=document.getElementById('clrovly');el.style.display='block';
     const t=Math.floor(GS.time);
     const eggRow=GS.eggActive
-      ?`<div class="clr-row" style="border-color:#FF450033;"><span class="clr-lbl">🥚 포트 무한 사용 클리어</span></div>`
+      ?`<div class="clr-row" style="border-color:#FF450033;"><span class="clr-lbl">포트 무한 사용 클리어</span></div>`
       :``;
     document.getElementById('clr-stats').innerHTML=`
       ${eggRow}
@@ -1221,7 +1260,7 @@ const G={
     if(GS.waveActive&&GS.oreQ.length===0&&GS.ores.length===0){
       GS.waveActive=false;
       // 클리어 보상: 초반엔 넉넉히, 후반엔 크게
-      const bonus=Math.floor(80+GS.wave*22+Math.pow(GS.wave,1.4)*1.8);
+      const bonus=Math.floor(45+GS.wave*11+Math.pow(GS.wave,1.25)*1.0);
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
       if(GS.wave>=100){GS.running=false;UI.showClear();return;}
