@@ -292,12 +292,12 @@ const LVL=[{mult:1},{mult:1.25,cm:.65},{mult:1.55,cm:1.1},{mult:1.9,cm:1.7},{mul
 // 맵
 // ═══════════════════════════════════════════════════════
 const COLS=14,ROWS2=13,TS=34;
-// 캔버스: top=59, bottom=341 → 높이=500px
-const CV_W=BASE_W,CV_H=500;
+// 캔버스: top=59, bottom=381 → 높이=460px
+const CV_W=BASE_W,CV_H=460;
 const MAP_W=COLS*TS;       // 476
 const MAP_H2=ROWS2*TS;     // 442
 const MAP_OX=Math.floor((CV_W-MAP_W)/2); // 2
-const MAP_OY=Math.floor((CV_H-MAP_H2)/2); // 29
+const MAP_OY=Math.floor((CV_H-MAP_H2)/2); // 9
 
 const GRID=[];
 for(let r=0;r<ROWS2;r++)GRID.push(new Array(COLS).fill(0));
@@ -1215,7 +1215,11 @@ const UI={
     this.closeSettings();
     document.getElementById('helpovly').classList.add('show');
   },
-  closeHelp(){document.getElementById('helpovly').classList.remove('show');},
+  closeHelp(){
+    document.getElementById('helpovly').classList.remove('show');
+    document.getElementById('help-close').textContent='확인';
+    if(G._startPending){G._startPending=false;G._doStart();}
+  },
 
   updHUD(){
     document.getElementById('hport').textContent=GS.eggActive?'∞':Math.floor(GS.port).toLocaleString();
@@ -1311,6 +1315,11 @@ const G={
   init(){R.init();UI.init();},
 
   start(){
+    G._startPending=true;
+    document.getElementById('help-close').textContent='▶  공장 가동 시작';
+    UI.showHelp();
+  },
+  _doStart(){
     document.getElementById('sovly').style.display='none';
     GS.running=true;UI.updHUD();
     this._lastTs=performance.now();

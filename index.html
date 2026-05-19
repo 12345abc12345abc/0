@@ -56,15 +56,59 @@
     </div>
   </div>
 
-  <!-- 도움말 오버레이 -->
+  <!-- 도움말 / 튜토리얼 오버레이 -->
   <div id="helpovly">
-    <div id="help-box">
-      <div id="help-title">게임 방법</div>
-      <div class="help-row">설비를 탭해 배치하고, 원석을 공정해 포트를 생산합니다.</div>
-      <div class="help-row">원석이 경로 끝까지 탈출하면 안정성이 감소합니다.</div>
-      <div class="help-row">포트로 설비를 구매·강화해 공정 라인을 구축하세요.</div>
-      <div class="help-row">같은 설비 4개를 2×2로 배치하면 초대형 합체 (×5 성능).</div>
-      <div class="help-row">웨이브 100을 클리어하면 공장 완전 가동 달성!</div>
+    <div id="help-bg"></div>
+    <div id="help-gridbg"></div>
+    <div id="help-content">
+      <div id="help-badge">OPERATION GUIDE</div>
+      <div id="help-main-title"><span>공장 가동</span> 안내</div>
+      <div id="help-titlesub">IEG · Smart Factory Defense</div>
+      <div id="help-divider-line"></div>
+      <div id="help-items">
+        <div class="hi">
+          <div class="hi-num">01</div>
+          <div class="hi-body">
+            <div class="hi-name">설비 배치</div>
+            <div class="hi-desc">하단 그리드에서 설비를 선택 후 맵의 빈 칸을 탭하여 배치합니다.</div>
+          </div>
+        </div>
+        <div class="hi">
+          <div class="hi-num">02</div>
+          <div class="hi-body">
+            <div class="hi-name">강화 · 매각</div>
+            <div class="hi-desc">배치된 설비를 탭해 강화(최대 Lv.5)하거나 포트를 돌려받고 매각합니다.</div>
+          </div>
+        </div>
+        <div class="hi">
+          <div class="hi-num">03</div>
+          <div class="hi-body">
+            <div class="hi-name">초대형 합체</div>
+            <div class="hi-desc">같은 설비 4개를 2×2 정사각형으로 배치하면 ×5 성능의 초대형으로 합체합니다.</div>
+          </div>
+        </div>
+        <div class="hi">
+          <div class="hi-num">04</div>
+          <div class="hi-body">
+            <div class="hi-name">원석과 안정성</div>
+            <div class="hi-desc">원석이 경로 끝까지 탈출하면 안정성이 감소합니다. 0이 되면 공장 가동이 중지됩니다.</div>
+          </div>
+        </div>
+        <div class="hi">
+          <div class="hi-num">05</div>
+          <div class="hi-body">
+            <div class="hi-name">웨이브 진행</div>
+            <div class="hi-desc">우측 웨이브 버튼으로 다음 파도를 시작합니다. 자동 웨이브로 쉬지 않고 진행할 수 있습니다.</div>
+          </div>
+        </div>
+        <div class="hi">
+          <div class="hi-num">06</div>
+          <div class="hi-body">
+            <div class="hi-name">목표: 100웨이브 클리어</div>
+            <div class="hi-desc">웨이브 100을 클리어하면 공장 완전 가동 달성! 포트 생산량을 최대화하세요.</div>
+          </div>
+        </div>
+      </div>
       <button id="help-close" onclick="UI.closeHelp()">확인</button>
     </div>
   </div>

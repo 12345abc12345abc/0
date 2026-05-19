@@ -11,8 +11,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 /* ══ 레이아웃 영역 (위→아래)
   #hud       0 ~ 56px  (56px)
   #sbar     56 ~ 59px  (3px)
-  #gc       59 ~ 559px (500px ← 캔버스)
-  #midbar  559 ~ 619px (60px)
+  #gc       59 ~ 519px (460px ← 캔버스, 맵 콘텐츠는 9~451)
+  #midbar  519 ~ 619px (100px)
   #bot     619 ~ 900px (281px ← 5×2 그리드 + 웨이브패널)
 ══ */
 
@@ -76,31 +76,74 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .si.active .si-icon,.si.active>span:last-child{color:#FF4500;}
 .si-div{height:1px;background:#ffffff0e;margin:3px 0;}
 
-/* ── 도움말 오버레이 ── */
+/* ── 도움말 / 튜토리얼 오버레이 ── */
 #helpovly{
-  display:none;position:absolute;inset:0;
-  background:#000000cc;align-items:center;justify-content:center;z-index:110;
+  display:none;position:absolute;inset:0;z-index:110;
+  flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
 }
 #helpovly.show{display:flex;}
-#help-box{
-  background:#1c1c1c;border:1px solid #FF450033;border-radius:13px;
-  padding:24px 20px;width:350px;
+#help-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,#1a0800 0%,#000 70%);
 }
-#help-title{
-  font-size:14px;font-weight:900;color:#FF4500;letter-spacing:1px;
-  margin-bottom:14px;text-align:center;text-shadow:0 0 10px #FF450055;
+#help-gridbg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(#FF450008 1px,transparent 1px),
+    linear-gradient(90deg,#FF450008 1px,transparent 1px);
+  background-size:36px 36px;
+  animation:gridShift 8s linear infinite;
 }
-.help-row{
-  font-size:11px;color:#bbb;line-height:1.6;
-  padding:7px 0;border-bottom:1px solid #ffffff0a;
+#help-content{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+  width:100%;padding:0 22px;
 }
-.help-row:last-of-type{border-bottom:none;}
+#help-badge{
+  font-size:9px;font-weight:800;letter-spacing:5px;color:#FF4500cc;
+  text-transform:uppercase;margin-bottom:12px;
+  border:1px solid #FF450044;border-radius:2px;padding:4px 14px;
+}
+#help-main-title{
+  font-size:30px;font-weight:900;color:#fff;
+  letter-spacing:-0.5px;line-height:1;text-align:center;margin-bottom:3px;
+}
+#help-main-title span{color:#FF4500;}
+#help-titlesub{
+  font-size:10px;font-weight:700;color:#ffffff44;
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;
+}
+#help-divider-line{
+  width:40px;height:2px;
+  background:linear-gradient(90deg,transparent,#FF4500,transparent);
+  margin-bottom:14px;
+}
+#help-items{width:100%;display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.hi{
+  display:flex;align-items:flex-start;gap:11px;
+  background:#ffffff07;border:1px solid #ffffff0e;border-radius:8px;
+  padding:9px 11px;
+}
+.hi-num{
+  font-size:9px;font-weight:900;color:#FF4500;
+  min-width:20px;padding-top:2px;letter-spacing:0;flex-shrink:0;
+}
+.hi-body{display:flex;flex-direction:column;gap:2px;}
+.hi-name{font-size:11px;font-weight:900;color:#fff;}
+.hi-desc{font-size:9px;color:#aaa;line-height:1.5;font-weight:500;}
 #help-close{
-  display:block;width:100%;margin-top:16px;padding:12px;
+  width:100%;padding:14px;
   background:linear-gradient(135deg,#FF4500,#FF6A00);
   border:none;border-radius:8px;color:#fff;
-  font-size:12px;font-weight:900;cursor:pointer;letter-spacing:.5px;
+  font-size:13px;font-weight:900;cursor:pointer;letter-spacing:.5px;
+  position:relative;overflow:hidden;transition:transform .12s;
 }
+#help-close::after{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,#ffffff33,transparent);
+  animation:sheen 2.4s 1s ease-in-out infinite;
+}
+#help-close:active{transform:scale(.97);}
 
 /* ── 안정성 바 ── */
 #sbar{position:absolute;top:56px;left:0;right:0;height:3px;background:#111;z-index:29;}
@@ -108,7 +151,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 
 /* ── 캔버스 ── */
 #gc{
-  position:absolute;top:59px;left:0;right:0;bottom:341px;
+  position:absolute;top:59px;left:0;right:0;bottom:381px;
   display:block;touch-action:none;cursor:crosshair;
 }
 
@@ -129,9 +172,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 }
 #eggtip.show{opacity:1;}
 
-/* ══ 중간 정보바 (60px) ══ */
+/* ══ 중간 정보바 (100px) ══ */
 #midbar{
-  position:absolute;left:0;right:0;bottom:281px;height:60px;
+  position:absolute;left:0;right:0;bottom:281px;height:100px;
   background:#141414;
   border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14;
   z-index:28;display:flex;align-items:center;justify-content:center;
@@ -151,7 +194,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #bupg{background:#333;color:#fff;border:1px solid #555;}
 #bupg:disabled{background:#222;color:#555;}
 #bsell{background:#2a1010;color:#e88;border:1px solid #533;}
-.mi-div{width:1px;height:50px;background:#ffffff18;flex-shrink:0;}
+.mi-div{width:1px;height:85px;background:#ffffff18;flex-shrink:0;}
 .mi-col2{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0 6px;overflow:hidden;}
 .tis{font-size:8.5px;color:#aaa;margin:1px 0;display:flex;justify-content:space-between;gap:2px;}
 .tis span{color:#eee;font-weight:800;}
