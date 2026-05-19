@@ -28,9 +28,44 @@
     </div>
     <!-- 제어버튼: HUD 맨 우측 -->
     <div id="hctrl">
-      <button class="hb" id="bpause" onclick="G.togglePause()">⏸</button>
-      <button class="hb" id="bspd"   onclick="G.toggleSpeed()">×1</button>
-      <button class="hb" id="bsfx"   onclick="const on=SFX.toggle();document.getElementById('bsfx').textContent=on?'🔊':'🔇';">🔊</button>
+      <button class="hb" id="bset" onclick="UI.toggleSettings()">⚙</button>
+    </div>
+  </div>
+
+  <!-- 설정 배경 (외부 탭으로 닫기) -->
+  <div id="setbg" onclick="UI.closeSettings()"></div>
+  <!-- 환경설정 패널 -->
+  <div id="setpanel">
+    <div class="si" id="si-pause" onclick="G.togglePause();UI.closeSettings()">
+      <span class="si-icon">⏸</span>
+      <span>일시정지</span>
+    </div>
+    <div class="si" id="si-spd" onclick="G.toggleSpeed()">
+      <span class="si-icon">▶▶</span>
+      <span id="si-spd-lbl">배속 ×1</span>
+    </div>
+    <div class="si-div"></div>
+    <div class="si" id="si-sfx" onclick="UI.toggleSFX()">
+      <span class="si-icon" id="si-sfx-icon">ON</span>
+      <span>효과음</span>
+    </div>
+    <div class="si-div"></div>
+    <div class="si" onclick="UI.showHelp()">
+      <span class="si-icon si-q">?</span>
+      <span>게임 방법</span>
+    </div>
+  </div>
+
+  <!-- 도움말 오버레이 -->
+  <div id="helpovly">
+    <div id="help-box">
+      <div id="help-title">게임 방법</div>
+      <div class="help-row">설비를 탭해 배치하고, 원석을 공정해 포트를 생산합니다.</div>
+      <div class="help-row">원석이 경로 끝까지 탈출하면 안정성이 감소합니다.</div>
+      <div class="help-row">포트로 설비를 구매·강화해 공정 라인을 구축하세요.</div>
+      <div class="help-row">같은 설비 4개를 2×2로 배치하면 초대형 합체 (×5 성능).</div>
+      <div class="help-row">웨이브 100을 클리어하면 공장 완전 가동 달성!</div>
+      <button id="help-close" onclick="UI.closeHelp()">확인</button>
     </div>
   </div>
   <div id="sbar"><div id="sfill" style="width:100%"></div></div>

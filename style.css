@@ -47,7 +47,60 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 }
 .hb:active{transform:scale(.9);}
 .hb.on{background:#333;border-color:#aaa;color:#fff;}
+#bset{font-size:17px;color:#FF4500;border-color:#FF450033;}
+#bset.on{border-color:#FF4500;background:#1a1a1a;}
 #htime{font-size:8px;color:#555;font-weight:700;cursor:pointer;user-select:none;text-align:right;margin-top:2px;}
+
+/* ── 환경설정 패널 ── */
+#setbg{display:none;position:absolute;inset:0;z-index:98;}
+#setpanel{
+  display:none;flex-direction:column;
+  position:absolute;top:52px;right:6px;width:158px;
+  background:#1c1c1c;border:1px solid #ffffff18;border-radius:11px;
+  padding:5px 0;z-index:100;
+  box-shadow:0 10px 28px #00000099;
+}
+#setpanel.show{display:flex;}
+.si{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;cursor:pointer;
+  font-size:11px;font-weight:700;color:#bbb;
+  transition:background .1s;
+}
+.si:active{background:#ffffff0c;}
+.si-icon{
+  width:22px;text-align:center;font-size:11px;color:#555;flex-shrink:0;
+  font-weight:900;
+}
+.si-q{color:#FF4500!important;font-size:15px;}
+.si.active .si-icon,.si.active>span:last-child{color:#FF4500;}
+.si-div{height:1px;background:#ffffff0e;margin:3px 0;}
+
+/* ── 도움말 오버레이 ── */
+#helpovly{
+  display:none;position:absolute;inset:0;
+  background:#000000cc;align-items:center;justify-content:center;z-index:110;
+}
+#helpovly.show{display:flex;}
+#help-box{
+  background:#1c1c1c;border:1px solid #FF450033;border-radius:13px;
+  padding:24px 20px;width:350px;
+}
+#help-title{
+  font-size:14px;font-weight:900;color:#FF4500;letter-spacing:1px;
+  margin-bottom:14px;text-align:center;text-shadow:0 0 10px #FF450055;
+}
+.help-row{
+  font-size:11px;color:#bbb;line-height:1.6;
+  padding:7px 0;border-bottom:1px solid #ffffff0a;
+}
+.help-row:last-of-type{border-bottom:none;}
+#help-close{
+  display:block;width:100%;margin-top:16px;padding:12px;
+  background:linear-gradient(135deg,#FF4500,#FF6A00);
+  border:none;border-radius:8px;color:#fff;
+  font-size:12px;font-weight:900;cursor:pointer;letter-spacing:.5px;
+}
 
 /* ── 안정성 바 ── */
 #sbar{position:absolute;top:56px;left:0;right:0;height:3px;background:#111;z-index:29;}

@@ -1196,6 +1196,27 @@ const UI={
     this.desel();this.updHUD();this.showBanner('◈'+ref+' 환급','#FFD700');
   },
 
+  toggleSettings(){
+    const p=document.getElementById('setpanel'),bg=document.getElementById('setbg'),btn=document.getElementById('bset');
+    const show=!p.classList.contains('show');
+    p.classList.toggle('show',show);bg.style.display=show?'block':'none';btn.classList.toggle('on',show);
+  },
+  closeSettings(){
+    document.getElementById('setpanel').classList.remove('show');
+    document.getElementById('setbg').style.display='none';
+    document.getElementById('bset').classList.remove('on');
+  },
+  toggleSFX(){
+    const on=SFX.toggle();
+    const icon=document.getElementById('si-sfx-icon');if(icon)icon.textContent=on?'ON':'OFF';
+    const el=document.getElementById('si-sfx');if(el)el.classList.toggle('active',!on);
+  },
+  showHelp(){
+    this.closeSettings();
+    document.getElementById('helpovly').classList.add('show');
+  },
+  closeHelp(){document.getElementById('helpovly').classList.remove('show');},
+
   updHUD(){
     document.getElementById('hport').textContent=GS.eggActive?'∞':Math.floor(GS.port).toLocaleString();
     const st=Math.floor(GS.stability);
@@ -1368,8 +1389,7 @@ const G={
     GS.paused=true;
     document.getElementById('pause-wnum').textContent=GS.wave;
     document.getElementById('pauseovly').classList.add('show');
-    document.getElementById('bpause').textContent='▶';
-    document.getElementById('bpause').classList.add('on');
+    UI.closeSettings();
     // 게임 조작 차단
     document.getElementById('gc').style.pointerEvents='none';
     document.getElementById('bot').style.pointerEvents='none';
@@ -1377,12 +1397,10 @@ const G={
   resume(){
     GS.paused=false;
     document.getElementById('pauseovly').classList.remove('show');
-    document.getElementById('bpause').textContent='⏸';
-    document.getElementById('bpause').classList.remove('on');
     document.getElementById('gc').style.pointerEvents='';
     document.getElementById('bot').style.pointerEvents='';
   },
-  toggleSpeed(){GS.speed=GS.speed===1?2:1;const b=document.getElementById('bspd');b.textContent='×'+GS.speed;b.classList.toggle('on',GS.speed===2);},
+  toggleSpeed(){GS.speed=GS.speed===1?2:1;const sl=document.getElementById('si-spd-lbl');if(sl)sl.textContent='배속 ×'+GS.speed;const sd=document.getElementById('si-spd');if(sd)sd.classList.toggle('active',GS.speed===2);},
   toggleAuto(){
     GS.autoWave=!GS.autoWave;document.getElementById('abtn').classList.toggle('on',GS.autoWave);
     if(!GS.autoWave){GS.autoActive=false;document.getElementById('acd').textContent='';}
