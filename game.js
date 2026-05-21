@@ -726,7 +726,6 @@ class Tower{
         ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
         ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
       }
-      ctx.save();ctx.fillStyle='#FFD700';ctx.font='bold 9px sans-serif';ctx.textAlign='right';ctx.textBaseline='top';ctx.shadowColor='#000';ctx.shadowBlur=4;ctx.fillText('×5',this.cx+TS-4,this.cy-TS+4);ctx.shadowBlur=0;ctx.restore();
       return;
     }
     if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.5,this.cy-TS*.5,TS,TS);ctx.shadowBlur=0;ctx.restore();}
@@ -1313,6 +1312,40 @@ const UI={
       this._showTowerInfo(this.selTwr);
   },
 
+  showUnlock(id,onDone){
+    const d=TWR[id];
+    const ovly=document.getElementById('unlkovly');
+    document.getElementById('unlk-name').textContent=d.name;
+    document.getElementById('unlk-name').style.color=d.color;
+    document.getElementById('unlk-price').textContent='◈ '+d.price;
+    document.getElementById('unlk-desc').textContent=d.desc;
+    const ic=document.getElementById('unlk-icon');
+    const ctx=ic.getContext('2d');
+    ctx.clearRect(0,0,96,96);ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,96,96);
+    const dummy=new Tower(id,0,0);
+    dummy.cx=48;dummy.cy=48;dummy.angle=-Math.PI/2;dummy._animT=0;dummy._firingT=0;dummy._tDmg=0;dummy._tSpd=0;dummy._armAngle=-Math.PI/2;
+    ctx.save();ctx.translate(48,48);
+    const r=96*.42;
+    if(id==='coreShooter')dummy._dCS(ctx,r,0,false);
+    else if(id==='pixelArm')dummy._dPA(ctx,r,0,false);
+    else switch(d.type){
+      case'aoe':dummy._dAOE(ctx,r,0,false);break;case'focus':dummy._dSlow(ctx,r,0,false);break;
+      case'pierce':dummy._dPierce(ctx,r,0,false);break;case'chain':dummy._dChain(ctx,r,0,false);break;
+      case'pulseslow':dummy._dSlowField(ctx,r,0);break;case'scan':dummy._dScan(ctx,r,0);break;
+      case'buff':dummy._dRefinery(ctx,r,0);break;case'twinhub':dummy._dTwinHub(ctx,r,0);break;
+    }
+    ctx.restore();
+    ovly.classList.add('show');
+    const fill=document.getElementById('unlk-fill');
+    fill.style.transition='none';fill.style.width='100%';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      fill.style.transition='width 5s linear';fill.style.width='0%';
+    }));
+    clearTimeout(this._unlkT);
+    this._unlkT=setTimeout(()=>{ovly.classList.remove('show');UI.updHUD();onDone&&onDone();},5000);
+    ovly.onclick=()=>{clearTimeout(this._unlkT);ovly.classList.remove('show');UI.updHUD();onDone&&onDone();};
+  },
+
   showBanner(text,col){
     const el=document.getElementById('banner');
     el.textContent=text;el.style.color=col||'#00E5FF';el.classList.add('show');
@@ -1383,15 +1416,17 @@ const UI={
 // ═══════════════════════════════════════════════════════
 // 잠금 해제
 // ═══════════════════════════════════════════════════════
-function checkUnlocks(w){
+function checkUnlocks(w,onDone){
   const idx=Math.floor(w/2)-1;
   if(idx>=0&&idx<UNLOCK_ORDER.length){
     const id=UNLOCK_ORDER[idx];
     if(!GS.unlocked.has(id)){
       GS.unlocked.add(id);
-      UI.showBanner(TWR[id].name+' 해금!','#00E5FF');
+      UI.showUnlock(id,onDone);
+      return;
     }
   }
+  onDone&&onDone();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1447,10 +1482,9 @@ const G={
       const bonus=Math.floor(80+GS.wave*18+Math.pow(GS.wave,1.3)*1.5);
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
-      checkUnlocks(GS.wave);
       if(GS.wave>=100){GS.running=false;UI.showClear();return;}
       UI.showBanner(`★ W${GS.wave} 클리어! +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
-      if(GS.autoWave){GS.autoActive=true;GS.autoTimer=5;}
+      checkUnlocks(GS.wave,()=>{if(GS.autoWave){GS.autoActive=true;GS.autoTimer=5;}});
     }
     for(const t of GS.towers)t.update(dt,GS.ores);
     for(const p of GS.projs)p.update(dt);GS.projs=GS.projs.filter(p=>p.alive);

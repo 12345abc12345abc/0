@@ -283,6 +283,34 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #acd{font-size:9px;color:#FF4500;text-align:center;min-height:12px;
   line-height:1.3;font-weight:700;padding:0 2px;}
 
+/* ── 해금 오버레이 ── */
+#unlkovly{
+  position:absolute;inset:0;z-index:65;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.72);
+}
+#unlkovly.show{display:flex;}
+#unlk-box{
+  width:300px;padding:28px 24px 22px;
+  background:linear-gradient(160deg,#0d1a2a,#0a1018);
+  border:1.5px solid #00E5FF44;border-radius:14px;
+  box-shadow:0 0 40px #00E5FF22;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  text-align:center;
+}
+#unlk-badge{
+  font-size:9px;font-weight:900;letter-spacing:2px;color:#00E5FF;
+  background:#00E5FF18;border:1px solid #00E5FF44;
+  padding:3px 10px;border-radius:20px;
+}
+#unlk-sub{font-size:11px;color:#aaa;margin-top:2px;}
+#unlk-icon{border-radius:10px;background:#1a1a1a;margin:8px 0 4px;}
+#unlk-name{font-size:20px;font-weight:900;color:#fff;}
+#unlk-price{font-size:12px;color:#FFD700;font-weight:700;}
+#unlk-desc{font-size:11px;color:#888;line-height:1.5;word-break:keep-all;margin-top:2px;}
+#unlk-bar{width:100%;height:4px;background:#ffffff18;border-radius:2px;margin-top:14px;overflow:hidden;}
+#unlk-fill{height:100%;width:100%;background:#00E5FF;border-radius:2px;transform-origin:left;transition:none;}
+
 /* ══ 오버레이 ══ */
 #sovly,#govly{
   position:absolute;inset:0;z-index:60;
