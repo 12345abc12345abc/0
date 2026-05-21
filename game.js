@@ -708,7 +708,7 @@ class Tower{
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
     if(this.isMega){
-      if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=3;ctx.shadowColor=bc;ctx.shadowBlur=12;ctx.strokeRect(this.cx-TS+2,this.cy-TS+2,TS*2-4,TS*2-4);ctx.shadowBlur=0;ctx.restore();}
+      if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';const p=4;ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=bc;ctx.shadowBlur=12;ctx.strokeRect(this.cx-TS+p,this.cy-TS+p,TS*2-p*2,TS*2-p*2);ctx.shadowBlur=0;ctx.restore();}
       ctx.save();ctx.translate(this.cx,this.cy);ctx.scale(2,2);
       if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
       else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
@@ -728,7 +728,7 @@ class Tower{
       }
       return;
     }
-    if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.5,this.cy-TS*.5,TS,TS);ctx.shadowBlur=0;ctx.restore();}
+    if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';const p=3;ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.5+p,this.cy-TS*.5+p,TS-p*2,TS-p*2);ctx.shadowBlur=0;ctx.restore();}
     ctx.save();ctx.translate(this.cx,this.cy);
     if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
     else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
