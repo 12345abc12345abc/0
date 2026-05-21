@@ -28,6 +28,7 @@
     </div>
     <!-- 제어버튼: HUD 맨 우측 -->
     <div id="hctrl">
+      <button class="hb" id="bspd" onclick="G.toggleSpeed()">×1</button>
       <button class="hb" id="bset" onclick="UI.toggleSettings()">⚙</button>
     </div>
   </div>
@@ -39,10 +40,6 @@
     <div class="si" id="si-pause" onclick="G.togglePause();UI.closeSettings()">
       <span class="si-icon">⏸</span>
       <span>일시정지</span>
-    </div>
-    <div class="si" id="si-spd" onclick="G.toggleSpeed()">
-      <span class="si-icon">▶▶</span>
-      <span id="si-spd-lbl">배속 ×1</span>
     </div>
     <div class="si-div"></div>
     <div class="si" id="si-sfx" onclick="UI.toggleSFX()">
