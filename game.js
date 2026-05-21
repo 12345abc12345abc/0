@@ -291,8 +291,8 @@ const ORE_RESIST={
 // 맵
 // ═══════════════════════════════════════════════════════
 const COLS=14,ROWS2=13,TS=34;
-// 캔버스: top=59, bottom=321 → 높이=520px
-const CV_W=BASE_W,CV_H=520;
+// 캔버스: top=59, bottom=381 → 높이=460px
+const CV_W=BASE_W,CV_H=460;
 const MAP_W=COLS*TS;       // 476
 const MAP_H2=ROWS2*TS;     // 442
 const MAP_OX=Math.floor((CV_W-MAP_W)/2); // 2
