@@ -198,6 +198,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .mi-col2{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0 6px;overflow:hidden;}
 .tis{font-size:8.5px;color:#aaa;margin:1px 0;display:flex;justify-content:space-between;gap:2px;}
 .tis span{color:#eee;font-weight:800;}
+.tis-desc{grid-column:1/-1;font-size:8px;color:#777;margin-top:3px;line-height:1.4;word-break:keep-all;}
 .mi-cls{background:none;border:none;color:#555;font-size:15px;cursor:pointer;padding:0 0 0 4px;flex-shrink:0;align-self:flex-start;margin-top:2px;}
 #mid-card{display:none;width:100%;height:100%;padding:8px 14px;flex-direction:column;gap:3px;}
 #mid-card.show{display:flex;}

@@ -1236,6 +1236,7 @@ const UI={
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
     if(tower.type==='twinhub'){s+=`<div class="tis">공정+<span>${(20*tower._lm()).toFixed(0)}%</span></div>`;s+=`<div class="tis">속도+<span>${(20*tower._lm()).toFixed(0)}%</span></div>`;}
     if(tower.level<4){const nc=Math.round(tower.basePrice*LVL[tower.level].cm);s+=`<div class="tis" style="color:#FFD700bb">다음업그레이드<span style="color:#FFD700">◈${nc}</span></div>`;}
+    s+=`<div class="tis-desc">${d.desc}</div>`;
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
     if(tower.level>=4){bu.disabled=true;bu.textContent='최대';}
