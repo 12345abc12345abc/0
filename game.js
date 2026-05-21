@@ -649,14 +649,17 @@ class Tower{
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
     if(tp==='pulseslow'){
-      this._pulseT=(this._pulseT||0)+dt;
-      const iv=2.2/Math.max(.5,this._lm());
-      if(this._pulseT>=iv){
-        this._pulseT=0;
-        const rng=this.getRange()*TS;
-        const sr=Math.min(.35*this._lm()*this._megaMult(),.92);
-        for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applySlow(sr,2.2);
-        GS.effects.push(new RingEff(this.cx,this.cy,rng,this.color));
+      const rng=this.getRange()*TS;
+      const hasOre=ores.some(o=>o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng);
+      if(hasOre){
+        this._pulseT=(this._pulseT||0)+dt;
+        const iv=2.2/Math.max(.5,this._lm());
+        if(this._pulseT>=iv){
+          this._pulseT=0;
+          const sr=Math.min(.35*this._lm()*this._megaMult(),.92);
+          for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applySlow(sr,2.2);
+          GS.effects.push(new RingEff(this.cx,this.cy,rng,this.color));
+        }
       }
       return;
     }
@@ -727,7 +730,7 @@ class Tower{
         ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
         ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
       }
-      if(this.level>1){const bc=['','#C0C0C0','#FFD700','#111111'][this.level-1]||'#C0C0C0';const sh=this.level===4?'#ffffff':bc;ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=3;ctx.shadowColor=sh;ctx.shadowBlur=10;ctx.strokeRect(this.cx-TS+5,this.cy-TS+5,TS*2-10,TS*2-10);ctx.shadowBlur=0;ctx.restore();}
+      if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=3;ctx.shadowColor=bc;ctx.shadowBlur=12;ctx.strokeRect(this.cx-TS+5,this.cy-TS+5,TS*2-10,TS*2-10);ctx.shadowBlur=0;ctx.restore();}
       ctx.save();ctx.fillStyle='#FFD700';ctx.font='bold 9px sans-serif';ctx.textAlign='right';ctx.textBaseline='top';ctx.shadowColor='#000';ctx.shadowBlur=4;ctx.fillText('×5',this.cx+TS-4,this.cy-TS+4);ctx.shadowBlur=0;ctx.restore();
       return;
     }
@@ -750,7 +753,7 @@ class Tower{
       ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
       ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
     }
-    if(this.level>1){const bc=['','#C0C0C0','#FFD700','#111111'][this.level-1]||'#C0C0C0';const sh=this.level===4?'#ffffff':bc;ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=sh;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.48,this.cy-TS*.48,TS*.96,TS*.96);ctx.shadowBlur=0;ctx.restore();}
+    if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.48,this.cy-TS*.48,TS*.96,TS*.96);ctx.shadowBlur=0;ctx.restore();}
   }
   _base(ctx,r,col,sh='circle'){
     if(sh==='circle'){ctx.beginPath();ctx.arc(0,0,r*.88,0,Math.PI*2);}
@@ -1221,8 +1224,8 @@ const UI={
     const d=TWR[tower.tId];
     document.getElementById('mi-name').textContent=tower.name;
     document.getElementById('mi-name').style.color=tower.color;
-    const gradeLabel=['','1강','2강','3강'][tower.level]||'MAX';
-    const gradeCol=['','#C0C0C0','#FFD700','#dddddd'][tower.level]||'#FFD700';
+    const gradeLabel=['','업그레이드 1','업그레이드 2','업그레이드 3'][tower.level]||'업그레이드 3';
+    const gradeCol=['','#EF5350','#FFD700','#00E5FF'][tower.level]||'#00E5FF';
     const lvEl=document.getElementById('mi-lvl');
     lvEl.textContent=tower.level>1?gradeLabel:'기본';
     lvEl.style.color=tower.level>1?gradeCol:'#888';
@@ -1256,7 +1259,8 @@ const UI={
     if(!GS.eggActive&&GS.port<c){this.showBanner('포트가 부족합니다!','#EF5350');return;}
     if(!GS.eggActive)GS.port-=c;t.upgCost+=c;t.level++;
     SFX.upgrade();
-    this._showTowerInfo(t);this.updHUD();this.showBanner(t.name+' Lv.'+t.level+' 강화!','#00BCD4');
+    checkMerge();
+    this._showTowerInfo(t);this.updHUD();this.showBanner(t.name+' 강화!','#00BCD4');
   },
 
   sell(){
