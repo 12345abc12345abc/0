@@ -248,10 +248,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .tc.sel{border-color:var(--tc-col,#ddd);background:#222;box-shadow:0 0 12px var(--tc-col,#ffffff)33;}
 .tc.dis{opacity:.3;pointer-events:none;}
 .tc.locked-card{pointer-events:none;border-color:#2a2a2a;}
-.tc.locked-card canvas,.tc.locked-card .tn,.tc.locked-card .tp{visibility:hidden;}
+.tc.locked-card canvas{filter:grayscale(1) brightness(0.4);}
+.tc.locked-card .tn{color:#555;}
+.tc.locked-card .tp{opacity:.3;}
 .tc.locked-card::before{background:none;}
 .tc.locked-card::after{content:'';background:#222;opacity:1;}
-.lock-ico{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:28px;pointer-events:none;}
+.lock-ico{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:28px;pointer-events:none;filter:drop-shadow(0 0 3px rgba(0,0,0,.9));}
 .lock-ico::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:14px;height:12px;border:3px solid rgba(255,255,255,.9);border-radius:8px 8px 0 0;border-bottom:none;}
 .lock-ico::after{content:'';position:absolute;bottom:0;left:0;width:22px;height:18px;background:rgba(255,255,255,.9);border-radius:3px;background-image:radial-gradient(circle at 50% 45%,rgba(20,20,20,.55) 3px,transparent 3px);}
 .tc canvas{width:52px;height:52px;border-radius:5px;display:block;flex-shrink:0;}
