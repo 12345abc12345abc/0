@@ -266,7 +266,7 @@ const TWR_ORDER=['pixelArm','conveyor','coreShooter','scanner','magnetCannon',
 const UNLOCK_ORDER=['conveyor','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','plasmaCutter'];
 const TWR={
   pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:2.0,  range:2.4, desc:'레이저 빔을 즉발로 발사한다. 고속 원석을 우선 타겟팅한다.'},
-  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'주기적으로 범위 내 원석을 35% 감속한다. 불안정 원석에는 거의 효과가 없다.'},
+  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'주기적으로 범위 내 원석을 35% 감속한다. 불안정 원석에는 효과가 없다.'},
   coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:22,  spd:1.0,  range:3.0, desc:'가장 멀리 진행한 원석을 우선 처리한다. 고밀도 원석에 강하다.'},
   scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:0,   spd:0,    range:3.4, desc:'범위 내 원석이 받는 피해를 25% 증폭한다.'},
   magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:30,  spd:0,    range:3.0, desc:'단일 대상에 집중 레이저를 지속 발사한다. 압축·고밀도 원석에 효과적이다.'},
@@ -283,7 +283,7 @@ const ORE_RESIST={
   dense:   {single:.55},       // 고밀도: 단일공격에 강함 → 광역/관통 사용 필요
   core:    {chain:.55,slow:.2},// 보스: 연쇄·감속 저항
   compres: {aoe:.45,chain:.5}, // 압축: 광역·연쇄에 강함 → 관통·집중 레이저 추천
-  unstable:{slow:.1},          // 불안정: 감속 거의 무효
+  unstable:{slow:0},            // 불안정: 감속 완전 무효
   fast:    {pierce:.65},       // 고속: 관통 명중률 낮음
 };
 
