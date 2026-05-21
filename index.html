@@ -120,17 +120,18 @@
       <div class="mp2">IEG · Smart Factory Defense</div>
     </div>
     <div id="mid-info">
-      <div class="mi-col1">
-        <div class="mi-name" id="mi-name">-</div>
-        <div class="mi-lvl"  id="mi-lvl"></div>
-        <div class="mi-btns">
-          <button class="mi-btn" id="bupg"  onclick="UI.upgrade()">업그레이드</button>
-          <button class="mi-btn" id="bsell" onclick="UI.sell()">매각</button>
+      <div class="mi-top">
+        <div class="mi-hdr">
+          <div class="mi-name" id="mi-name">-</div>
+          <div class="mi-lvl"  id="mi-lvl"></div>
         </div>
+        <button class="mi-cls" onclick="UI.desel()">✕</button>
       </div>
-      <div class="mi-div"></div>
-      <div class="mi-col2" id="mi-stats"></div>
-      <button class="mi-cls" onclick="UI.desel()">✕</button>
+      <div id="mi-stats"></div>
+      <div class="mi-btns">
+        <button class="mi-btn" id="bupg"  onclick="UI.upgrade()">업그레이드</button>
+        <button class="mi-btn" id="bsell" onclick="UI.sell()">매각</button>
+      </div>
     </div>
     <div id="mid-card">
       <div id="mc-name">-</div>

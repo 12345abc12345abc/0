@@ -187,9 +187,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .mp2{font-size:9px;color:#fff;letter-spacing:4px;font-weight:600;opacity:.55;}
 #mid-info{display:none;width:100%;height:100%;padding:5px 13px 6px;flex-direction:column;gap:0;}
 #mid-info.show{display:flex;}
-.mi-top{display:flex;align-items:center;gap:5px;flex-shrink:0;}
-.mi-name{font-size:13px;font-weight:900;flex:1;line-height:1;}
-.mi-lvl{font-size:9px;font-weight:800;padding:1px 7px;border-radius:12px;background:#ffffff0e;white-space:nowrap;}
+.mi-top{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.mi-hdr{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+.mi-name{font-size:13px;font-weight:900;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mi-lvl{font-size:9px;font-weight:800;padding:1px 7px;border-radius:10px;background:#ffffff0e;white-space:nowrap;align-self:flex-start;}
 .mi-cls{
   background:#ffffff12;border:1.5px solid #ffffff20;border-radius:50%;
   color:#999;font-size:11px;cursor:pointer;padding:0;flex-shrink:0;
