@@ -249,7 +249,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .tc.dis{opacity:.3;pointer-events:none;}
 .tc.locked-card{pointer-events:none;--tc-col:#333;}
 .tc.locked-card canvas,.tc.locked-card .tn,.tc.locked-card .tp{visibility:hidden;}
-.tc.locked-card::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:30px;opacity:.85;background:none;height:auto;width:auto;border-radius:0;}
+.tc.locked-card::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:30px;opacity:.9;background:none;height:auto;width:auto;border-radius:0;filter:brightness(0) invert(1);}
 .tc canvas{width:52px;height:52px;border-radius:5px;display:block;flex-shrink:0;}
 .tn{font-size:9px;color:#bbb;text-align:center;line-height:1.25;word-break:keep-all;font-weight:700;}
 .tp{font-size:10.5px;color:#FFD700;font-weight:900;}
