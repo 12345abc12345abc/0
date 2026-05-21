@@ -325,24 +325,22 @@ function getDir(r,c){
 
 // 밸런스
 function getPool(w){
-  // 웨이브별 등장 광물 풀 — 점진적 도입
-  if(w<=3) return['normal'];
-  if(w<=6) return['normal','normal','fast'];
-  if(w<=10)return['normal','fast','multi'];
-  if(w<=15)return['normal','fast','multi','dense'];
-  if(w<=20)return['fast','multi','dense','pure'];
-  if(w<=28)return['fast','multi','dense','pure','unstable'];
-  if(w<=38)return['multi','dense','pure','unstable','compres'];
-  if(w<=55)return['dense','pure','unstable','compres'];
-  if(w<=70)return['pure','unstable','compres'];
+  if(w<=5) return['normal'];
+  if(w<=9) return['normal','normal','fast'];
+  if(w<=14)return['normal','fast','multi'];
+  if(w<=20)return['normal','fast','multi','dense'];
+  if(w<=28)return['fast','multi','dense','pure'];
+  if(w<=38)return['fast','multi','dense','pure','unstable'];
+  if(w<=50)return['multi','dense','pure','unstable','compres'];
+  if(w<=70)return['dense','pure','unstable','compres'];
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W1:×1 W10:×2.4 W30:×6.4 W50:×12 | W65:×45 W80:×128 W90:×228 W100:×403
+  // W1:×1 W10:×1.7 W20:×2.8 W30:×4.5 W50:×10 | W65:×43 W80:×126 W90:×226 W100:×401
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.15;
-  if(w<=30)return hpS(10)+(w-10)*0.20;
-  if(w<=50)return hpS(30)+(w-30)*0.30;
+  if(w<=10)return 1.0+(w-1)*0.078;
+  if(w<=30)return hpS(10)+(w-10)*0.14;
+  if(w<=50)return hpS(30)+(w-30)*0.28;
   if(w<=65)return hpS(50)+(w-50)*2.2;
   if(w<=80)return hpS(65)+(w-65)*5.5;
   if(w<=90)return hpS(80)+(w-80)*10.0;
@@ -353,17 +351,18 @@ function spdS(w){
   return 1.294+(w-50)*0.015;
 }
 function countS(w){
-  if(w<=3)return 4+w;
-  if(w<=50)return Math.floor(6+w*0.88);
-  if(w<=75)return Math.floor(50+(w-50)*1.6);
-  return Math.floor(90+(w-75)*3.0);
+  if(w<=3) return 2+w;
+  if(w<=20)return Math.floor(4+w*0.6);
+  if(w<=50)return Math.floor(16+(w-20)*0.9);
+  if(w<=75)return Math.floor(43+(w-50)*1.6);
+  return Math.floor(83+(w-75)*3.0);
 }
 
 // ═══════════════════════════════════════════════════════
 // 게임 상태
 // ═══════════════════════════════════════════════════════
 const GS={
-  port:100,stability:100,wave:0,time:0,totalPort:0,
+  port:200,stability:100,wave:0,time:0,totalPort:0,
   portHist:[],towers:[],ores:[],projs:[],
   particles:[],popups:[],effects:[],
   running:false,waveActive:false,oreQ:[],spawnT:0,
@@ -1445,7 +1444,7 @@ const G={
     if(GS.waveActive&&GS.oreQ.length===0&&GS.ores.length===0){
       GS.waveActive=false;
       // 클리어 보상: 초반엔 넉넉히, 후반엔 크게
-      const bonus=Math.floor(45+GS.wave*11+Math.pow(GS.wave,1.25)*1.0);
+      const bonus=Math.floor(80+GS.wave*18+Math.pow(GS.wave,1.3)*1.5);
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
       checkUnlocks(GS.wave);
