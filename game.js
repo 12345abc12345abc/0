@@ -1084,7 +1084,7 @@ function makeWave(w){
   const pool=getPool(w),totalCount=countS(w),q=[];
   const rushes=w<=20?2:w<=50?3:4;
   const perRush=Math.ceil(totalCount/rushes);
-  const rushGap=w<=20?22:w<=50?18:14;
+  const rushGap=w<=20?8:w<=50?6:5;
   let t=0;
   for(let ri=0;ri<rushes;ri++){
     const n=ri<rushes-1?perRush:totalCount-perRush*(rushes-1);
@@ -1316,7 +1316,7 @@ const UI={
     const d=TWR[id];
     const ovly=document.getElementById('unlkovly');
     document.getElementById('unlk-name').textContent=d.name;
-    document.getElementById('unlk-name').style.color=d.color;
+    document.getElementById('unlk-name').style.color='#ffffff';
     document.getElementById('unlk-price').textContent='◈ '+d.price;
     document.getElementById('unlk-desc').textContent=d.desc;
     const ic=document.getElementById('unlk-icon');
