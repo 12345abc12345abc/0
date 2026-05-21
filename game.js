@@ -1530,7 +1530,7 @@ const G={
     document.getElementById('gc').style.pointerEvents='';
     document.getElementById('bot').style.pointerEvents='';
   },
-  toggleSpeed(){GS.speed=GS.speed===1?2:GS.speed===2?4:1;const sl=document.getElementById('si-spd-lbl');if(sl)sl.textContent='배속 ×'+GS.speed;const sd=document.getElementById('si-spd');if(sd)sd.classList.toggle('active',GS.speed>1);},
+  toggleSpeed(){GS.speed=GS.speed===1?2:1;const sl=document.getElementById('si-spd-lbl');if(sl)sl.textContent='배속 ×'+GS.speed;const sd=document.getElementById('si-spd');if(sd)sd.classList.toggle('active',GS.speed===2);},
   toggleAuto(){
     GS.autoWave=!GS.autoWave;document.getElementById('abtn').classList.toggle('on',GS.autoWave);
     if(!GS.autoWave){GS.autoActive=false;document.getElementById('acd').textContent='';}
