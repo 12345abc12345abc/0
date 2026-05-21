@@ -238,6 +238,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .tc:active{transform:scale(.94);}
 .tc.sel{border-color:var(--tc-col,#ddd);background:#222;box-shadow:0 0 12px var(--tc-col,#ffffff)33;}
 .tc.dis{opacity:.3;pointer-events:none;}
+.tc.locked-card{opacity:.28;pointer-events:none;filter:grayscale(1);}
+.tc.locked-card::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:18px;opacity:.7;background:none;height:auto;width:auto;border-radius:0;}
 .tc canvas{width:52px;height:52px;border-radius:5px;display:block;flex-shrink:0;}
 .tn{font-size:7px;color:#999;text-align:center;line-height:1.25;word-break:keep-all;font-weight:600;}
 .tp{font-size:9.5px;color:#FFD700;font-weight:900;}
