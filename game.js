@@ -1348,8 +1348,11 @@ const UI={
 
   showBanner(text,col){
     const el=document.getElementById('banner');
-    el.textContent=text;el.style.color=col||'#00E5FF';el.classList.add('show');
-    clearTimeout(this._bt);this._bt=setTimeout(()=>el.classList.remove('show'),2200);
+    const c=col||'#00E5FF';
+    el.textContent=text;el.style.color=c;el.style.setProperty('--bc',c);
+    el.classList.remove('show');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
+    clearTimeout(this._bt);this._bt=setTimeout(()=>el.classList.remove('show'),2400);
   },
 
   showClear(){
@@ -1545,8 +1548,7 @@ const G={
       GS.eggActive=true;GS.port=999999999;
       document.getElementById('htime').style.color='#FFD700';
       document.getElementById('htime').style.fontWeight='900';
-      const tip=document.getElementById('eggtip');tip.classList.add('show');
-      setTimeout(()=>tip.classList.remove('show'),3000);
+      UI.showBanner('∞ 포트 무한 활성화!','#FFD700');
       UI.updHUD();return;
     }
     // 20초: 100웨이브 즉시 클리어 (시간만 맞으면 항상)
