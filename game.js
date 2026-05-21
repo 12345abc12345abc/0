@@ -709,10 +709,6 @@ class Tower{
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
     if(this.isMega){
-      const pulse=.7+Math.sin(Date.now()*.004)*.3;
-      ctx.save();ctx.strokeStyle='#FFD700';ctx.lineWidth=3;ctx.shadowColor='#FFD700';ctx.shadowBlur=14;ctx.globalAlpha=pulse;
-      ctx.strokeRect(this.cx-TS+2,this.cy-TS+2,TS*2-4,TS*2-4);
-      ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
       ctx.save();ctx.translate(this.cx,this.cy);ctx.scale(2,2);
       if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
       else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
