@@ -11,9 +11,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 /* ══ 레이아웃 영역 (위→아래)
   #hud       0 ~ 56px  (56px)
   #sbar     56 ~ 59px  (3px)
-  #gc       59 ~ 519px (460px ← 캔버스, 맵 콘텐츠는 9~451)
-  #midbar  519 ~ 619px (100px)
-  #bot     619 ~ 900px (281px ← 5×2 그리드 + 웨이브패널)
+  #gc       59 ~ 579px (520px ← 캔버스, 맵 콘텐츠는 39~481)
+  #midbar  579 ~ 679px (100px)
+  #bot     679 ~ 900px (221px ← 5×2 그리드 + 웨이브패널)
 ══ */
 
 /* ── HUD (56px) — 무채색 ── */
@@ -151,7 +151,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 
 /* ── 캔버스 ── */
 #gc{
-  position:absolute;top:59px;left:0;right:0;bottom:381px;
+  position:absolute;top:59px;left:0;right:0;bottom:321px;
   display:block;touch-action:none;cursor:crosshair;
 }
 
@@ -176,7 +176,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 
 /* ══ 중간 정보바 (100px) ══ */
 #midbar{
-  position:absolute;left:0;right:0;bottom:281px;height:100px;
+  position:absolute;left:0;right:0;bottom:221px;height:100px;
   background:#141414;
   border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14;
   z-index:28;display:flex;align-items:center;justify-content:center;
@@ -196,7 +196,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .tis span{color:#ddd;font-weight:800;font-size:10px;}
 .tis-desc{font-size:9px;color:#555;line-height:1.35;word-break:keep-all;margin-top:3px;}
 .mi-btns{display:flex;gap:5px;margin-top:5px;flex-shrink:0;}
-.mi-btn{flex:1;padding:8px 0;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:900;letter-spacing:.3px;transition:transform .1s;}
+.mi-btn{flex:1;padding:7px 0;border-radius:7px;border:none;cursor:pointer;font-size:11px;font-weight:900;letter-spacing:.3px;transition:transform .1s;}
 .mi-btn:active{transform:scale(.96);}
 #bupg{background:#0e2035;color:#60b4e0;border:1px solid #60b4e030;}
 #bupg:disabled{background:#181818;color:#444;border-color:#2a2a2a;}
@@ -209,9 +209,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .mc-tag{font-size:9px;background:#222;border:1px solid #ffffff14;border-radius:4px;padding:3px 8px;color:#aaa;font-weight:600;}
 .mc-tag b{color:#eee;}
 
-/* ══ 하단 장비 영역 (281px) ══ */
+/* ══ 하단 장비 영역 (221px) ══ */
 #bot{
-  position:absolute;bottom:0;left:0;right:0;height:281px;
+  position:absolute;bottom:0;left:0;right:0;height:221px;
   background:#0e0e0e;
   border-top:1px solid #ffffff14;
   display:flex;flex-direction:row;align-items:stretch;z-index:30;
@@ -246,43 +246,51 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .tn{font-size:9px;color:#bbb;text-align:center;line-height:1.25;word-break:keep-all;font-weight:700;}
 .tp{font-size:10.5px;color:#FFD700;font-weight:900;}
 
-/* 웨이브 패널 (우측 세로) */
+/* 웨이브 패널 (우측 — 유닛 카드 열과 동일 크기) */
 #wpanel{
-  width:88px;flex-shrink:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:6px;padding:8px 6px;
-  border-left:1px solid #ffffff12;
+  width:80px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:stretch;
+  gap:5px;padding:6px 5px;
+  position:relative;
 }
 #wbtn{
-  width:76px;height:120px;
-  background:#1a1a1a;border:1.5px solid #FF450044;border-radius:9px;
+  flex:1;
+  background:#1a1a1a;border:2px solid #FF4500;border-radius:9px;
   cursor:pointer;color:#FF4500;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;font-size:13px;font-weight:900;transition:all .15s;
+  gap:3px;font-size:12px;font-weight:900;transition:all .15s;
   position:relative;overflow:hidden;
 }
-#wbtn::before{content:'';position:absolute;top:0;left:0;right:0;height:40%;
-  background:linear-gradient(180deg,#FF450014,transparent);pointer-events:none;}
-#wbtn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:#FF4500;opacity:.55;border-radius:0 0 7px 7px;}
+#wbtn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,#FF450020,transparent);pointer-events:none;}
+#wbtn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:#FF4500;opacity:.7;border-radius:0 0 8px 8px;}
 #wbtn:active{transform:scale(.94);}
 #wbtn.dis{opacity:.3;pointer-events:none;}
-#wbtn .wi{font-size:32px;line-height:1;}
-#wnum{font-size:10px;color:#FF450099;font-weight:700;}
+#wbtn .wi{font-size:26px;line-height:1;}
+#wnum{font-size:9px;color:#FF450088;font-weight:700;}
 #abtn{
-  width:76px;height:68px;border-radius:9px;
+  flex:1;
+  border-radius:9px;
   background:#1a1a1a;border:1.5px solid #ffffff14;
   cursor:pointer;font-size:11px;color:#555;text-align:center;
-  font-weight:800;transition:all .15s;line-height:1.6;
-  display:flex;align-items:center;justify-content:center;
+  font-weight:800;transition:all .15s;line-height:1.5;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
 }
+#abtn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,#ffffff03,transparent);pointer-events:none;}
 #abtn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:#FF4500;opacity:0;border-radius:0 0 7px 7px;transition:opacity .15s;}
-#abtn.on{border-color:#FF450066;color:#FF4500;box-shadow:0 0 10px #FF450022;}
+  background:#FF4500;opacity:0;border-radius:0 0 8px 8px;transition:opacity .15s;}
+#abtn.on{border-color:#FF450066;color:#FF4500;box-shadow:0 0 8px #FF450022;}
 #abtn.on::after{opacity:.5;}
-#acd{font-size:10px;color:#FF4500;text-align:center;min-height:12px;
-  line-height:1.3;font-weight:700;padding:0 2px;}
+#acd{
+  position:absolute;
+  bottom:8px;left:0;right:0;
+  text-align:center;
+  font-size:9px;color:#FF4500;font-weight:700;
+  pointer-events:none;
+}
 
 /* ── 해금 오버레이 ── */
 #unlkovly{
