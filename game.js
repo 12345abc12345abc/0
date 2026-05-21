@@ -709,6 +709,7 @@ class Tower{
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
     if(this.isMega){
+      if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=3;ctx.shadowColor=bc;ctx.shadowBlur=12;ctx.strokeRect(this.cx-TS+2,this.cy-TS+2,TS*2-4,TS*2-4);ctx.shadowBlur=0;ctx.restore();}
       ctx.save();ctx.translate(this.cx,this.cy);ctx.scale(2,2);
       if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
       else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
@@ -726,10 +727,10 @@ class Tower{
         ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
         ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
       }
-      if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=3;ctx.shadowColor=bc;ctx.shadowBlur=12;ctx.strokeRect(this.cx-TS+5,this.cy-TS+5,TS*2-10,TS*2-10);ctx.shadowBlur=0;ctx.restore();}
       ctx.save();ctx.fillStyle='#FFD700';ctx.font='bold 9px sans-serif';ctx.textAlign='right';ctx.textBaseline='top';ctx.shadowColor='#000';ctx.shadowBlur=4;ctx.fillText('×5',this.cx+TS-4,this.cy-TS+4);ctx.shadowBlur=0;ctx.restore();
       return;
     }
+    if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.5,this.cy-TS*.5,TS,TS);ctx.shadowBlur=0;ctx.restore();}
     ctx.save();ctx.translate(this.cx,this.cy);
     if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
     else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
@@ -749,7 +750,6 @@ class Tower{
       ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
       ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
     }
-    if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.48,this.cy-TS*.48,TS*.96,TS*.96);ctx.shadowBlur=0;ctx.restore();}
   }
   _base(ctx,r,col,sh='circle'){
     if(sh==='circle'){ctx.beginPath();ctx.arc(0,0,r*.88,0,Math.PI*2);}
