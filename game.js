@@ -1306,6 +1306,9 @@ const UI={
       const locked=!GS.unlocked.has(id);
       el.classList.toggle('locked-card',locked);
       el.classList.toggle('dis',!locked&&!GS.eggActive&&GS.port<TWR[id].price);
+      let li=el.querySelector('.lock-ico');
+      if(locked&&!li){li=document.createElement('div');li.className='lock-ico';el.appendChild(li);}
+      else if(!locked&&li){li.remove();}
     }
     document.getElementById('wbtn').classList.toggle('dis',GS.waveActive);
     if(this.selTwr&&document.getElementById('mid-info').classList.contains('show'))
