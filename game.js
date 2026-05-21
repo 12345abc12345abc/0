@@ -1336,14 +1336,9 @@ const UI={
     }
     ctx.restore();
     ovly.classList.add('show');
-    const fill=document.getElementById('unlk-fill');
-    fill.style.transition='none';fill.style.width='100%';
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      fill.style.transition='width 5s linear';fill.style.width='0%';
-    }));
-    clearTimeout(this._unlkT);
-    this._unlkT=setTimeout(()=>{ovly.classList.remove('show');UI.updHUD();onDone&&onDone();},5000);
-    ovly.onclick=()=>{clearTimeout(this._unlkT);ovly.classList.remove('show');UI.updHUD();onDone&&onDone();};
+    const dismiss=()=>{ovly.classList.remove('show');UI.updHUD();onDone&&onDone();};
+    const btn=document.getElementById('unlk-btn');
+    btn.onclick=e=>{e.stopPropagation();dismiss();};
   },
 
   showBanner(text,col){

@@ -309,8 +309,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #unlk-name{font-size:20px;font-weight:900;color:#fff;}
 #unlk-price{font-size:12px;color:#FFD700;font-weight:700;}
 #unlk-desc{font-size:11px;color:#888;line-height:1.5;word-break:keep-all;margin-top:2px;}
-#unlk-bar{width:100%;height:4px;background:#ffffff18;border-radius:2px;margin-top:14px;overflow:hidden;}
-#unlk-fill{height:100%;width:100%;background:#00E5FF;border-radius:2px;transform-origin:left;transition:none;}
+#unlk-btn{
+  margin-top:18px;padding:10px 36px;
+  background:#00E5FF18;border:1.5px solid #00E5FF88;border-radius:8px;
+  color:#00E5FF;font-size:13px;font-weight:900;letter-spacing:1px;
+  cursor:pointer;
+}
+#unlk-btn:active{transform:scale(.96);}
 
 /* ══ 오버레이 ══ */
 #sovly,#govly{
