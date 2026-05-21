@@ -265,16 +265,16 @@ const TWR_ORDER=['pixelArm','conveyor','coreShooter','scanner','magnetCannon',
                  'refinery','laserGrid','chainBolt','twinHub','plasmaCutter'];
 const UNLOCK_ORDER=['conveyor','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:2.0,  range:2.4, desc:'레이저 빔을 즉사 발사. 고속 원석 우선 타겟. 빠른 연사가 강점.'},
-  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'주기적으로 범위 내 원석을 35% 감속. 불안정 원석에는 거의 효과 없음.'},
-  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:22,  spd:1.0,  range:3.0, desc:'가장 멀리 진행한 원석 우선 처리. 고밀도 원석에 강함.'},
-  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:0,   spd:0,    range:3.4, desc:'범위 내 원석 받는 피해 +25%. 중첩 불가, 최강 효과만 적용.'},
-  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:30,  spd:0,    range:3.0, desc:'단일 대상 집중 레이저 지속 공정. 압축·고밀도 원석에 추천.'},
-  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.5, desc:'범위 내 처치 시 포트 +40%. 중첩 불가, 최강 효과만 적용.'},
-  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:20,  spd:1.5,  range:2.6, desc:'범위 내 전체 원석 동시 광역 처리. 코너·집중 구간 최강. 고속 원석에 추천.'},
-  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:32,  spd:0.75, range:3.2, desc:'최대 3개 연쇄 번개 + 감전 2.5초. 보스에는 연쇄 효과 감소.'},
-  twinHub:     {name:'트윈 허브',     price:2800, color:'#00BCD4',type:'twinhub',  dmg:0,   spd:0,    range:3.8, desc:'인접 장비 공정력+20% 속도+20%. 중첩 불가, 최강 효과만 적용.'},
-  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:90,  spd:0.38, range:5.5, desc:'직선 관통 최대 8개. 고속 원석 관통 감소. 압축 원석에 특효.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:2.0,  range:2.4, desc:'레이저 빔을 즉발로 발사한다. 고속 원석을 우선 타겟팅한다.'},
+  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'주기적으로 범위 내 원석을 35% 감속한다. 불안정 원석에는 거의 효과가 없다.'},
+  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:22,  spd:1.0,  range:3.0, desc:'가장 멀리 진행한 원석을 우선 처리한다. 고밀도 원석에 강하다.'},
+  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:0,   spd:0,    range:3.4, desc:'범위 내 원석이 받는 피해를 25% 증폭한다.'},
+  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:30,  spd:0,    range:3.0, desc:'단일 대상에 집중 레이저를 지속 발사한다. 압축·고밀도 원석에 효과적이다.'},
+  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.5, desc:'범위 내에서 원석 처치 시 획득 포트를 40% 증가시킨다.'},
+  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:20,  spd:1.5,  range:2.6, desc:'범위 내 전체 원석을 동시에 광역 처리한다. 고속 원석에 유리하다.'},
+  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:32,  spd:0.75, range:3.2, desc:'최대 3개 대상에 연쇄 번개를 발사하며 2.5초간 감전시킨다.'},
+  twinHub:     {name:'트윈 허브',     price:2800, color:'#00BCD4',type:'twinhub',  dmg:0,   spd:0,    range:3.8, desc:'인접한 장비의 공정력과 속도를 각 20% 강화한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:90,  spd:0.38, range:5.5, desc:'직선으로 최대 8개 원석을 관통한다. 고속 원석에는 관통 위력이 감소한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
