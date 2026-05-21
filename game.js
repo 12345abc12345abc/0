@@ -1260,6 +1260,7 @@ const UI={
     if(!GS.eggActive)GS.port-=c;t.upgCost+=c;t.level++;
     SFX.upgrade();
     checkMerge();
+    if(!GS.towers.includes(t)){this.updHUD();return;}
     this._showTowerInfo(t);this.updHUD();this.showBanner(t.name+' 업그레이드!','#00BCD4');
   },
 
