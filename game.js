@@ -1239,11 +1239,11 @@ const UI={
     if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
     if(tower.type==='twinhub'){s+=`<div class="tis">공정+<span>${(20*tower._lm()).toFixed(0)}%</span></div>`;s+=`<div class="tis">속도+<span>${(20*tower._lm()).toFixed(0)}%</span></div>`;}
-    if(tower.level<4){const nc=Math.round(tower.basePrice*LVL[tower.level].cm);s+=`<div class="tis" style="color:#FFD700bb">다음강화<span style="color:#FFD700">◈${nc}</span></div>`;}
+    if(tower.level<4){const nc=Math.round(tower.basePrice*LVL[tower.level].cm);s+=`<div class="tis" style="color:#FFD700bb">다음업그레이드<span style="color:#FFD700">◈${nc}</span></div>`;}
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
-    if(tower.level>=4){bu.disabled=true;bu.textContent='최대 (3강)';}
-    else{const c=Math.round(tower.basePrice*LVL[tower.level].cm);bu.disabled=!GS.eggActive&&GS.port<c;bu.textContent=`강화 ◈${c}`;}
+    if(tower.level>=4){bu.disabled=true;bu.textContent='최대';}
+    else{const c=Math.round(tower.basePrice*LVL[tower.level].cm);bu.disabled=!GS.eggActive&&GS.port<c;bu.textContent=`업그레이드 ◈${c}`;}
     document.getElementById('bsell').textContent=`매각 ◈${Math.round((tower.basePrice+tower.upgCost)*.6)}`;
   },
 
@@ -1260,7 +1260,7 @@ const UI={
     if(!GS.eggActive)GS.port-=c;t.upgCost+=c;t.level++;
     SFX.upgrade();
     checkMerge();
-    this._showTowerInfo(t);this.updHUD();this.showBanner(t.name+' 강화!','#00BCD4');
+    this._showTowerInfo(t);this.updHUD();this.showBanner(t.name+' 업그레이드!','#00BCD4');
   },
 
   sell(){
