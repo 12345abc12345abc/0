@@ -362,7 +362,7 @@ function countS(w){
 // 게임 상태
 // ═══════════════════════════════════════════════════════
 const GS={
-  port:200,stability:100,wave:0,time:0,totalPort:0,
+  port:100,stability:100,wave:0,time:0,totalPort:0,
   portHist:[],towers:[],ores:[],projs:[],
   particles:[],popups:[],effects:[],
   running:false,waveActive:false,oreQ:[],spawnT:0,
@@ -1233,7 +1233,6 @@ const UI={
     if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
     if(tower.type==='twinhub'){s+=`<div class="tis">공정+<span>${(20*tower._lm()).toFixed(0)}%</span></div>`;s+=`<div class="tis">속도+<span>${(20*tower._lm()).toFixed(0)}%</span></div>`;}
-    if(tower.level<4){const nc=Math.round(tower.basePrice*LVL[tower.level].cm);s+=`<div class="tis" style="color:#FFD700bb">다음업그레이드<span style="color:#FFD700">◈${nc}</span></div>`;}
     s+=`<div class="tis-desc">${d.desc}</div>`;
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
@@ -1287,8 +1286,6 @@ const UI={
   },
   closeHelp(){
     document.getElementById('helpovly').classList.remove('show');
-    document.getElementById('help-close').textContent='확인';
-    if(G._startPending){G._startPending=false;G._doStart();}
   },
 
   updHUD(){
@@ -1439,9 +1436,7 @@ const G={
   init(){R.init();UI.init();},
 
   start(){
-    G._startPending=true;
-    document.getElementById('help-close').textContent='▶  공장 가동 시작';
-    UI.showHelp();
+    G._doStart();
   },
   _doStart(){
     document.getElementById('sovly').style.display='none';
@@ -1484,7 +1479,7 @@ const G={
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
       if(GS.wave>=100){GS.running=false;UI.showClear();return;}
-      UI.showBanner(`★ W${GS.wave} 클리어! +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
+      UI.showBanner(`W${GS.wave} 클리어! +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
       checkUnlocks(GS.wave,()=>{if(GS.autoWave){GS.autoActive=true;GS.autoTimer=5;}});
     }
     for(const t of GS.towers)t.update(dt,GS.ores);
