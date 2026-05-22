@@ -531,10 +531,11 @@ const R={
       }
     }
     if(UI.selTwr)this.drawRange(ctx,UI.selTwr.cx,UI.selTwr.cy,UI.selTwr.getRange(),UI.selTwr.color);
-    // 4. 게임 오브젝트 (effects는 타워·광물보다 위에)
+    // 4. 게임 오브젝트 — 레이어 순서: 타워기본 → 광물 → 발사체 → 타워오버레이(빔/궤도) → 이펙트 → 파티클 → 팝업
     for(const t of GS.towers)t.draw(ctx,gt);
     for(const o of GS.ores)o.draw(ctx,gt);
     for(const p of GS.projs)p.draw(ctx);
+    for(const t of GS.towers)t.drawFX(ctx);
     const sfe=[...GS.effects].sort((a,b)=>(a.z||0)-(b.z||0));
     for(const e of sfe)e.draw(ctx,gt);
     for(const p of GS.particles)p.draw(ctx);
@@ -745,16 +746,6 @@ class Tower{
         case'drone':this._dDrone(ctx,r,t);break;
       }
       ctx.restore();
-      if(this.type==='focus'&&this._focusTgt&&this._focusTgt.alive&&this._firingT>0){
-        ctx.save();const p2=.6+Math.sin(Date.now()*.022)*.4;
-        ctx.strokeStyle=this.color;ctx.shadowColor=this.color;
-        ctx.globalAlpha=.25;ctx.lineWidth=9+p2*3;ctx.shadowBlur=0;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
-        ctx.globalAlpha=.85;ctx.lineWidth=2.5+p2*.5;ctx.shadowBlur=18+p2*6;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
-        ctx.strokeStyle='#fff';ctx.lineWidth=.9;ctx.globalAlpha=.62*p2;ctx.shadowBlur=4;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
-        ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
-      }
-      if(this.type==='drone')this._drawDroneOrbit(ctx);
-      if(this.type==='twinhub')this._drawTwinOrbit(ctx);
       return;
     }
     if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';const p=3;ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.5+p,this.cy-TS*.5+p,TS-p*2,TS-p*2);ctx.shadowBlur=0;ctx.restore();}
@@ -769,12 +760,14 @@ class Tower{
       case'drone':this._dDrone(ctx,r,t);break;
     }
     ctx.restore();
+  }
+  drawFX(ctx){
     if(this.type==='focus'&&this._focusTgt&&this._focusTgt.alive&&this._firingT>0){
-      ctx.save();const pulse=.6+Math.sin(Date.now()*.022)*.4;
-      ctx.strokeStyle=this.color;ctx.shadowColor=this.color;
-      ctx.globalAlpha=.25;ctx.lineWidth=9+pulse*3;ctx.shadowBlur=0;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
-      ctx.globalAlpha=.88;ctx.lineWidth=2.5+pulse*.5;ctx.shadowBlur=20+pulse*7;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
-      ctx.strokeStyle='#fff';ctx.lineWidth=.9;ctx.globalAlpha=.65*pulse;ctx.shadowBlur=4;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+      const p=.6+Math.sin(Date.now()*.022)*.4;
+      ctx.save();ctx.strokeStyle=this.color;ctx.shadowColor=this.color;
+      ctx.globalAlpha=.25;ctx.lineWidth=9+p*3;ctx.shadowBlur=0;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+      ctx.globalAlpha=.88;ctx.lineWidth=2.5+p*.5;ctx.shadowBlur=20+p*7;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+      ctx.strokeStyle='#fff';ctx.lineWidth=.9;ctx.globalAlpha=.65*p;ctx.shadowBlur=4;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
       ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
     }
     if(this.type==='drone')this._drawDroneOrbit(ctx);
