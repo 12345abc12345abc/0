@@ -266,7 +266,7 @@ const TWR_ORDER=['pixelArm','conveyor','coreShooter','scanner','magnetCannon',
 const UNLOCK_ORDER=['conveyor','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','plasmaCutter'];
 const TWR={
   pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:0.9,  range:2.4, desc:'기본 처리 장비. 범위 내 가장 앞선 원석을 순차적으로 처리한다.'},
-  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'원석을 1초간 완전히 정지시킨다. 해제 후 1초간 면역이 생긴다.'},
+  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'일정 확률로 범위 내 원석을 감속시킨다.'},
   coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:22,  spd:2.5,  range:3.0, desc:'빠른 발사 속도로 가장 앞선 원석을 신속히 처리한다.'},
   scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:40,  spd:0.5,  range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 레이저를 발사한다.'},
   magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:18,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 지속적으로 집중 레이저를 발사한다.'},
@@ -560,7 +560,7 @@ class Ore{
     if(!this.alive)return;
     if(this.freezeTimer>0){this.freezeTimer-=dt;if(this.freezeTimer<=0)this.freezeImmune=1.0;this.flashT=.08;return;}
     if(this.freezeImmune>0)this.freezeImmune-=dt;
-    if(this.slowTimer>0){this.slowTimer-=dt;if(this.slowTimer<=0){this.spd=this.baseSpd;this._sR=0;}}
+    if(this.slowTimer>0){this.slowTimer-=dt;if(this.slowTimer<=0){this.spd=this.baseSpd;this._sR=0;this.freezeImmune=3.0;}}
     if(this.ampTimer>0)this.ampTimer-=dt;if(this.flashT>0)this.flashT-=dt;
     if(this.shockTimer>0){
       this.shockTimer-=dt;
@@ -600,7 +600,7 @@ class Ore{
     GS.port+=pr;GS.totalPort+=pr;GS.portHist.push({t:GS.time,v:pr});
     GS.popups.push(new Popup(this.x,this.y-this.radius-5,'+'+pr,'#FFD700'));UI.updHUD();
   }
-  applySlow(ratio,dur){const res=ORE_RESIST[this.type];const eff=res&&res.slow!==undefined?ratio*res.slow:ratio;this._sR=Math.max(this._sR,eff);this.spd=this.baseSpd*(1-this._sR);if(this.slowTimer<dur)this.slowTimer=dur;}
+  applySlow(ratio,dur){if(this.freezeImmune>0)return;const res=ORE_RESIST[this.type];const eff=res&&res.slow!==undefined?ratio*res.slow:ratio;this._sR=Math.max(this._sR,eff);this.spd=this.baseSpd*(1-this._sR);if(this.slowTimer<dur)this.slowTimer=dur;}
   applyFreeze(dur){if(this.freezeImmune>0)return;if(this.freezeTimer<dur)this.freezeTimer=dur;}
   applyAmp(ratio,dur){this.ampRatio=Math.max(this.ampRatio,ratio);if(this.ampTimer<dur)this.ampTimer=dur;}
   applyShock(dps,dur){this.shockDps=Math.max(this.shockDps,dps);if(this.shockTimer<dur)this.shockTimer=dur;}
@@ -658,7 +658,8 @@ class Tower{
         const iv=2.2/Math.max(.5,this._lm());
         if(this._pulseT>=iv){
           this._pulseT=0;
-          for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applyFreeze(1.0);
+          const sr=Math.min(.45*this._lm()*this._megaMult(),.92);
+          for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(Math.random()<.55)o.applySlow(sr,2.2);}
           GS.effects.push(new RingEff(this.cx,this.cy,rng,this.color));
         }
       }
@@ -967,27 +968,28 @@ class Tower{
   }
   _dSlowField(ctx,r,t){
     const col=this.color;
-    // 사각 베이스 (컨베이어 벨트 형태)
-    const hw=r*.86;
+    const hw=r*.84;
+    // 정사각형 베이스
     ctx.fillStyle='#1a1a1acc';ctx.strokeStyle='#444';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.roundRect(-hw,-hw*.6,hw*2,hw*1.2,r*.1);ctx.fill();ctx.stroke();
-    // 이동하는 벨트 스트라이프
-    ctx.save();ctx.beginPath();ctx.roundRect(-hw,-hw*.6,hw*2,hw*1.2,r*.1);ctx.clip();
-    const offset=(t*r*.8)%(r*.36);
-    ctx.globalAlpha=.38;
-    for(let x=-hw*2+offset;x<hw*2;x+=r*.36){
+    ctx.fillRect(-hw,-hw,hw*2,hw*2);ctx.strokeRect(-hw,-hw,hw*2,hw*2);
+    // 이동하는 대각선 스트라이프 (클립 적용)
+    ctx.save();ctx.beginPath();ctx.rect(-hw,-hw,hw*2,hw*2);ctx.clip();
+    const offset=(t*r*.9)%(r*.38);
+    ctx.globalAlpha=.35;
+    for(let x=-hw*3+offset;x<hw*3;x+=r*.38){
       ctx.fillStyle=col;
-      ctx.beginPath();ctx.moveTo(x,-hw*.6);ctx.lineTo(x+r*.22,-hw*.6);ctx.lineTo(x+r*.22-hw*.4,hw*.6);ctx.lineTo(x-hw*.4,hw*.6);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(x,-hw);ctx.lineTo(x+r*.2,-hw);ctx.lineTo(x+r*.2-hw*1.6,hw);ctx.lineTo(x-hw*1.6,hw);ctx.closePath();ctx.fill();
     }
     ctx.globalAlpha=1;ctx.restore();
-    // 롤러 (양쪽 끝 원)
-    ctx.fillStyle='#2e2e2e';ctx.strokeStyle=col+'88';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.arc(-hw*.74,0,r*.22,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.beginPath();ctx.arc(hw*.74,0,r*.22,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // 롤러 중심
-    ctx.fillStyle=col;
-    ctx.beginPath();ctx.arc(-hw*.74,0,r*.1,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.arc(hw*.74,0,r*.1,0,Math.PI*2);ctx.fill();
+    // 테두리 강조
+    ctx.strokeStyle=col+'66';ctx.lineWidth=1.5;ctx.strokeRect(-hw,-hw,hw*2,hw*2);
+    // 중앙 코어
+    ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,r*.14,0,Math.PI*2);ctx.fill();
+    // 모서리 핀
+    for(const [sx,sy] of [[-1,-1],[1,-1],[1,1],[-1,1]]){
+      ctx.fillStyle='#333';ctx.strokeStyle=col+'88';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.arc(sx*hw*.7,sy*hw*.7,r*.13,0,Math.PI*2);ctx.fill();ctx.stroke();
+    }
   }
   _dScan(ctx,r,t){const col=this.color;this._base(ctx,r,col,'circle');ctx.setLineDash([3,4]);ctx.strokeStyle=col+'55';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.7,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(0,0,r*.44,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.save();ctx.rotate(t*1.8);ctx.fillStyle=col+'28';ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.7,-Math.PI*.22,Math.PI*.22);ctx.closePath();ctx.fill();ctx.restore();ctx.strokeStyle=col+'88';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-r*.48,0);ctx.lineTo(r*.48,0);ctx.moveTo(0,-r*.48);ctx.lineTo(0,r*.48);ctx.stroke();ctx.beginPath();ctx.arc(0,0,r*.15,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();}
   _dRefinery(ctx,r,t){
