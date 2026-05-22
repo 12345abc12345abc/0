@@ -265,16 +265,16 @@ const TWR_ORDER=['pixelArm','conveyor','coreShooter','scanner','magnetCannon',
                  'refinery','laserGrid','chainBolt','twinHub','plasmaCutter'];
 const UNLOCK_ORDER=['conveyor','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:2.0,  range:2.4, desc:'레이저 빔을 즉발로 발사한다. 고속 원석을 우선 타겟팅한다.'},
-  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'주기적으로 범위 내 원석을 35% 감속한다. 불안정 원석에는 효과가 없다.'},
-  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:22,  spd:1.0,  range:3.0, desc:'가장 멀리 진행한 원석을 우선 처리한다. 고밀도 원석에 강하다.'},
-  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:14,  spd:1.8,  range:3.4, desc:'주기적으로 범위 내 원석 전체를 광역 처리한다.'},
-  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:30,  spd:0,    range:3.0, desc:'단일 대상에 집중 레이저를 지속 발사한다. 압축·고밀도 원석에 효과적이다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:0.9,  range:2.4, desc:'기본 처리 장비. 범위 내 가장 앞선 원석을 순차적으로 처리한다.'},
+  conveyor:    {name:'컨베이어',       price:150,  color:'#1A237E',type:'pulseslow',dmg:0,   spd:0,    range:2.2, desc:'원석을 1초간 완전히 정지시킨다. 해제 후 1초간 면역이 생긴다.'},
+  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:22,  spd:2.5,  range:3.0, desc:'빠른 발사 속도로 가장 앞선 원석을 신속히 처리한다.'},
+  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:40,  spd:0.5,  range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 레이저를 발사한다.'},
+  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:18,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 지속적으로 집중 레이저를 발사한다.'},
   refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:3.5, desc:'범위 내에서 원석 처치 시 획득 포트를 40% 증가시킨다.'},
-  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:20,  spd:1.5,  range:2.6, desc:'범위 내 전체 원석을 동시에 광역 처리한다. 고속 원석에 유리하다.'},
-  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:32,  spd:0.75, range:3.2, desc:'최대 3개 대상에 연쇄 번개를 발사하며 2.5초간 감전시킨다.'},
-  twinHub:     {name:'트윈 허브',     price:2800, color:'#00BCD4',type:'twinhub',  dmg:50,  spd:1.0,  range:3.8, desc:'두 개의 포탄을 동시에 발사해 서로 다른 원석을 처리한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:90,  spd:0.38, range:5.5, desc:'직선으로 최대 8개 원석을 관통한다. 고속 원석에는 관통 위력이 감소한다.'},
+  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:20,  spd:1.5,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
+  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:32,  spd:0.75, range:3.2, desc:'최대 3개 원석에 연쇄 번개를 발사하고 2.5초간 감전시킨다.'},
+  twinHub:     {name:'트윈 허브',     price:2800, color:'#00BCD4',type:'twinhub',  dmg:0,   spd:0,    range:3.8, desc:'범위 내 설비의 공정 속도를 20% 강화한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:90,  spd:0.38, range:5.5, desc:'직선으로 최대 8개 원석을 동시에 관통 처리한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
@@ -552,12 +552,14 @@ class Ore{
     this.x=R.tx(PATH[0].c);this.y=R.ty(PATH[0].r);
     this.alive=true;this.escaped=false;
     this.slowTimer=0;this._sR=0;this.ampRatio=0;this.ampTimer=0;
-    this.shockTimer=0;this.shockDps=0;
+    this.shockTimer=0;this.shockDps=0;this.freezeTimer=0;this.freezeImmune=0;
     this.flashT=0;this.spin=Math.random()*Math.PI*2;
     const sz=[0,TS*.21,TS*.26,TS*.32,TS*.40];this.radius=sz[this.grade]||TS*.21;
   }
   update(dt){
     if(!this.alive)return;
+    if(this.freezeTimer>0){this.freezeTimer-=dt;if(this.freezeTimer<=0)this.freezeImmune=1.0;this.flashT=.08;return;}
+    if(this.freezeImmune>0)this.freezeImmune-=dt;
     if(this.slowTimer>0){this.slowTimer-=dt;if(this.slowTimer<=0){this.spd=this.baseSpd;this._sR=0;}}
     if(this.ampTimer>0)this.ampTimer-=dt;if(this.flashT>0)this.flashT-=dt;
     if(this.shockTimer>0){
@@ -599,6 +601,7 @@ class Ore{
     GS.popups.push(new Popup(this.x,this.y-this.radius-5,'+'+pr,'#FFD700'));UI.updHUD();
   }
   applySlow(ratio,dur){const res=ORE_RESIST[this.type];const eff=res&&res.slow!==undefined?ratio*res.slow:ratio;this._sR=Math.max(this._sR,eff);this.spd=this.baseSpd*(1-this._sR);if(this.slowTimer<dur)this.slowTimer=dur;}
+  applyFreeze(dur){if(this.freezeImmune>0)return;if(this.freezeTimer<dur)this.freezeTimer=dur;}
   applyAmp(ratio,dur){this.ampRatio=Math.max(this.ampRatio,ratio);if(this.ampTimer<dur)this.ampTimer=dur;}
   applyShock(dps,dur){this.shockDps=Math.max(this.shockDps,dps);if(this.shockTimer<dur)this.shockTimer=dur;}
   draw(ctx,gt){
@@ -640,7 +643,7 @@ class Tower{
   }
   _lm(){return LVL[this.level-1].mult;}
   _megaMult(){return this.isMega?5:1;}
-  _calcTwin(){this._tDmg=0;this._tSpd=0;}
+  _calcTwin(){let best=0;for(const t of GS.towers)if(t.type==='twinhub'&&t.uid!==this.uid&&Math.hypot(t.cx-this.cx,t.cy-this.cy)<=t.getRange()*TS)best=Math.max(best,.2*t._lm()*t._megaMult());this._tDmg=0;this._tSpd=best;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
   getRange(){return TWR[this.tId].range*(this.isMega?1.3:1);}
@@ -655,16 +658,14 @@ class Tower{
         const iv=2.2/Math.max(.5,this._lm());
         if(this._pulseT>=iv){
           this._pulseT=0;
-          const sr=Math.min(.35*this._lm()*this._megaMult(),.92);
-          for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applySlow(sr,2.2);
+          for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng)o.applyFreeze(1.0);
           GS.effects.push(new RingEff(this.cx,this.cy,rng,this.color));
         }
       }
       return;
     }
-    if(tp==='scan'){this._aoeT+=dt;const iv=1/Math.max(.1,this.getSpd());if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;let hit=false;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng){o.takeDmg(this.getDmg()*iv,'aoe');hit=true;}if(hit){this._firingT=.22;GS.effects.push(new RingEff(this.cx,this.cy,this.getRange()*TS,this.color));SFX.shoot('aoe');}}return;}
-    if(tp==='buff')return;
-    if(tp==='twinhub'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt1=this._findTgt(ores);if(!tgt1)return;const rng=this.getRange()*TS;let tgt2=null,bestP2=-1;for(const o of ores){if(!o.alive||o===tgt1||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;const p=o.pathIdx+o.progress;if(p>bestP2){bestP2=p;tgt2=o;}}this.angle=Math.atan2(tgt1.y-this.cy,tgt1.x-this.cx);GS.projs.push(new Proj(this.cx,this.cy,tgt1,this.getDmg(),{color:this.color,size:1.3}));if(tgt2)GS.projs.push(new Proj(this.cx,this.cy,tgt2,this.getDmg(),{color:this.color,size:1.3}));this.cooldown=1;this._firingT=.2;SFX.shoot('aoe');return;}
+    if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;let best=null,bestHp=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);GS.projs.push(new Proj(this.cx,this.cy,best,this.getDmg(),{color:this.color,size:1.8}));this.cooldown=1;this._firingT=.35;SFX.shoot('aoe');return;}
+    if(tp==='buff'||tp==='twinhub')return;
     if(tp==='focus'){
       if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
       if(!this._focusTgt)this._focusTgt=this._findTgt(ores);
@@ -678,7 +679,7 @@ class Tower{
     }
     if(tp==='aoe'){
       this._aoeT+=dt;const iv=1/Math.max(.1,this.getSpd());
-      if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;let hit=false;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng){o.takeDmg(this.getDmg()*iv,'aoe');hit=true;}if(hit){this._firingT=.22;GS.effects.push(new RingEff(this.cx,this.cy,this.getRange()*TS,this.color));SFX.shoot('aoe');}}return;}
+      if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;let hit=false;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng){o.takeDmg(this.getDmg()*iv,'aoe');hit=true;}if(hit){this._firingT=.28;GS.effects.push(new GridFlashEff(this.cx,this.cy,rng,this.color));SFX.shoot('aoe');}}return;}
     if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}
     if(tp==='pierce'){
       const hasTgt=this._findTgt(ores);if(!hasTgt)return;
@@ -693,7 +694,7 @@ class Tower{
     if(this.tId==='pixelArm')this._armAngle=this.angle;
     this._fire(tgt);this.cooldown=1;this._firingT=.15;SFX.shoot(this.tId);
   }
-  _findTgt(ores){const rng=this.getRange()*TS;const isLast=this.tId==='magnetCannon';let best=null,bestP=isLast?Infinity:-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(this.tId==='pixelArm'&&o.type==='fast'){best=o;break;}const p=o.pathIdx+o.progress;if(isLast?p<bestP:p>bestP){bestP=p;best=o;}}return best;}
+  _findTgt(ores){const rng=this.getRange()*TS;const isLast=this.tId==='magnetCannon';let best=null,bestP=isLast?Infinity:-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;const p=o.pathIdx+o.progress;if(isLast?p<bestP:p>bestP){bestP=p;best=o;}}return best;}
   _fire(tgt){
     if(this.tId==='pixelArm'){
       const dir=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);
@@ -723,9 +724,10 @@ class Tower{
       if(this.type==='focus'&&this._focusTgt&&this._focusTgt.alive&&this._firingT>0){
         ctx.save();const p2=.6+Math.sin(Date.now()*.02)*.4;
         ctx.strokeStyle=this.color;ctx.lineWidth=3+p2;ctx.shadowColor=this.color;ctx.shadowBlur=14+p2*4;
-        ctx.globalAlpha=.9;ctx.setLineDash([6,3]);
-        ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
-        ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
+        ctx.globalAlpha=.28;ctx.lineWidth=8+p2*3;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+        ctx.globalAlpha=.85;ctx.lineWidth=2.5+p2*.5;ctx.shadowBlur=18+p2*6;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+        ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.globalAlpha=.6*p2;ctx.shadowBlur=4;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
+        ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
       }
       return;
     }
@@ -1006,7 +1008,13 @@ class Tower{
 // 이펙트
 // ═══════════════════════════════════════════════════════
 class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.size=opts.size||1;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>7)this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;const sz=this.size;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*.48;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,(3.2-i*.3)*sz,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6*sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}
-class RingEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.32;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.48;ctx.strokeStyle=this.col;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.28-p*.28),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;}}
+class RingEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.32;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.55;ctx.strokeStyle=this.col;ctx.lineWidth=2.5;ctx.shadowColor=this.col;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=p*.25;ctx.lineWidth=6;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
+class GridFlashEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.5;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.save();ctx.shadowColor=this.col;
+  ctx.globalAlpha=p*.6;ctx.strokeStyle=this.col;ctx.lineWidth=3;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1+(1-p)*.4),0,Math.PI*2);ctx.stroke();
+  ctx.globalAlpha=p*.35;ctx.lineWidth=1.5;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1+(1-p)*.7),0,Math.PI*2);ctx.stroke();
+  ctx.globalAlpha=p*.7;ctx.lineWidth=2;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p*.55,0,Math.PI*2);ctx.stroke();
+  const hl=this.r*(1.2+(1-p)*.4);ctx.globalAlpha=p*.45;ctx.lineWidth=1.5;ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(this.x-hl,this.y);ctx.lineTo(this.x+hl,this.y);ctx.moveTo(this.x,this.y-hl);ctx.lineTo(this.x,this.y+hl);ctx.stroke();
+  ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();}}
 class LaserEff{constructor(x,y,dir,len,col){this.x=x;this.y=y;this.dir=dir;this.len=len;this.col=col;this.life=this.max=.2;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.82;ctx.shadowColor=this.col;ctx.shadowBlur=6;ctx.strokeStyle=this.col;ctx.lineWidth=1.5+p*1.5;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(this.dir)*this.len,this.y+Math.sin(this.dir)*this.len);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class BoltEff{
   constructor(x1,y1,x2,y2,col){
@@ -1177,7 +1185,7 @@ const UI={
     if(d.type==='buff')tags+=`<span class="mc-tag">포트 <b>+40%</b></span>`;
     if(d.type==='chain')tags+=`<span class="mc-tag">연쇄 <b>3개</b></span>`;
     if(d.type==='pierce')tags+=`<span class="mc-tag">관통 <b>8개</b></span>`;
-    if(d.type==='twinhub')tags+=`<span class="mc-tag">2연사</span>`;
+    if(d.type==='twinhub')tags+=`<span class="mc-tag">속도 <b>+20%</b></span>`;
     document.getElementById('mc-tags').innerHTML=tags;
   },
 
@@ -1232,7 +1240,7 @@ const UI={
     if(tower.type==='buff')s+=`<div class="tis">포트<span>+${(40*tower._lm()).toFixed(0)}%</span></div>`;
     if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
-    if(tower.type==='twinhub')s+=`<div class="tis">2연사<span>동시</span></div>`;
+    if(tower.type==='twinhub')s+=`<div class="tis">속도버프<span>+${(20*tower._lm()).toFixed(0)}%</span></div>`;
     s+=`<div class="tis-desc">${d.desc}</div>`;
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
