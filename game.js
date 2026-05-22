@@ -784,25 +784,46 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 설비, 기본방향 위(↑)
+  // 코어슈터: 쌍열 오토캐논, 기본방향 위(↑)
   _dCS(ctx,r,t,f){
     const col=this.color;
-    this._base(ctx,r,col,'circle');
-    ctx.strokeStyle='#ffffff15';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.65,0,Math.PI*2);ctx.stroke();
+    this._base(ctx,r,col,'hex');
+    // rotating accent ring
+    ctx.save();ctx.rotate(t*1.6);
+    ctx.strokeStyle=col+'44';ctx.lineWidth=1.2;ctx.setLineDash([r*.2,r*.15]);
+    ctx.beginPath();ctx.arc(0,0,r*.72,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);ctx.restore();
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // 설비 몸체 (중앙 아래쪽)
-    ctx.fillStyle='#2e2e2e';ctx.strokeStyle='#666';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.roundRect(-r*.22,-r*.18,r*.44,r*.36,r*.06);ctx.fill();ctx.stroke();
-    // 포신 (위쪽 = 발사 방향)
-    ctx.fillStyle='#777';
-    ctx.beginPath();ctx.roundRect(-r*.1,-r*.85,r*.2,r*.7,r*.04);ctx.fill();
-    ctx.strokeStyle='#999';ctx.lineWidth=1;ctx.strokeRect(-r*.1,-r*.85,r*.2,r*.7);
-    // 포신 끝 강조
-    ctx.fillStyle=f?col:'#444';
-    ctx.beginPath();ctx.roundRect(-r*.12,-r*.88,r*.24,r*.08,r*.02);ctx.fill();
-    // 포신 중앙 홈
-    ctx.strokeStyle='#555';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(0,-r*.82);ctx.lineTo(0,-r*.2);ctx.stroke();
+    // mounting bracket
+    ctx.fillStyle='#2e2e2e';ctx.strokeStyle='#505050';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.roundRect(-r*.36,-r*.12,r*.72,r*.26,r*.05);ctx.fill();ctx.stroke();
+    ctx.fillStyle=col+'30';ctx.beginPath();ctx.roundRect(-r*.36,-r*.02,r*.72,r*.09,0);ctx.fill();
+    // twin barrels
+    const bw=r*.12,bh=r*.72;
+    for(const bx of [-r*.22,r*.1]){
+      ctx.fillStyle='#4c4c4c';ctx.strokeStyle='#686868';ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(bx,-r*.84,bw,bh,r*.025);ctx.fill();ctx.stroke();
+      // cooling ribs
+      ctx.strokeStyle='#2e2e2e';ctx.lineWidth=.7;
+      for(let v=0;v<3;v++){ctx.beginPath();ctx.moveTo(bx+r*.022,-r*.65+v*r*.17);ctx.lineTo(bx+bw-r*.022,-r*.65+v*r*.17);ctx.stroke();}
+      // inner groove
+      ctx.strokeStyle='#282828';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(bx+bw*.5,-r*.8);ctx.lineTo(bx+bw*.5,-r*.15);ctx.stroke();
+    }
+    // muzzle tips
+    for(const bx of [-r*.22,r*.1]){
+      if(f){
+        ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=12;
+        ctx.beginPath();ctx.arc(bx+bw*.5,-r*.88,r*.082,0,Math.PI*2);ctx.fill();
+        ctx.shadowBlur=0;
+      } else {
+        ctx.fillStyle='#363636';
+        ctx.beginPath();ctx.roundRect(bx,-r*.88,bw,r*.07,r*.02);ctx.fill();
+      }
+    }
+    // center cowl
+    ctx.fillStyle='#252525';ctx.strokeStyle='#424242';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(-r*.04,-r*.1,r*.08,r*.22,r*.03);ctx.fill();ctx.stroke();
     ctx.restore();
     this._core(ctx,r,col);
   }
@@ -1019,21 +1040,24 @@ class Tower{
     // inner counter ring
     ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=col+'33';ctx.lineWidth=.8;ctx.setLineDash([r*.14,r*.22]);
     ctx.beginPath();ctx.arc(0,0,r*.52,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // drone silhouette cross
-    const pulse=.5+Math.sin(t*3)*.5;
-    ctx.strokeStyle=col+(pulse>.5?'cc':'66');ctx.lineWidth=1.8;ctx.lineCap='round';
+    // cross arms — stable opacity (no pulse jump)
+    ctx.strokeStyle=col+'99';ctx.lineWidth=1.8;ctx.lineCap='round';
     ctx.beginPath();ctx.moveTo(-r*.26,0);ctx.lineTo(r*.26,0);ctx.stroke();
     ctx.beginPath();ctx.moveTo(0,-r*.26);ctx.lineTo(0,r*.26);ctx.stroke();
-    // spinning rotor dots
+    // spinning rotor dots — fixed size, no shadowBlur change
     for(let i=0;i<4;i++){
       const aa=i*Math.PI/2+t*4;
-      ctx.fillStyle=col+(pulse>.6?'ee':'66');ctx.shadowColor=col;ctx.shadowBlur=pulse*4;
-      ctx.beginPath();ctx.arc(Math.cos(aa)*r*.34,Math.sin(aa)*r*.34,r*.07,0,Math.PI*2);ctx.fill();
+      const dx=Math.cos(aa)*r*.34,dy=Math.sin(aa)*r*.34;
+      ctx.fillStyle=col+'cc';
+      ctx.beginPath();ctx.arc(dx,dy,r*.08,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#ffffff77';
+      ctx.beginPath();ctx.arc(dx-r*.02,dy-r*.02,r*.03,0,Math.PI*2);ctx.fill();
     }
+    // glowing core — fixed size
+    ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=7;
+    ctx.beginPath();ctx.arc(0,0,r*.12,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
-    // glowing core
-    ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,r*.1,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#fff';ctx.globalAlpha=.75;ctx.beginPath();ctx.arc(-r*.03,-r*.03,r*.045,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.globalAlpha=.75;ctx.beginPath();ctx.arc(-r*.04,-r*.04,r*.05,0,Math.PI*2);ctx.fill();
     ctx.globalAlpha=1;
   }
   _drawDroneOrbit(ctx){
