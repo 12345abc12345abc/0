@@ -425,18 +425,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 }
 @keyframes sheen{to{left:160%}}
 #title-start:active{transform:scale(.96);}
-#title-howto{
-  margin-top:18px;display:flex;flex-direction:column;gap:5px;width:260px;
-  animation:titleIn .5s .6s both;
+#title-help{
+  margin-top:10px;width:220px;height:44px;border-radius:10px;cursor:pointer;
+  background:transparent;border:1.5px solid #ffffff22;color:#aaa;
+  font-size:14px;font-weight:700;letter-spacing:1px;
+  animation:titleIn .5s .6s both;transition:border-color .15s,color .15s;
 }
-.th-row{font-size:10px;color:#aaa;letter-spacing:.3px;padding:4px 10px;
-  background:#ffffff07;border-radius:5px;border-left:2px solid #FF450066;}
-#title-help-btn{
-  margin-top:10px;font-size:10px;color:#FF450099;cursor:pointer;
-  text-decoration:underline;letter-spacing:.5px;
-  animation:titleIn .5s .7s both;
-}
-#title-help-btn:active{color:#FF4500;}
+#title-help:active{border-color:#FF450088;color:#FF4500;}
 
 /* ── 클리어 화면 ── */
 #clrovly{background:#000;}
