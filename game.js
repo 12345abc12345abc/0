@@ -276,7 +276,7 @@ const TWR={
   refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'refinery', dmg:8,   spd:1.1,  range:2.4, desc:'원석에 전격을 발사해 처리하며 포트를 추가 획득한다.'},
   laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:12,  spd:1.4,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
   chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:28,  spd:0.8,  range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
-  twinHub:     {name:'트윈 허브',     price:2800, color:'#9C27B0',type:'twinhub',  dmg:0,   spd:0,    range:2.4, desc:'범위 내 설비의 공정 속도를 강화한다.'},
+  twinHub:     {name:'트윈 허브',     price:2800, color:'#9C27B0',type:'twinhub',  dmg:0,   spd:0,    range:1.8, desc:'두 궤도 드론이 원석에 접촉하면 일정 시간 모든 공정 데미지를 2배로 증폭시킨다.'},
   drone:       {name:'레이스 드론',   price:3200, color:'#00E5CC',type:'drone',    dmg:80,  spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
   plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:65,  spd:0.36, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
 };
@@ -639,12 +639,13 @@ class Tower{
     this.cx=R.tx(col);this.cy=R.ty(row);
     this.angle=-Math.PI/2;this.cooldown=0;this._aoeT=0;this._animT=0;this._firingT=0;
     this._tDmg=0;this._tSpd=0;this._armAngle=-Math.PI/2;this._focusTgt=null;this._soundT=0;this._droneAngle=0;this._hitCooldown=0;
+    this._twinAngles=[0,Math.PI];this._twin_hcd=[0,0];
     this.isMega=false;this.megaCells=[];
   }
   _lm(){return LVL[this.level-1].mult;}
   _megaMult(){return this.isMega?5:1;}
   _eff(e){e.z=this.basePrice*(this.isMega?4:1);GS.effects.push(e);return e;}
-  _calcTwin(){let best=0;for(const t of GS.towers)if(t.type==='twinhub'&&t.uid!==this.uid&&Math.hypot(t.cx-this.cx,t.cy-this.cy)<=t.getRange()*TS){const b=Math.min(([0.2,0.45,0.7,1.0][t.level-1]||0.2)*(t.isMega?1.2:1),1.0);best=Math.max(best,b);}this._tDmg=0;this._tSpd=best;}
+  _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
   getRange(){return TWR[this.tId].range*(this.isMega?1.3:1);}
@@ -667,7 +668,25 @@ class Tower{
       return;
     }
     if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;let best=null,bestHp=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
-    if(tp==='twinhub')return;
+    if(tp==='twinhub'){
+      const spd=0.85+this._lm()*.1,dr=this.getRange()*TS,hitR=TS*.42;
+      const dur=[1.5,2.5,3.5,5.0][this.level-1]||1.5;
+      for(let i=0;i<2;i++){
+        this._twinAngles[i]+=dt*spd;
+        if(this._twin_hcd[i]>0){this._twin_hcd[i]-=dt;continue;}
+        const ox=this.cx+Math.cos(this._twinAngles[i])*dr,oy=this.cy+Math.sin(this._twinAngles[i])*dr;
+        for(const o of ores){
+          if(!o.alive)continue;
+          if(Math.hypot(o.x-ox,o.y-oy)<hitR+o.radius){
+            o.applyAmp(1.0,dur);
+            this._twin_hcd[i]=0.55;this._firingT=.22;
+            this._eff(new RingEff(ox,oy,hitR*2,this.color));
+            break;
+          }
+        }
+      }
+      return;
+    }
     if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(1,Math.round(dmg*.5));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new LightningEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
     if(tp==='drone'){this._droneAngle+=dt*(0.38+this._lm()*.06);const dr=this.getRange()*TS;const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;const hitR=TS*.62;for(const o of ores){if(!o.alive)continue;if(Math.hypot(o.x-drX,o.y-drY)<hitR){o.takeDmg(this.getDmg()*dt,'single');if(this._hitCooldown<=0){this._eff(new RingEff(drX,drY,hitR*1.4,this.color));this._hitCooldown=.1;}this._firingT=.18;}}if(this._hitCooldown>0)this._hitCooldown-=dt;return;}
     if(tp==='focus'){
@@ -735,6 +754,7 @@ class Tower{
         ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
       }
       if(this.type==='drone')this._drawDroneOrbit(ctx);
+      if(this.type==='twinhub')this._drawTwinOrbit(ctx);
       return;
     }
     if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';const p=3;ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2;ctx.shadowColor=bc;ctx.shadowBlur=8;ctx.strokeRect(this.cx-TS*.5+p,this.cy-TS*.5+p,TS-p*2,TS-p*2);ctx.shadowBlur=0;ctx.restore();}
@@ -758,6 +778,7 @@ class Tower{
       ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
     }
     if(this.type==='drone')this._drawDroneOrbit(ctx);
+    if(this.type==='twinhub')this._drawTwinOrbit(ctx);
   }
   _base(ctx,r,col,sh='circle'){
     if(sh==='circle'){ctx.beginPath();ctx.arc(0,0,r*.88,0,Math.PI*2);}
@@ -1105,7 +1126,48 @@ class Tower{
     cg.addColorStop(0,'#fff');cg.addColorStop(.5,col);cg.addColorStop(1,col+'44');
     ctx.fillStyle=cg;ctx.fill();
   }
-  _dTwinHub(ctx,r,t){const col=this.color;this._base(ctx,r,col,'circle');ctx.save();ctx.rotate(t*.65);ctx.strokeStyle=col+'88';ctx.lineWidth=2;ctx.beginPath();ctx.arc(-r*.28,0,r*.4,0,Math.PI*2);ctx.stroke();ctx.restore();ctx.save();ctx.rotate(-t*.65);ctx.strokeStyle=col+'88';ctx.lineWidth=2;ctx.beginPath();ctx.arc(r*.28,0,r*.4,0,Math.PI*2);ctx.stroke();ctx.restore();ctx.fillStyle=col+'aa';ctx.beginPath();ctx.arc(-r*.28,0,r*.09,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(r*.28,0,r*.09,0,Math.PI*2);ctx.fill();ctx.strokeStyle=col+'cc';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-r*.17,0);ctx.lineTo(r*.17,0);ctx.stroke();this._core(ctx,r,col);}
+  _dTwinHub(ctx,r,t){
+    const col=this.color;this._base(ctx,r,col,'circle');
+    // two rotating orbital rings (base only — orbs drawn separately in _drawTwinOrbit)
+    ctx.save();ctx.rotate(t*.7);ctx.strokeStyle=col+'55';ctx.lineWidth=1.4;ctx.setLineDash([r*.22,r*.18]);
+    ctx.beginPath();ctx.arc(0,0,r*.72,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.rotate(-t*.55);ctx.strokeStyle=col+'33';ctx.lineWidth=.8;ctx.setLineDash([r*.15,r*.25]);
+    ctx.beginPath();ctx.arc(0,0,r*.52,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // twin node dots
+    ctx.fillStyle=col+'bb';
+    ctx.beginPath();ctx.arc(-r*.26,0,r*.1,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(r*.26,0,r*.1,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col+'88';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(-r*.16,0);ctx.lineTo(r*.16,0);ctx.stroke();
+    this._core(ctx,r,col);
+  }
+  _drawTwinOrbit(ctx){
+    const dr=this.getRange()*TS,col=this.color;
+    for(let i=0;i<2;i++){
+      const da=this._twinAngles[i],active=this._twin_hcd[i]>0;
+      // short trail (6 steps)
+      for(let j=5;j>=0;j--){
+        const ta=da-j*.2;const a=(1-j/5)*.42;
+        ctx.globalAlpha=a;ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=a*6;
+        ctx.beginPath();ctx.arc(this.cx+Math.cos(ta)*dr,this.cy+Math.sin(ta)*dr,3.2*(1-j/5)+.4,0,Math.PI*2);ctx.fill();
+      }
+      ctx.shadowBlur=0;ctx.globalAlpha=1;
+      // sphere orb
+      const ox=this.cx+Math.cos(da)*dr,oy=this.cy+Math.sin(da)*dr;
+      ctx.save();
+      ctx.shadowColor=col;ctx.shadowBlur=active?20:9;
+      const g=ctx.createRadialGradient(ox-.8,oy-.8,.3,ox,oy,5.5);
+      g.addColorStop(0,'#fff');g.addColorStop(.35,col);g.addColorStop(1,col+'33');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(ox,oy,5.5,0,Math.PI*2);ctx.fill();
+      if(active){
+        // amp flash ring
+        ctx.globalAlpha=.55;ctx.strokeStyle=col;ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.arc(ox,oy,9,0,Math.PI*2);ctx.stroke();
+        ctx.globalAlpha=1;
+      }
+      ctx.shadowBlur=0;ctx.restore();
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1337,7 +1399,7 @@ const UI={
     if(d.type==='refinery')tags+=`<span class="mc-tag">전격·포트 획득</span>`;
     if(d.type==='chain')tags+=`<span class="mc-tag">연쇄 <b>3개</b></span>`;
     if(d.type==='pierce')tags+=`<span class="mc-tag">관통 <b>8개</b></span>`;
-    if(d.type==='twinhub')tags+=`<span class="mc-tag">속도버프</span>`;
+    if(d.type==='twinhub')tags+=`<span class="mc-tag">궤도 증폭</span>`;
     if(d.type==='drone')tags+=`<span class="mc-tag">선회공격</span>`;
     document.getElementById('mc-tags').innerHTML=tags;
   },
@@ -1393,7 +1455,7 @@ const UI={
     if(tower.type==='refinery'){const pg=Math.max(1,Math.round(tower.getDmg()*.5));s+=`<div class="tis">포트/발사<span>+◈${pg}</span></div>`;}
     if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
-    if(tower.type==='twinhub'){const tb=[20,45,70,100][tower.level-1]||20;s+=`<div class="tis">속도버프<span>+${tb}%</span></div>`;}
+    if(tower.type==='twinhub'){const dur=[1.5,2.5,3.5,5.0][tower.level-1]||1.5;s+=`<div class="tis">증폭 지속<span>${dur}초</span></div>`;s+=`<div class="tis">데미지 배율<span>×2</span></div>`;}
     s+=`<div class="tis-desc">${d.desc}</div>`;
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
