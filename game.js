@@ -269,16 +269,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:6,   spd:1.0,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
-  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:16,  spd:2.4,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
-  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:48,  spd:0.24, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
-  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:14,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
-  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'refinery', dmg:8,   spd:1.1,  range:2.4, desc:'원석에 전격을 발사해 처리하며 포트를 추가 획득한다.'},
-  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:12,  spd:1.4,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
-  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:28,  spd:0.8,  range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:1.1,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
+  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:18,  spd:2.6,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
+  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:55,  spd:0.22, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
+  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:18,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
+  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'refinery', dmg:4,   spd:0.6,  range:2.4, desc:'원석에 전격을 발사해 처리하며 포트를 추가 획득한다.'},
+  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:13,  spd:1.5,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
+  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:32,  spd:0.85, range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
   twinHub:     {name:'트윈 허브',     price:2800, color:'#9C27B0',type:'twinhub',  dmg:0,   spd:0,    range:1.8, desc:'두 궤도 드론이 원석에 접촉하면 일정 시간 모든 공정 데미지를 2배로 증폭시킨다.'},
-  drone:       {name:'레이스 드론',   price:3200, color:'#00E5CC',type:'drone',    dmg:80,  spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:65,  spd:0.36, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
+  drone:       {name:'레이스 드론',   price:3200, color:'#00E5CC',type:'drone',    dmg:130, spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:72,  spd:0.38, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
@@ -1037,40 +1037,50 @@ class Tower{
     ctx.globalAlpha=1;
   }
   _drawDroneOrbit(ctx){
-    const dr=this.getRange()*TS,da=this._droneAngle,f=this._firingT>0;
+    const dr=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
     ctx.save();
     // orbit path
-    ctx.strokeStyle=this.color+'1e';ctx.lineWidth=1;ctx.setLineDash([4,7]);
+    ctx.strokeStyle=col+'14';ctx.lineWidth=.8;ctx.setLineDash([3,9]);
     ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();
     ctx.setLineDash([]);
-    // elongated trail (16 steps)
-    for(let i=15;i>=0;i--){
-      const ta=da-i*.14;const a=(1-i/15);
-      ctx.globalAlpha=a*.45;ctx.shadowColor=this.color;ctx.shadowBlur=a*5;
-      ctx.fillStyle=this.color;const sz=4*a+.4;
-      ctx.beginPath();ctx.arc(this.cx+Math.cos(ta)*dr,this.cy+Math.sin(ta)*dr,sz,0,Math.PI*2);ctx.fill();
+    // short trail
+    for(let j=7;j>=0;j--){
+      const ta=da-j*.13,a=(1-j/7)*.36;
+      ctx.globalAlpha=a;ctx.fillStyle=col;
+      ctx.beginPath();ctx.arc(this.cx+Math.cos(ta)*dr,this.cy+Math.sin(ta)*dr,2.8*(1-j/7)+.3,0,Math.PI*2);ctx.fill();
     }
-    ctx.shadowBlur=0;ctx.globalAlpha=1;
-    // wraith drone body
+    ctx.globalAlpha=1;
+    // drone body
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
     ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);
-    ctx.shadowColor=this.color;ctx.shadowBlur=f?24:8;
-    // swept chevron body
-    ctx.fillStyle=f?this.color:'#c8ffe8';
-    ctx.beginPath();
-    ctx.moveTo(0,-10);ctx.lineTo(-7,3);ctx.lineTo(-3,1);ctx.lineTo(0,5);
-    ctx.lineTo(3,1);ctx.lineTo(7,3);ctx.closePath();ctx.fill();
-    // wing edge lines
-    ctx.strokeStyle=this.color+'cc';ctx.lineWidth=1.2;ctx.shadowBlur=4;
-    ctx.beginPath();ctx.moveTo(0,-9);ctx.lineTo(-6,2);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-9);ctx.lineTo(6,2);ctx.stroke();
-    // engine core (rear glow)
-    ctx.fillStyle=f?'#fff':this.color+'aa';ctx.shadowBlur=f?10:4;
-    ctx.beginPath();ctx.arc(0,4,f?4.5:2.5,0,Math.PI*2);ctx.fill();
-    // nav lights (wing tips)
-    ctx.shadowBlur=6;
-    ctx.fillStyle='#FF4500';ctx.beginPath();ctx.arc(-7,3,1.8,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#00FFB0';ctx.beginPath();ctx.arc(7,3,1.8,0,Math.PI*2);ctx.fill();
+    ctx.shadowColor=col;ctx.shadowBlur=f?15:6;
+    // central body frame
+    ctx.fillStyle=f?col:'#d4fff8';ctx.strokeStyle=col;ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(-3,-4.5,6,9,1.5);ctx.fill();ctx.stroke();
+    // body highlight
+    ctx.fillStyle='rgba(255,255,255,.3)';
+    ctx.beginPath();ctx.roundRect(-2,-4,4,3.5,1);ctx.fill();
+    // 4 arms (diagonal)
+    const AP=[[-3,-3.5],[3,-3.5],[3,3.5],[-3,3.5]];
+    const RP=[[-8.5,-8.5],[8.5,-8.5],[8.5,8.5],[-8.5,8.5]];
+    ctx.strokeStyle=col;ctx.lineWidth=1.3;ctx.lineCap='round';
+    for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(AP[i][0],AP[i][1]);ctx.lineTo(RP[i][0],RP[i][1]);ctx.stroke();}
+    // rotors
+    const rs=this._droneAngle*9;
+    for(const[rx,ry]of RP){
+      ctx.save();ctx.translate(rx,ry);
+      ctx.fillStyle=col+'25';ctx.beginPath();ctx.arc(0,0,4,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle=f?col:'#555';ctx.lineWidth=.9;ctx.beginPath();ctx.arc(0,0,3.5,0,Math.PI*2);ctx.stroke();
+      ctx.save();ctx.rotate(rs);
+      ctx.strokeStyle=f?'#fff':col+'88';ctx.lineWidth=1;ctx.globalAlpha=f?.95:.55;
+      ctx.beginPath();ctx.moveTo(-3,0);ctx.lineTo(3,0);ctx.stroke();
+      ctx.globalAlpha=1;ctx.restore();
+      ctx.fillStyle=f?col:'#666';ctx.shadowBlur=f?5:0;
+      ctx.beginPath();ctx.arc(0,0,1.3,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+    // engine glow when active
+    if(f){ctx.fillStyle='#fff';ctx.shadowColor=col;ctx.shadowBlur=10;ctx.globalAlpha=.88;ctx.beginPath();ctx.arc(0,5.5,2.2,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
     ctx.shadowBlur=0;ctx.restore();ctx.restore();
   }
   _dScan(ctx,r,t){
