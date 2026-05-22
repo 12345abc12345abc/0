@@ -92,6 +92,11 @@ const SFX={
       this._osc('sawtooth',300,.12,.22);
       this._osc('sine',80,.2,.28);
       this._noise(.1,.14,400);
+    } else if(type==='refinery'){
+      // 정제소: 짧은 전격 지직
+      this._noise(.04,.28,2400);
+      this._osc('sawtooth',880,.02,.14);
+      this._osc('square',180,.05,.08);
     }
   },
 
@@ -264,16 +269,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','twinHub','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:5,   spd:0.9,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
-  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:14,  spd:2.2,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
-  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:38,  spd:0.28, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
-  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:12,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
-  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'buff',     dmg:0,   spd:0,    range:2.4, desc:'범위 내 원석 처치 시 획득 포트를 증가시킨다.'},
-  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:14,  spd:1.5,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
-  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:26,  spd:0.75, range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
-  twinHub:     {name:'트윈 허브',     price:2800, color:'#00BCD4',type:'twinhub',  dmg:0,   spd:0,    range:2.4, desc:'범위 내 설비의 공정 속도를 강화한다.'},
-  drone:       {name:'드론',          price:3200, color:'#AA00FF',type:'drone',    dmg:100, spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:70,  spd:0.38, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:6,   spd:1.0,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
+  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:16,  spd:2.4,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
+  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:48,  spd:0.24, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
+  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:14,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
+  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'refinery', dmg:8,   spd:1.1,  range:2.4, desc:'원석에 전격을 발사해 처리하며 포트를 추가 획득한다.'},
+  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:12,  spd:1.4,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
+  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:28,  spd:0.8,  range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
+  twinHub:     {name:'트윈 허브',     price:2800, color:'#9C27B0',type:'twinhub',  dmg:0,   spd:0,    range:2.4, desc:'범위 내 설비의 공정 속도를 강화한다.'},
+  drone:       {name:'레이스 드론',   price:3200, color:'#00E5CC',type:'drone',    dmg:80,  spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:65,  spd:0.36, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
@@ -526,11 +531,12 @@ const R={
       }
     }
     if(UI.selTwr)this.drawRange(ctx,UI.selTwr.cx,UI.selTwr.cy,UI.selTwr.getRange(),UI.selTwr.color);
-    // 4. 게임 오브젝트
-    for(const e of GS.effects)e.draw(ctx,gt);
+    // 4. 게임 오브젝트 (effects는 타워·광물보다 위에)
     for(const t of GS.towers)t.draw(ctx,gt);
     for(const o of GS.ores)o.draw(ctx,gt);
     for(const p of GS.projs)p.draw(ctx);
+    const sfe=[...GS.effects].sort((a,b)=>(a.z||0)-(b.z||0));
+    for(const e of sfe)e.draw(ctx,gt);
     for(const p of GS.particles)p.draw(ctx);
     for(const p of GS.popups)p.draw(ctx);
   }
@@ -590,12 +596,7 @@ class Ore{
     SFX.hit(this.grade>=3);
     if(this.special==='split'){for(let i=0;i<3;i++){const o=new Ore('normal',this.wave);o.pathIdx=this.pathIdx;o.progress=this.progress;o.x=this.x;o.y=this.y;GS.ores.push(o);}}
     for(let i=0;i<12;i++)GS.particles.push(new Particle(this.x,this.y,this.color,i,12));
-    let bestBuff=0;
-    for(const t of GS.towers){
-      if(t.type==='buff'&&Math.hypot(t.cx-this.x,t.cy-this.y)<=t.getRange()*TS){const rb=Math.min(([0.4,0.6,0.8,1.0][t.level-1]||0.4)*(t.isMega?1.2:1),1.0);bestBuff=Math.max(bestBuff,rb);}
-    }
-    const pm=1+bestBuff;
-    const pr=Math.round(this.reward*pm);
+    const pr=this.reward;
     GS.port+=pr;GS.totalPort+=pr;GS.portHist.push({t:GS.time,v:pr});
     GS.popups.push(new Popup(this.x,this.y-this.radius-5,'+'+pr,'#FFD700'));UI.updHUD();
   }
@@ -642,6 +643,7 @@ class Tower{
   }
   _lm(){return LVL[this.level-1].mult;}
   _megaMult(){return this.isMega?5:1;}
+  _eff(e){e.z=this.basePrice*(this.isMega?4:1);GS.effects.push(e);return e;}
   _calcTwin(){let best=0;for(const t of GS.towers)if(t.type==='twinhub'&&t.uid!==this.uid&&Math.hypot(t.cx-this.cx,t.cy-this.cy)<=t.getRange()*TS){const b=Math.min(([0.2,0.45,0.7,1.0][t.level-1]||0.2)*(t.isMega?1.2:1),1.0);best=Math.max(best,b);}this._tDmg=0;this._tSpd=best;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
@@ -659,14 +661,15 @@ class Tower{
           this._pulseT=0;
           const sr=Math.min(.45*this._lm()*this._megaMult(),.92);
           for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(Math.random()<.55)o.applySlow(sr,2.2);}
-          GS.effects.push(new RingEff(this.cx,this.cy,rng,this.color));
+          this._eff(new RingEff(this.cx,this.cy,rng,this.color));
         }
       }
       return;
     }
-    if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;let best=null,bestHp=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;best.takeDmg(this.getDmg(),'scan');GS.effects.push(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
-    if(tp==='buff'||tp==='twinhub')return;
-    if(tp==='drone'){this._droneAngle+=dt*(1.5+this._lm()*.18);const dr=this.getRange()*TS;const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;const hitR=TS*.62;for(const o of ores){if(!o.alive)continue;if(Math.hypot(o.x-drX,o.y-drY)<hitR){o.takeDmg(this.getDmg()*dt,'single');if(this._hitCooldown<=0){GS.effects.push(new RingEff(drX,drY,hitR*1.4,this.color));this._hitCooldown=.1;}this._firingT=.18;}}if(this._hitCooldown>0)this._hitCooldown-=dt;return;}
+    if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;let best=null,bestHp=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
+    if(tp==='twinhub')return;
+    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(1,Math.round(dmg*.5));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new LightningEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
+    if(tp==='drone'){this._droneAngle+=dt*(0.38+this._lm()*.06);const dr=this.getRange()*TS;const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;const hitR=TS*.62;for(const o of ores){if(!o.alive)continue;if(Math.hypot(o.x-drX,o.y-drY)<hitR){o.takeDmg(this.getDmg()*dt,'single');if(this._hitCooldown<=0){this._eff(new RingEff(drX,drY,hitR*1.4,this.color));this._hitCooldown=.1;}this._firingT=.18;}}if(this._hitCooldown>0)this._hitCooldown-=dt;return;}
     if(tp==='focus'){
       if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
       if(!this._focusTgt)this._focusTgt=this._findTgt(ores);
@@ -680,7 +683,7 @@ class Tower{
     }
     if(tp==='aoe'){
       this._aoeT+=dt;const iv=1/Math.max(.1,this.getSpd());
-      if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;let hit=false;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng){o.takeDmg(this.getDmg()*iv,'aoe');hit=true;}if(hit){this._firingT=.28;GS.effects.push(new GridFlashEff(this.cx,this.cy,rng,this.color));SFX.shoot('aoe');}}return;}
+      if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;let hit=false;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng){o.takeDmg(this.getDmg()*iv,'aoe');hit=true;}if(hit){this._firingT=.28;this._eff(new GridFlashEff(this.cx,this.cy,rng,this.color));SFX.shoot('aoe');}}return;}
     if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}
     if(tp==='pierce'){
       const hasTgt=this._findTgt(ores);if(!hasTgt)return;
@@ -700,13 +703,13 @@ class Tower{
     if(this.tId==='pixelArm'){
       const dir=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);
       tgt.takeDmg(this.getDmg(),'single');
-      GS.effects.push(new LaserEff(this.cx,this.cy,dir,Math.hypot(tgt.x-this.cx,tgt.y-this.cy)+8,this.color));
+      this._eff(new LaserEff(this.cx,this.cy,dir,Math.hypot(tgt.x-this.cx,tgt.y-this.cy)+8,this.color));
     }else{
       GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),{color:this.color,slow:null,size:1}));
     }
   }
-  _firePierce(ores){const rng=this.getRange()*TS;let best=null,bestP=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);const dx=Math.cos(this.angle),dy=Math.sin(this.angle);let hit=0;for(const o of ores){if(!o.alive||hit>=8)continue;const ex=o.x-this.cx,ey=o.y-this.cy,dot=ex*dx+ey*dy;if(dot<0||dot>rng)continue;if(Math.abs(ex*dy-ey*dx)<TS*.5){o.takeDmg(this.getDmg(),'pierce');hit++;}}GS.effects.push(new LaserEff(this.cx,this.cy,this.angle,rng,this.color));}
-  _fireChain(ores){const rng=this.getRange()*TS;const first=this._findTgt(ores);if(!first)return;this.angle=Math.atan2(first.y-this.cy,first.x-this.cx);const targets=[first];let last=first;for(let i=1;i<3;i++){let nx=null,bd=rng*1.6;for(const o of ores){if(!o.alive||targets.includes(o))continue;const d=Math.hypot(o.x-last.x,o.y-last.y);if(d<bd){bd=d;nx=o;}}if(!nx)break;targets.push(nx);last=nx;}const base=this.getDmg(),mults=[1,.80,.60];const shockDps=base*0.5,shockDur=2.5;for(let i=0;i<targets.length;i++){targets[i].takeDmg(base*mults[i],'chain');targets[i].applyShock(shockDps*mults[i],shockDur);if(i>0)GS.effects.push(new BoltEff(targets[i-1].x,targets[i-1].y,targets[i].x,targets[i].y,this.color));}GS.effects.push(new BoltEff(this.cx,this.cy,targets[0].x,targets[0].y,this.color));}
+  _firePierce(ores){const rng=this.getRange()*TS;let best=null,bestP=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);const dx=Math.cos(this.angle),dy=Math.sin(this.angle);let hit=0;for(const o of ores){if(!o.alive||hit>=8)continue;const ex=o.x-this.cx,ey=o.y-this.cy,dot=ex*dx+ey*dy;if(dot<0||dot>rng)continue;if(Math.abs(ex*dy-ey*dx)<TS*.5){o.takeDmg(this.getDmg(),'pierce');hit++;}}this._eff(new LaserEff(this.cx,this.cy,this.angle,rng,this.color));}
+  _fireChain(ores){const rng=this.getRange()*TS;const first=this._findTgt(ores);if(!first)return;this.angle=Math.atan2(first.y-this.cy,first.x-this.cx);const targets=[first];let last=first;for(let i=1;i<3;i++){let nx=null,bd=rng*1.6;for(const o of ores){if(!o.alive||targets.includes(o))continue;const d=Math.hypot(o.x-last.x,o.y-last.y);if(d<bd){bd=d;nx=o;}}if(!nx)break;targets.push(nx);last=nx;}const base=this.getDmg(),mults=[1,.80,.60];const shockDps=base*0.5,shockDur=2.5;for(let i=0;i<targets.length;i++){targets[i].takeDmg(base*mults[i],'chain');targets[i].applyShock(shockDps*mults[i],shockDur);if(i>0)this._eff(new BoltEff(targets[i-1].x,targets[i-1].y,targets[i].x,targets[i].y,this.color));}this._eff(new BoltEff(this.cx,this.cy,targets[0].x,targets[0].y,this.color));}
 
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
@@ -719,7 +722,7 @@ class Tower{
         case'aoe':this._dAOE(ctx,r,t,f);break;case'focus':this._dSlow(ctx,r,t,f);break;case'slow':this._dSlow(ctx,r,t,f);break;
         case'pierce':this._dPierce(ctx,r,t,f);break;case'chain':this._dChain(ctx,r,t,f);break;
         case'pulseslow':this._dSlowField(ctx,r,t);break;case'scan':this._dScan(ctx,r,t);break;
-        case'buff':this._dRefinery(ctx,r,t);break;case'twinhub':this._dTwinHub(ctx,r,t);break;
+        case'refinery':this._dRefinery(ctx,r,t);break;case'twinhub':this._dTwinHub(ctx,r,t);break;
         case'drone':this._dDrone(ctx,r,t);break;
       }
       ctx.restore();
@@ -742,7 +745,7 @@ class Tower{
       case'aoe':this._dAOE(ctx,r,t,f);break;case'focus':this._dSlow(ctx,r,t,f);break;case'slow':this._dSlow(ctx,r,t,f);break;
       case'pierce':this._dPierce(ctx,r,t,f);break;case'chain':this._dChain(ctx,r,t,f);break;
       case'pulseslow':this._dSlowField(ctx,r,t);break;case'scan':this._dScan(ctx,r,t);break;
-      case'buff':this._dRefinery(ctx,r,t);break;case'twinhub':this._dTwinHub(ctx,r,t);break;
+      case'refinery':this._dRefinery(ctx,r,t);break;case'twinhub':this._dTwinHub(ctx,r,t);break;
       case'drone':this._dDrone(ctx,r,t);break;
     }
     ctx.restore();
@@ -996,38 +999,111 @@ class Tower{
   }
   _dDrone(ctx,r,t){
     const col=this.color;this._base(ctx,r,col,'hex');
-    ctx.strokeStyle=col+'55';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.52,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle=col+'99';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(-r*.28,-r*.24);ctx.lineTo(-r*.28,r*.24);ctx.moveTo(r*.28,-r*.24);ctx.lineTo(r*.28,r*.24);ctx.moveTo(-r*.28,0);ctx.lineTo(r*.28,0);ctx.stroke();
-    const pulse=.5+Math.sin(t*2.5)*.5;ctx.strokeStyle=col+(pulse>.6?'88':'33');ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.74,0,Math.PI*2);ctx.stroke();
+    // outer rotating dashed ring
+    ctx.save();ctx.rotate(t*.7);ctx.strokeStyle=col+'55';ctx.lineWidth=1.2;ctx.setLineDash([r*.22,r*.14]);
+    ctx.beginPath();ctx.arc(0,0,r*.74,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // inner counter ring
+    ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=col+'33';ctx.lineWidth=.8;ctx.setLineDash([r*.14,r*.22]);
+    ctx.beginPath();ctx.arc(0,0,r*.52,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // drone silhouette cross
+    const pulse=.5+Math.sin(t*3)*.5;
+    ctx.strokeStyle=col+(pulse>.5?'cc':'66');ctx.lineWidth=1.8;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(-r*.26,0);ctx.lineTo(r*.26,0);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-r*.26);ctx.lineTo(0,r*.26);ctx.stroke();
+    // spinning rotor dots
+    for(let i=0;i<4;i++){
+      const aa=i*Math.PI/2+t*4;
+      ctx.fillStyle=col+(pulse>.6?'ee':'66');ctx.shadowColor=col;ctx.shadowBlur=pulse*4;
+      ctx.beginPath();ctx.arc(Math.cos(aa)*r*.34,Math.sin(aa)*r*.34,r*.07,0,Math.PI*2);ctx.fill();
+    }
+    ctx.shadowBlur=0;
+    // glowing core
     ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,r*.1,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.globalAlpha=.75;ctx.beginPath();ctx.arc(-r*.03,-r*.03,r*.045,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
   }
   _drawDroneOrbit(ctx){
     const dr=this.getRange()*TS,da=this._droneAngle,f=this._firingT>0;
     ctx.save();
-    ctx.strokeStyle=this.color+'22';ctx.lineWidth=1;ctx.setLineDash([3,5]);
+    // orbit path
+    ctx.strokeStyle=this.color+'1e';ctx.lineWidth=1;ctx.setLineDash([4,7]);
     ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();
     ctx.setLineDash([]);
-    for(let i=7;i>=0;i--){const ta=da-i*.22;ctx.globalAlpha=(1-i/8)*.55;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.cx+Math.cos(ta)*dr,this.cy+Math.sin(ta)*dr,3.5*(1-i/8)+.5,0,Math.PI*2);ctx.fill();}
-    ctx.globalAlpha=1;
+    // elongated trail (16 steps)
+    for(let i=15;i>=0;i--){
+      const ta=da-i*.14;const a=(1-i/15);
+      ctx.globalAlpha=a*.45;ctx.shadowColor=this.color;ctx.shadowBlur=a*5;
+      ctx.fillStyle=this.color;const sz=4*a+.4;
+      ctx.beginPath();ctx.arc(this.cx+Math.cos(ta)*dr,this.cy+Math.sin(ta)*dr,sz,0,Math.PI*2);ctx.fill();
+    }
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+    // wraith drone body
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
     ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);
-    ctx.shadowColor=this.color;ctx.shadowBlur=f?18:5;
-    ctx.fillStyle=f?this.color:'#ccc';ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.fill();
-    ctx.shadowBlur=0;
-    for(let i=0;i<4;i++){const aa=i*Math.PI/2+Math.PI/4;const ax=Math.cos(aa)*7,ay=Math.sin(aa)*7;ctx.strokeStyle=this.color+'aa';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(ax,ay);ctx.stroke();ctx.save();ctx.translate(ax,ay);ctx.rotate(da*6);ctx.strokeStyle=this.color+'66';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,4,1.2,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
-    ctx.restore();ctx.restore();
+    ctx.shadowColor=this.color;ctx.shadowBlur=f?24:8;
+    // swept chevron body
+    ctx.fillStyle=f?this.color:'#c8ffe8';
+    ctx.beginPath();
+    ctx.moveTo(0,-10);ctx.lineTo(-7,3);ctx.lineTo(-3,1);ctx.lineTo(0,5);
+    ctx.lineTo(3,1);ctx.lineTo(7,3);ctx.closePath();ctx.fill();
+    // wing edge lines
+    ctx.strokeStyle=this.color+'cc';ctx.lineWidth=1.2;ctx.shadowBlur=4;
+    ctx.beginPath();ctx.moveTo(0,-9);ctx.lineTo(-6,2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-9);ctx.lineTo(6,2);ctx.stroke();
+    // engine core (rear glow)
+    ctx.fillStyle=f?'#fff':this.color+'aa';ctx.shadowBlur=f?10:4;
+    ctx.beginPath();ctx.arc(0,4,f?4.5:2.5,0,Math.PI*2);ctx.fill();
+    // nav lights (wing tips)
+    ctx.shadowBlur=6;
+    ctx.fillStyle='#FF4500';ctx.beginPath();ctx.arc(-7,3,1.8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#00FFB0';ctx.beginPath();ctx.arc(7,3,1.8,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;ctx.restore();ctx.restore();
   }
-  _dScan(ctx,r,t){const col=this.color;this._base(ctx,r,col,'circle');ctx.setLineDash([3,4]);ctx.strokeStyle=col+'55';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.7,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(0,0,r*.44,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.save();ctx.rotate(t*1.8);ctx.fillStyle=col+'28';ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.7,-Math.PI*.22,Math.PI*.22);ctx.closePath();ctx.fill();ctx.restore();ctx.strokeStyle=col+'88';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-r*.48,0);ctx.lineTo(r*.48,0);ctx.moveTo(0,-r*.48);ctx.lineTo(0,r*.48);ctx.stroke();ctx.beginPath();ctx.arc(0,0,r*.15,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();}
+  _dScan(ctx,r,t){
+    const col=this.color;this._base(ctx,r,col,'circle');
+    ctx.setLineDash([3,4]);ctx.strokeStyle=col+'55';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.arc(0,0,r*.7,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,r*.44,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.save();ctx.rotate(t*1.8);ctx.fillStyle=col+'28';
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.7,-Math.PI*.22,Math.PI*.22);ctx.closePath();ctx.fill();
+    ctx.restore();
+    ctx.strokeStyle=col+'88';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(-r*.48,0);ctx.lineTo(r*.48,0);ctx.moveTo(0,-r*.48);ctx.lineTo(0,r*.48);ctx.stroke();
+    // directional needle — points to last target
+    ctx.save();ctx.rotate(this.angle+Math.PI/2);
+    ctx.strokeStyle=col+'cc';ctx.lineWidth=2.2;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(0,r*.12);ctx.lineTo(0,-r*.64);ctx.stroke();
+    ctx.fillStyle=col;
+    ctx.beginPath();ctx.moveTo(0,-r*.65);ctx.lineTo(-r*.1,-r*.46);ctx.lineTo(r*.1,-r*.46);ctx.closePath();ctx.fill();
+    ctx.restore();
+    ctx.beginPath();ctx.arc(0,0,r*.15,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+  }
   _dRefinery(ctx,r,t){
-    const col=this.color;this._base(ctx,r,col,'oct');
-    ctx.strokeStyle='#333';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.68,0,Math.PI*2);ctx.stroke();
-    ctx.save();ctx.rotate(t*.5);ctx.strokeStyle=col+'88';ctx.lineWidth=1.5;
+    const col=this.color,f=this._firingT>0;
+    this._base(ctx,r,col,'oct');
+    // rotating gear (slightly faster to feel active)
+    ctx.save();ctx.rotate(t*.9);ctx.strokeStyle=col+'88';ctx.lineWidth=1.5;
     const gr=r*.52,tooth=r*.12;
     for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2;ctx.beginPath();ctx.moveTo(Math.cos(a)*gr,Math.sin(a)*gr);ctx.lineTo(Math.cos(a)*(gr+tooth),Math.sin(a)*(gr+tooth));ctx.stroke();}
     ctx.beginPath();ctx.arc(0,0,gr,0,Math.PI*2);ctx.stroke();ctx.restore();
-    const fly=Math.sin(t*2)*r*.06;ctx.fillStyle=col;
-    ctx.beginPath();ctx.moveTo(0,-r*.38+fly);ctx.lineTo(-r*.22,-r*.08+fly);ctx.lineTo(-r*.1,-r*.08+fly);ctx.lineTo(-r*.1,r*.28+fly);ctx.lineTo(r*.1,r*.28+fly);ctx.lineTo(r*.1,-r*.08+fly);ctx.lineTo(r*.22,-r*.08+fly);ctx.closePath();ctx.fill();
-    ctx.fillStyle='rgba(255,255,255,.22)';ctx.beginPath();ctx.roundRect(-r*.06,-r*.33+fly,r*.12,r*.16,r*.03);ctx.fill();
+    // directional barrel facing this.angle
+    ctx.save();ctx.rotate(this.angle+Math.PI/2);
+    ctx.fillStyle='#2a2a2a';ctx.strokeStyle='#666';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.roundRect(-r*.1,-r*.76,r*.2,r*.54,r*.04);ctx.fill();ctx.stroke();
+    // coil stripes
+    ctx.strokeStyle=col+'66';ctx.lineWidth=1;
+    for(let i=0;i<3;i++){const y=-r*.66+i*r*.14;ctx.beginPath();ctx.moveTo(-r*.08,y);ctx.lineTo(r*.08,y);ctx.stroke();}
+    // muzzle flash
+    ctx.fillStyle=f?col:'#3a3a3a';
+    ctx.beginPath();ctx.roundRect(-r*.12,-r*.8,r*.24,r*.08,r*.02);ctx.fill();
+    if(f){ctx.fillStyle=col+'66';ctx.shadowColor=col;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(0,-r*.8,r*.1,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+    ctx.restore();
+    // central core
+    ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);
+    const cg=ctx.createRadialGradient(0,0,r*.02,0,0,r*.16);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.5,col);cg.addColorStop(1,col+'44');
+    ctx.fillStyle=cg;ctx.fill();
   }
   _dTwinHub(ctx,r,t){const col=this.color;this._base(ctx,r,col,'circle');ctx.save();ctx.rotate(t*.65);ctx.strokeStyle=col+'88';ctx.lineWidth=2;ctx.beginPath();ctx.arc(-r*.28,0,r*.4,0,Math.PI*2);ctx.stroke();ctx.restore();ctx.save();ctx.rotate(-t*.65);ctx.strokeStyle=col+'88';ctx.lineWidth=2;ctx.beginPath();ctx.arc(r*.28,0,r*.4,0,Math.PI*2);ctx.stroke();ctx.restore();ctx.fillStyle=col+'aa';ctx.beginPath();ctx.arc(-r*.28,0,r*.09,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(r*.28,0,r*.09,0,Math.PI*2);ctx.fill();ctx.strokeStyle=col+'cc';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-r*.17,0);ctx.lineTo(r*.17,0);ctx.stroke();this._core(ctx,r,col);}
 }
@@ -1038,11 +1114,57 @@ class Tower{
 class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.size=opts.size||1;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>7)this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;const sz=this.size;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*.48;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,(3.2-i*.3)*sz,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6*sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}
 class RingEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.32;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.55;ctx.strokeStyle=this.col;ctx.lineWidth=2.5;ctx.shadowColor=this.col;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=p*.25;ctx.lineWidth=6;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class GridFlashEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.5;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.save();ctx.shadowColor=this.col;
-  ctx.globalAlpha=p*.6;ctx.strokeStyle=this.col;ctx.lineWidth=3;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1+(1-p)*.4),0,Math.PI*2);ctx.stroke();
-  ctx.globalAlpha=p*.35;ctx.lineWidth=1.5;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1+(1-p)*.7),0,Math.PI*2);ctx.stroke();
-  ctx.globalAlpha=p*.7;ctx.lineWidth=2;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p*.55,0,Math.PI*2);ctx.stroke();
-  const hl=this.r*(1.2+(1-p)*.4);ctx.globalAlpha=p*.45;ctx.lineWidth=1.5;ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(this.x-hl,this.y);ctx.lineTo(this.x+hl,this.y);ctx.moveTo(this.x,this.y-hl);ctx.lineTo(this.x,this.y+hl);ctx.stroke();
+  ctx.globalAlpha=p*.6;ctx.strokeStyle=this.col;ctx.lineWidth=3;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(0.95+(1-p)*.05),0,Math.PI*2);ctx.stroke();
+  ctx.globalAlpha=p*.35;ctx.lineWidth=1.5;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(0.88+(1-p)*.08),0,Math.PI*2);ctx.stroke();
+  ctx.globalAlpha=p*.7;ctx.lineWidth=2;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p*.5,0,Math.PI*2);ctx.stroke();
+  const hl=this.r*(0.92+(1-p)*.08);ctx.globalAlpha=p*.45;ctx.lineWidth=1.5;ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(this.x-hl,this.y);ctx.lineTo(this.x+hl,this.y);ctx.moveTo(this.x,this.y-hl);ctx.lineTo(this.x,this.y+hl);ctx.stroke();
   ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();}}
+class LightningEff{
+  constructor(x1,y1,x2,y2,col){
+    this.col=col;this.life=this.max=.26;this.z=0;
+    const mk=(ax,ay,bx,by,d)=>{
+      if(d===0||Math.hypot(bx-ax,by-ay)<7)return[[ax,ay],[bx,by]];
+      const len=Math.hypot(bx-ax,by-ay),jit=len*.36;
+      const mx=(ax+bx)/2+(Math.random()-.5)*jit,my=(ay+by)/2+(Math.random()-.5)*jit;
+      return[...mk(ax,ay,mx,my,d-1),...mk(mx,my,bx,by,d-1).slice(1)];
+    };
+    this.branches=[{pts:mk(x1,y1,x2,y2,3),w:2.8,a:1.0}];
+    const mainAng=Math.atan2(y2-y1,x2-x1),dist=Math.hypot(x2-x1,y2-y1);
+    for(let i=0;i<3;i++){
+      const t=.25+Math.random()*.5,bx=x1+(x2-x1)*t,by=y1+(y2-y1)*t;
+      const sa=mainAng+Math.PI/2*(Math.random()>.5?1:-1)+(Math.random()-.5)*.8;
+      const bl=dist*.22+Math.random()*dist*.12;
+      this.branches.push({pts:mk(bx,by,bx+Math.cos(sa)*bl,by+Math.sin(sa)*bl,2),w:1.3,a:.55});
+    }
+  }
+  update(dt){this.life-=dt;}
+  draw(ctx){
+    if(this.life<=0)return;
+    const p=this.life/this.max;
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+    for(const br of this.branches){
+      // outer glow
+      ctx.globalAlpha=p*br.a*.45;ctx.shadowColor=this.col;ctx.shadowBlur=22;
+      ctx.strokeStyle=this.col;ctx.lineWidth=br.w*2;
+      ctx.beginPath();ctx.moveTo(br.pts[0][0],br.pts[0][1]);
+      for(let i=1;i<br.pts.length;i++)ctx.lineTo(br.pts[i][0],br.pts[i][1]);
+      ctx.stroke();
+      // main bolt
+      ctx.globalAlpha=p*br.a*.9;ctx.shadowBlur=10;
+      ctx.strokeStyle=this.col;ctx.lineWidth=br.w;
+      ctx.beginPath();ctx.moveTo(br.pts[0][0],br.pts[0][1]);
+      for(let i=1;i<br.pts.length;i++)ctx.lineTo(br.pts[i][0],br.pts[i][1]);
+      ctx.stroke();
+      // white core
+      ctx.globalAlpha=p*br.a*.7;ctx.shadowBlur=3;
+      ctx.strokeStyle='#fff';ctx.lineWidth=br.w*.35;
+      ctx.beginPath();ctx.moveTo(br.pts[0][0],br.pts[0][1]);
+      for(let i=1;i<br.pts.length;i++)ctx.lineTo(br.pts[i][0],br.pts[i][1]);
+      ctx.stroke();
+    }
+    ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
+  }
+}
 class ExplodeEff{constructor(x,y,col){this.x=x;this.y=y;this.col=col;this.life=this.max=.55;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max,rp=1-p;ctx.save();ctx.shadowColor=this.col;ctx.globalAlpha=p*.5;ctx.strokeStyle=this.col;ctx.lineWidth=4+rp*3;ctx.shadowBlur=24;ctx.beginPath();ctx.arc(this.x,this.y,28*rp+4,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=p*.7;ctx.lineWidth=2.5;ctx.shadowBlur=16;ctx.beginPath();ctx.arc(this.x,this.y,18*rp+2,0,Math.PI*2);ctx.stroke();const cr=7*Math.max(0,p-.35)*2.8;if(cr>0){ctx.globalAlpha=p*.9;ctx.fillStyle='#fff';ctx.shadowBlur=20;ctx.beginPath();ctx.arc(this.x,this.y,cr,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=p*.38;ctx.strokeStyle=this.col;ctx.lineWidth=1.5;ctx.shadowBlur=6;for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(this.x+Math.cos(a)*(10+rp*6),this.y+Math.sin(a)*(10+rp*6));ctx.lineTo(this.x+Math.cos(a)*(24*rp+10),this.y+Math.sin(a)*(24*rp+10));ctx.stroke();}ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();}}
 class LaserEff{constructor(x,y,dir,len,col){this.x=x;this.y=y;this.dir=dir;this.len=len;this.col=col;this.life=this.max=.2;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.82;ctx.shadowColor=this.col;ctx.shadowBlur=6;ctx.strokeStyle=this.col;ctx.lineWidth=1.5+p*1.5;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(this.dir)*this.len,this.y+Math.sin(this.dir)*this.len);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class BoltEff{
@@ -1172,7 +1294,7 @@ const UI={
       case'aoe':dummy._dAOE(ctx,r,0,false);break;case'focus':dummy._dSlow(ctx,r,0,false);break;case'slow':dummy._dSlow(ctx,r,0,false);break;
       case'pierce':dummy._dPierce(ctx,r,0,false);break;case'chain':dummy._dChain(ctx,r,0,false);break;
       case'pulseslow':dummy._dSlowField(ctx,r,0);break;case'scan':dummy._dScan(ctx,r,0);break;
-      case'buff':dummy._dRefinery(ctx,r,0);break;case'twinhub':dummy._dTwinHub(ctx,r,0);break;
+      case'refinery':dummy._dRefinery(ctx,r,0);break;case'twinhub':dummy._dTwinHub(ctx,r,0);break;
       case'drone':dummy._dDrone(ctx,r,0);break;
     }
     ctx.restore();
@@ -1212,7 +1334,7 @@ const UI={
     tags+=`<span class="mc-tag">범위 <b>${d.range}</b></span>`;
     if(d.type==='focus')tags+=`<span class="mc-tag">집중 레이저</span>`;
     if(d.type==='scan')tags+=`<span class="mc-tag">광역</span>`;
-    if(d.type==='buff')tags+=`<span class="mc-tag">포트 <b>+40%</b></span>`;
+    if(d.type==='refinery')tags+=`<span class="mc-tag">전격·포트 획득</span>`;
     if(d.type==='chain')tags+=`<span class="mc-tag">연쇄 <b>3개</b></span>`;
     if(d.type==='pierce')tags+=`<span class="mc-tag">관통 <b>8개</b></span>`;
     if(d.type==='twinhub')tags+=`<span class="mc-tag">속도버프</span>`;
@@ -1268,7 +1390,7 @@ const UI={
     if(d.spd>0)s+=`<div class="tis">속도<span>${tower.getSpd().toFixed(1)}/초</span></div>`;
     s+=`<div class="tis">범위<span>${d.range}</span></div>`;
     if(tower.type==='focus')s+=`<div class="tis">집중 레이저<span>지속</span></div>`;
-    if(tower.type==='buff'){const rb=[40,60,80,100][tower.level-1]||40;s+=`<div class="tis">포트<span>+${rb}%</span></div>`;}
+    if(tower.type==='refinery'){const pg=Math.max(1,Math.round(tower.getDmg()*.5));s+=`<div class="tis">포트/발사<span>+◈${pg}</span></div>`;}
     if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
     if(tower.type==='twinhub'){const tb=[20,45,70,100][tower.level-1]||20;s+=`<div class="tis">속도버프<span>+${tb}%</span></div>`;}
@@ -1371,7 +1493,7 @@ const UI={
       case'aoe':dummy._dAOE(ctx,r,0,false);break;case'focus':dummy._dSlow(ctx,r,0,false);break;
       case'pierce':dummy._dPierce(ctx,r,0,false);break;case'chain':dummy._dChain(ctx,r,0,false);break;
       case'pulseslow':dummy._dSlowField(ctx,r,0);break;case'scan':dummy._dScan(ctx,r,0);break;
-      case'buff':dummy._dRefinery(ctx,r,0);break;case'twinhub':dummy._dTwinHub(ctx,r,0);break;
+      case'refinery':dummy._dRefinery(ctx,r,0);break;case'twinhub':dummy._dTwinHub(ctx,r,0);break;
       case'drone':dummy._dDrone(ctx,r,0);break;
     }
     ctx.restore();
@@ -1579,8 +1701,8 @@ const G={
     // 10초: 포트 무한 (게임 진행 중만)
     if(GS.running&&this._eggWindow10&&!GS.eggActive){
       GS.eggActive=true;GS.port=999999999;
-      document.getElementById('htime').style.color='#FFD700';
-      document.getElementById('htime').style.fontWeight='900';
+      const ico=document.getElementById('hport-ico');
+      if(ico){ico.style.color='#FFD700';ico.style.textShadow='0 0 12px #FFD700';}
       UI.showBanner('∞ 포트 무한 활성화!','#FFD700');
       UI.updHUD();return;
     }

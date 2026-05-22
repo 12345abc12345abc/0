@@ -13,9 +13,9 @@
   <div id="hud">
     <!-- 좌: 포트 -->
     <div class="hblock">
-      <div class="hlb">◈ 포트</div>
+      <div class="hlb"><span id="hport-ico" onclick="G.tryEgg()">◈</span> 포트</div>
       <div class="hv gold" id="hport">100</div>
-      <div id="htime" onclick="G.tryEgg()">0:00</div>
+      <div id="htime">0:00</div>
     </div>
     <!-- 중앙: 웨이브만 -->
     <div id="hcenter">
@@ -162,8 +162,7 @@
   <!-- ── 해금 오버레이 ── -->
   <div id="unlkovly">
     <div id="unlk-box">
-      <div id="unlk-badge">NEW EQUIPMENT UNLOCKED</div>
-      <div id="unlk-sub">새로운 장비 잠금 해제</div>
+      <div id="unlk-sub">새 장비 해금</div>
       <canvas id="unlk-icon" width="96" height="96"></canvas>
       <div id="unlk-name"></div>
       <div id="unlk-price"></div>
