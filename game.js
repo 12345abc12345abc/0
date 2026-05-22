@@ -1766,6 +1766,7 @@ const G={
     // 10초: 포트 무한 (게임 진행 중만)
     if(GS.running&&this._eggWindow10&&!GS.eggActive){
       GS.eggActive=true;GS.port=999999999;
+      for(const id of TWR_ORDER)GS.unlocked.add(id);
       const ico=document.getElementById('hport-ico');
       if(ico){ico.style.color='#FFD700';ico.style.textShadow='0 0 12px #FFD700';}
       UI.showBanner('∞ 포트 무한 활성화!','#FFD700');
