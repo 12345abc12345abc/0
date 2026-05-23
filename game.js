@@ -710,7 +710,7 @@ class Tower{
       const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;
       if(this._hitCooldown>0){this._hitCooldown-=dt;}
       else{
-        const laserR=4*TS;
+        const laserR=1*TS;
         let bestO=null,bestD=Infinity;
         for(const o of ores){
           if(!o.alive)continue;
@@ -1182,51 +1182,51 @@ class Tower{
     const dr=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
     const sc=this.isMega?1:0.5;
     ctx.save();
-    // orbit path dashed ring
+    // orbit path
     ctx.strokeStyle=col+'14';ctx.lineWidth=.8;ctx.setLineDash([3,9]);
     ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();
     ctx.setLineDash([]);
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
     ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);ctx.scale(sc,sc);
-    ctx.shadowColor=col;ctx.shadowBlur=f?14:5;
-    // X-frame arms at 45° (quadcopter X config)
-    ctx.strokeStyle=f?col:col+'cc';ctx.lineWidth=1.8;ctx.lineCap='round';
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:5;
+    // outer hull ring
+    ctx.strokeStyle=f?col:col+'88';ctx.lineWidth=1.4;
+    ctx.fillStyle='#071410';
+    ctx.beginPath();ctx.arc(0,0,11,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // inner rim
+    ctx.strokeStyle=col+'44';ctx.lineWidth=.8;
+    ctx.beginPath();ctx.arc(0,0,8.5,0,Math.PI*2);ctx.stroke();
+    // 4 thruster pods on rim (top/bottom/left/right)
     for(let i=0;i<4;i++){
-      const a=i*Math.PI/2+Math.PI/4;
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*3,Math.sin(a)*3);ctx.lineTo(Math.cos(a)*10,Math.sin(a)*10);ctx.stroke();
-    }
-    // central body
-    ctx.fillStyle='#0a1c14';ctx.strokeStyle=f?col:col+'99';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.roundRect(-3.2,-3.2,6.4,6.4,1.3);ctx.fill();ctx.stroke();
-    ctx.fillStyle=col+'28';ctx.beginPath();ctx.roundRect(-2,-2,4,4,.8);ctx.fill();
-    // 4 rotors at arm tips with guard rings and spinning blades
-    const rs=this._droneAngle*14;
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2+Math.PI/4;
-      const mx=Math.cos(a)*10,my=Math.sin(a)*10;
-      ctx.save();ctx.translate(mx,my);
-      // guard ring
-      ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=1;
-      ctx.beginPath();ctx.arc(0,0,4.5,0,Math.PI*2);ctx.stroke();
-      // motor hub
-      ctx.fillStyle='#0e2018';ctx.strokeStyle=col+'66';ctx.lineWidth=.8;
-      ctx.beginPath();ctx.arc(0,0,2.4,0,Math.PI*2);ctx.fill();ctx.stroke();
-      // 2-blade prop (alternating phase per rotor)
-      ctx.save();ctx.rotate(rs+(i%2)*Math.PI/2);
-      ctx.strokeStyle=f?'#ccfff5':col+'bb';ctx.lineWidth=1.3;ctx.globalAlpha=f?.9:.6;
-      ctx.lineCap='round';
-      ctx.beginPath();ctx.moveTo(-3.6,0);ctx.lineTo(3.6,0);ctx.stroke();
-      ctx.globalAlpha=1;ctx.restore();
-      // center dot
-      ctx.fillStyle=f?col:'#555';ctx.shadowBlur=f?6:0;
-      ctx.beginPath();ctx.arc(0,0,1.1,0,Math.PI*2);ctx.fill();
+      const a=i*Math.PI/2;
+      const tx=Math.cos(a)*9.5,ty=Math.sin(a)*9.5;
+      ctx.save();ctx.translate(tx,ty);ctx.rotate(a);
+      ctx.fillStyle='#0c201a';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1;
+      ctx.beginPath();ctx.ellipse(0,0,2.8,1.6,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+      // thruster glow
+      if(f){ctx.fillStyle=col;ctx.globalAlpha=.7;ctx.beginPath();ctx.ellipse(0,0,1.4,.8,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
       ctx.restore();
     }
-    // forward targeting light
-    ctx.fillStyle=f?'#fff':col+'88';ctx.shadowColor=col;ctx.shadowBlur=f?10:3;
-    ctx.beginPath();ctx.arc(0,-3.8,1.1,0,Math.PI*2);ctx.fill();
-    // laser fire glow from body when active
-    if(f){ctx.fillStyle=col;ctx.globalAlpha=.7;ctx.shadowBlur=14;ctx.beginPath();ctx.arc(0,0,4.5,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+    // spinning inner disc
+    ctx.save();ctx.rotate(this._droneAngle*3);
+    ctx.strokeStyle=f?col+'cc':col+'33';ctx.lineWidth=1;ctx.setLineDash([4,5]);
+    ctx.beginPath();ctx.arc(0,0,6,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    ctx.restore();
+    // 3 sensor fins
+    ctx.save();ctx.rotate(-this._droneAngle*1.5);
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3;
+      ctx.strokeStyle=f?col:col+'77';ctx.lineWidth=1.2;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*4,Math.sin(a)*4);ctx.lineTo(Math.cos(a)*7.5,Math.sin(a)*7.5);ctx.stroke();
+      ctx.fillStyle=f?col:'#2a5045';
+      ctx.beginPath();ctx.arc(Math.cos(a)*7.5,Math.sin(a)*7.5,.9,0,Math.PI*2);ctx.fill();
+    }
+    ctx.restore();
+    // core
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:8;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,3.5);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.4,col);cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,3.5,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;ctx.restore();ctx.restore();
   }
   _dScan(ctx,r,t){
