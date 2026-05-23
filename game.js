@@ -269,16 +269,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:1.1,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
-  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:15,  spd:2.0,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
-  twinHub:     {name:'트윈 허브',     price:380,  color:'#9C27B0',type:'twinhub',  dmg:7,   spd:0,    range:1.8, desc:'두 궤도 드론이 원석을 처리하고 50% 감속시킨다. 감속 후 2초간 재접촉 불가.'},
-  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:60,  spd:0.22, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
-  magnetCannon:{name:'마그넷 레이저', price:850,  color:'#FF6D00',type:'focus',    dmg:22,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
-  refinery:    {name:'포트 정제소',   price:1150, color:'#FFD700',type:'refinery', dmg:5,   spd:0.5,  range:2.4, desc:'원석에 전격을 발사해 처리하며 다른 유닛보다 포트를 더 많이 획득한다.'},
-  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:15,  spd:1.5,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
-  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:36,  spd:0.85, range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
-  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:120, spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:82,  spd:0.38, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:8,   spd:1.2,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
+  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:18,  spd:2.2,  range:3.2, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
+  twinHub:     {name:'트윈 허브',     price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.8, desc:'두 궤도 드론이 원석을 처리하고 50% 감속시킨다. 감속 후 1초간 재접촉 불가.'},
+  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:90,  spd:0.28, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
+  magnetCannon:{name:'마그넷 레이저', price:850,  color:'#FF6D00',type:'focus',    dmg:30,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
+  refinery:    {name:'포트 정제소',   price:1150, color:'#FFD700',type:'refinery', dmg:7,   spd:0.65, range:2.4, desc:'원석에 전격을 발사해 처리하며 다른 유닛보다 포트를 더 많이 획득한다.'},
+  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:22,  spd:1.6,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
+  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:50,  spd:0.9,  range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
+  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:180, spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:110, spd:0.42, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
@@ -340,26 +340,31 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W1:×1 W10:×1.7 W20:×2.8 W30:×4.5 W50:×10 | W65:×43 W80:×126 W90:×226 W100:×401
+  // W10:×1.68 W20:×3.1 | W30:×8.3 W40:×20 W50:×50 W60:×150 W70:×500 W80:×2000 W90:×8000 W100:×30000
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.078;
-  if(w<=30)return hpS(10)+(w-10)*0.14;
-  if(w<=50)return hpS(30)+(w-30)*0.28;
-  if(w<=65)return hpS(50)+(w-50)*2.2;
-  if(w<=80)return hpS(65)+(w-65)*5.5;
-  if(w<=90)return hpS(80)+(w-80)*10.0;
-  return hpS(90)+(w-90)*17.5;
+  if(w<=10)return 1.0+(w-1)*0.076;
+  if(w<=20)return hpS(10)+(w-10)*0.14;
+  if(w<=30)return hpS(20)+(w-20)*0.52;
+  if(w<=40)return hpS(30)+(w-30)*1.2;
+  if(w<=50)return hpS(40)+(w-40)*3.0;
+  if(w<=60)return hpS(50)+(w-50)*10.0;
+  if(w<=70)return hpS(60)+(w-60)*35.0;
+  if(w<=80)return hpS(70)+(w-70)*150.0;
+  if(w<=90)return hpS(80)+(w-80)*600.0;
+  return hpS(90)+(w-90)*2200.0;
 }
 function spdS(w){
-  if(w<=50)return 1+Math.min(w-1,49)*0.006;
-  return 1.294+(w-50)*0.015;
+  if(w<=20)return 1+Math.min(w-1,19)*0.008;
+  if(w<=50)return spdS(20)+(w-20)*0.018;
+  if(w<=80)return spdS(50)+(w-50)*0.04;
+  return spdS(80)+(w-80)*0.08;
 }
 function countS(w){
-  if(w<=3) return 3+w;
-  if(w<=20)return Math.floor(5+w*0.95);
-  if(w<=50)return Math.floor(24+(w-20)*1.5);
-  if(w<=75)return Math.floor(69+(w-50)*2.6);
-  return Math.floor(134+(w-75)*4.5);
+  if(w<=3) return 4+w;
+  if(w<=20)return Math.floor(8+w*1.4);
+  if(w<=50)return Math.floor(36+(w-20)*2.6);
+  if(w<=75)return Math.floor(114+(w-50)*4.0);
+  return Math.floor(214+(w-75)*7.0);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -568,7 +573,7 @@ class Ore{
     if(this.freezeTimer>0){this.freezeTimer-=dt;if(this.freezeTimer<=0)this.freezeImmune=1.0;this.flashT=.08;return;}
     if(this.freezeImmune>0)this.freezeImmune-=dt;
     if(this.slowTimer>0){this.slowTimer-=dt;if(this.slowTimer<=0){this.spd=this.baseSpd;this._sR=0;this.freezeImmune=3.0;}}
-    if(this._twinSlowT>0){this._twinSlowT-=dt;if(this._twinSlowT<=0)this._twinImmuneT=2.0;}
+    if(this._twinSlowT>0){this._twinSlowT-=dt;if(this._twinSlowT<=0)this._twinImmuneT=1.0;}
     if(this._twinImmuneT>0)this._twinImmuneT-=dt;
     if(this.ampTimer>0)this.ampTimer-=dt;if(this.flashT>0)this.flashT-=dt;
     if(this.shockTimer>0){
@@ -653,7 +658,7 @@ class Tower{
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
-  getRange(){return TWR[this.tId].range*(this.isMega?1.3:1);}
+  getRange(){return TWR[this.tId].range*(this.isMega?2.0:1);}
   update(dt,ores){
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
@@ -1083,6 +1088,7 @@ class Tower{
   }
   _drawDroneOrbit(ctx){
     const dr=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
+    const sc=this.isMega?1:0.5;
     ctx.save();
     // orbit path
     ctx.strokeStyle=col+'14';ctx.lineWidth=.8;ctx.setLineDash([3,9]);
@@ -1090,7 +1096,7 @@ class Tower{
     ctx.setLineDash([]);
     // drone body
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
-    ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);
+    ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);ctx.scale(sc,sc);
     ctx.shadowColor=col;ctx.shadowBlur=f?15:6;
     // central body frame
     ctx.fillStyle=f?col:'#d4fff8';ctx.strokeStyle=col;ctx.lineWidth=1;
@@ -1197,7 +1203,8 @@ class Tower{
     for(let i=0;i<nOrbs;i++){
       const da=this._twinAngles[i],active=this._twin_hcd[i]>0;
       const ox=this.cx+Math.cos(da)*dr,oy=this.cy+Math.sin(da)*dr;
-      ctx.save();ctx.translate(ox,oy);ctx.rotate(da+Math.PI/2);
+      const sc=this.isMega?1.8:1;
+      ctx.save();ctx.translate(ox,oy);ctx.rotate(da+Math.PI/2);ctx.scale(sc,sc);
       ctx.shadowColor=col;ctx.shadowBlur=active?12:5;
       // body
       ctx.fillStyle=active?col:'#c8c8c8';ctx.strokeStyle=col;ctx.lineWidth=.9;
@@ -1539,9 +1546,9 @@ const UI={
     s+=`<div class="tis">범위<span>${d.range}</span></div>`;
     if(tower.type==='focus')s+=`<div class="tis">집중 레이저<span>지속</span></div>`;
     if(tower.type==='refinery'){const pg=Math.max(1,Math.round(tower.getDmg()*.5));s+=`<div class="tis">포트/발사<span>+◈${pg}</span></div>`;}
-    if(tower.type==='chain')s+=`<div class="tis">연쇄<span>3개</span></div>`;
+    if(tower.type==='chain'){const sd=Math.round(tower.getDmg()*0.5);s+=`<div class="tis">연쇄<span>3개</span></div>`;s+=`<div class="tis">감전<span>DPS ${sd} / 2.5초</span></div>`;}
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
-    if(tower.type==='twinhub'){const dur=[1.0,1.5,2.0,2.5][tower.level-1]||1.0;s+=`<div class="tis">감속<span>50% / ${dur}초</span></div>`;s+=`<div class="tis">면역<span>접촉 후 2초</span></div>`;}
+    if(tower.type==='twinhub'){const dur=[1.0,1.5,2.0,2.5][tower.level-1]||1.0;s+=`<div class="tis">감속<span>50% / ${dur}초</span></div>`;s+=`<div class="tis">면역<span>접촉 후 1초</span></div>`;}
     s+=`<div class="tis-desc">${d.desc}</div>`;
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
