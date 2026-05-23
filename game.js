@@ -649,7 +649,7 @@ class Tower{
     this.cx=R.tx(col);this.cy=R.ty(row);
     this.angle=-Math.PI/2;this.cooldown=0;this._aoeT=0;this._animT=0;this._firingT=0;
     this._tDmg=0;this._tSpd=0;this._armAngle=-Math.PI/2;this._focusTgt=null;this._soundT=0;this._droneAngle=0;this._hitCooldown=0;
-    this._twinAngles=[0,Math.PI*2/5,Math.PI*4/5,Math.PI*6/5,Math.PI*8/5];this._twin_hcd=[0,0,0,0,0];
+    this._twinAngles=[0,Math.PI,Math.PI*2/5,Math.PI*4/5,Math.PI*6/5];this._twin_hcd=[0,0,0,0,0];this._lastNOrbs=0;
     this.isMega=false;this.megaCells=[];
   }
   _lm(){return LVL[this.level-1].mult;}
@@ -682,6 +682,7 @@ class Tower{
       const orbSpd=0.9+this._lm()*.1,dr=this.getRange()*TS,hitR=TS*.36;
       const slowDur=[1.0,1.5,2.0,2.5][this.level-1]||1.0;
       const nOrbs=this.isMega?5:2;
+      if(this._lastNOrbs!==nOrbs){this._lastNOrbs=nOrbs;const b=this._twinAngles[0];for(let i=0;i<5;i++)this._twinAngles[i]=b+i*(Math.PI*2/nOrbs);}
       for(let i=0;i<nOrbs;i++){
         this._twinAngles[i]+=dt*orbSpd;
         if(this._twin_hcd[i]>0){this._twin_hcd[i]-=dt;continue;}
@@ -1059,32 +1060,47 @@ class Tower{
     }
   }
   _dDrone(ctx,r,t){
-    const col=this.color;this._base(ctx,r,col,'hex');
-    // outer rotating dashed ring
-    ctx.save();ctx.rotate(t*.7);ctx.strokeStyle=col+'55';ctx.lineWidth=1.2;ctx.setLineDash([r*.22,r*.14]);
-    ctx.beginPath();ctx.arc(0,0,r*.74,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // inner counter ring
-    ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=col+'33';ctx.lineWidth=.8;ctx.setLineDash([r*.14,r*.22]);
-    ctx.beginPath();ctx.arc(0,0,r*.52,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // cross arms — stable opacity (no pulse jump)
-    ctx.strokeStyle=col+'99';ctx.lineWidth=1.8;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(-r*.26,0);ctx.lineTo(r*.26,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-r*.26);ctx.lineTo(0,r*.26);ctx.stroke();
-    // spinning rotor dots — fixed size, no shadowBlur change
+    const col=this.color,f=this._firingT>0;
+    this._base(ctx,r,col,'oct');
+    // outer segmented orbit ring
+    ctx.save();ctx.rotate(t*.45);
+    ctx.strokeStyle=col+'77';ctx.lineWidth=1.6;ctx.setLineDash([r*.3,r*.07]);
+    ctx.beginPath();ctx.arc(0,0,r*.8,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // counter inner ring
+    ctx.save();ctx.rotate(-t*1.0);
+    ctx.strokeStyle=col+'33';ctx.lineWidth=.9;ctx.setLineDash([r*.1,r*.18]);
+    ctx.beginPath();ctx.arc(0,0,r*.56,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // 4 diagonal launch rails
+    ctx.save();ctx.rotate(Math.PI/4);
+    ctx.strokeStyle=col+'aa';ctx.lineWidth=1.8;ctx.lineCap='butt';
     for(let i=0;i<4;i++){
-      const aa=i*Math.PI/2+t*4;
-      const dx=Math.cos(aa)*r*.34,dy=Math.sin(aa)*r*.34;
-      ctx.fillStyle=col+'cc';
-      ctx.beginPath();ctx.arc(dx,dy,r*.08,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#ffffff77';
-      ctx.beginPath();ctx.arc(dx-r*.02,dy-r*.02,r*.03,0,Math.PI*2);ctx.fill();
+      const a=i*Math.PI/2;
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.2,Math.sin(a)*r*.2);ctx.lineTo(Math.cos(a)*r*.74,Math.sin(a)*r*.74);ctx.stroke();
+      ctx.fillStyle=f?col:col+'99';ctx.shadowColor=col;ctx.shadowBlur=f?8:2;
+      ctx.beginPath();ctx.arc(Math.cos(a)*r*.74,Math.sin(a)*r*.74,r*.07,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
     }
-    // glowing core — fixed size
-    ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=7;
-    ctx.beginPath();ctx.arc(0,0,r*.12,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    // spinning 3-blade rotor
+    ctx.save();ctx.rotate(t*4.2);
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3;
+      ctx.fillStyle=f?col:col+'99';
+      ctx.beginPath();ctx.ellipse(Math.cos(a)*r*.34,Math.sin(a)*r*.34,r*.13,r*.048,-a+Math.PI/2,0,Math.PI*2);ctx.fill();
+    }
+    ctx.restore();
+    // targeting ring
+    ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.arc(0,0,r*.25,0,Math.PI*2);ctx.stroke();
+    // crosshair ticks
+    ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=1;
+    for(let i=0;i<4;i++){const a=i*Math.PI/2;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.18,Math.sin(a)*r*.18);ctx.lineTo(Math.cos(a)*r*.29,Math.sin(a)*r*.29);ctx.stroke();}
+    // core
+    ctx.shadowColor=col;ctx.shadowBlur=f?24:10;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.17);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.4,col);cg.addColorStop(1,col+'22');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.17,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
-    ctx.fillStyle='#fff';ctx.globalAlpha=.75;ctx.beginPath();ctx.arc(-r*.04,-r*.04,r*.05,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=1;
   }
   _drawDroneOrbit(ctx){
     const dr=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
@@ -1174,27 +1190,49 @@ class Tower{
     ctx.fillStyle=cg;ctx.fill();
   }
   _dTwinHub(ctx,r,t){
-    const col=this.color;this._base(ctx,r,col,'circle');
-    // orbit track
-    ctx.save();ctx.rotate(t*.45);ctx.strokeStyle=col+'30';ctx.lineWidth=.9;ctx.setLineDash([r*.15,r*.12]);
-    ctx.beginPath();ctx.arc(0,0,r*.76,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // two drone dock arms (left/right)
-    ctx.strokeStyle='#363636';ctx.lineWidth=1.6;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(-r*.2,0);ctx.lineTo(-r*.58,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(r*.2,0);ctx.lineTo(r*.58,0);ctx.stroke();
-    // dock pads
-    for(const sx of [-1,1]){
-      const px=sx*r*.58;
-      ctx.fillStyle='#252525';ctx.strokeStyle=col+'66';ctx.lineWidth=1.2;
-      ctx.beginPath();ctx.arc(px,0,r*.17,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.strokeStyle=col+'44';ctx.lineWidth=.8;
-      ctx.beginPath();ctx.moveTo(px-r*.1,0);ctx.lineTo(px+r*.1,0);ctx.moveTo(px,-.1*r);ctx.lineTo(px,r*.1);ctx.stroke();
+    const col=this.color,f=this._firingT>0;
+    // rotated square base plate
+    ctx.save();ctx.rotate(Math.PI/4);
+    ctx.fillStyle='#111122';ctx.strokeStyle=col+'44';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.roundRect(-r*.68,-r*.68,r*1.36,r*1.36,r*.1);ctx.fill();ctx.stroke();
+    ctx.restore();
+    // background energy field
+    ctx.fillStyle=col+'0d';ctx.beginPath();ctx.arc(0,0,r*.84,0,Math.PI*2);ctx.fill();
+    // dual conduit arms with glow line
+    const al=r*.64,aw=r*.075;
+    for(const sx of[-1,1]){
+      ctx.fillStyle='#0a0a1c';ctx.strokeStyle=col+'55';ctx.lineWidth=.9;
+      ctx.beginPath();ctx.roundRect(sx>0?r*.16:-al,  -aw, al-r*.16, aw*2, aw*.35);ctx.fill();ctx.stroke();
     }
-    // central emitter
-    ctx.fillStyle='#242424';ctx.strokeStyle='#484848';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.fillStyle=col+'38';ctx.beginPath();ctx.arc(0,0,r*.14,0,Math.PI*2);ctx.fill();
-    this._core(ctx,r,col);
+    ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?12:4;
+    ctx.beginPath();ctx.moveTo(-al+r*.04,0);ctx.lineTo(al-r*.04,0);ctx.stroke();
+    ctx.shadowBlur=0;
+    // twin energy nodes
+    for(const sx of[-1,1]){
+      const nx=sx*al;
+      ctx.fillStyle='#080818';ctx.strokeStyle=col;ctx.lineWidth=1.5;
+      ctx.shadowColor=col;ctx.shadowBlur=f?18:7;
+      ctx.beginPath();ctx.arc(nx,0,r*.17,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.shadowBlur=0;
+      const ng=ctx.createRadialGradient(nx,0,0,nx,0,r*.17);
+      ng.addColorStop(0,f?'#fff':col+'dd');ng.addColorStop(1,col+'00');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(nx,0,r*.17,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=.8;
+      ctx.beginPath();ctx.moveTo(nx-r*.08,0);ctx.lineTo(nx+r*.08,0);ctx.moveTo(nx,-r*.08);ctx.lineTo(nx,r*.08);ctx.stroke();
+    }
+    // central rotating hexagonal coil
+    ctx.save();ctx.rotate(t*1.8);
+    ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.5;ctx.shadowColor=col;ctx.shadowBlur=f?8:2;
+    ctx.beginPath();
+    for(let i=0;i<6;i++){const a=i/6*Math.PI*2;i===0?ctx.moveTo(Math.cos(a)*r*.29,Math.sin(a)*r*.29):ctx.lineTo(Math.cos(a)*r*.29,Math.sin(a)*r*.29);}
+    ctx.closePath();ctx.stroke();
+    ctx.shadowBlur=0;ctx.restore();
+    // core
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:9;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.15);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.5,col);cg.addColorStop(1,col+'22');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.15,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
   }
   _drawTwinOrbit(ctx){
     const dr=this.getRange()*TS,col=this.color,nOrbs=this.isMega?5:2;
