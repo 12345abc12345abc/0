@@ -725,7 +725,7 @@ class Tower{
     if(tp==='drone'){
       this._droneAngle+=dt*(0.55+this._lm()*.08);
       const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;
-      const orbitR=rng*0.93;
+      const orbitR=rng*(0.55+0.38*Math.sin(this._droneAngle*0.5));
       const drX=cx0+Math.cos(this._droneAngle)*orbitR,drY=cy0+Math.sin(this._droneAngle)*orbitR;
       if(this._hitCooldown>0){this._hitCooldown-=dt;}
       else{
@@ -790,7 +790,6 @@ class Tower{
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
     if(this.isMega){
-      if(this.level>1){const bc=['','#EF5350','#FFD700','#00E5FF'][this.level-1]||'#EF5350';const p=4;ctx.save();ctx.strokeStyle=bc;ctx.lineWidth=2.5;ctx.shadowColor=bc;ctx.shadowBlur=12;ctx.strokeRect(this.cx-TS+p,this.cy-TS+p,TS*2-p*2,TS*2-p*2);ctx.shadowBlur=0;ctx.restore();}
       ctx.save();ctx.translate(this.cx,this.cy);ctx.scale(2,2);
       if(this.tId==='coreShooter')this._dCS(ctx,r,t,f);
       else if(this.tId==='pixelArm')this._dPA(ctx,r,t,f);
@@ -1000,109 +999,6 @@ class Tower{
     ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.21,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle=col+(f?'dd':'60');ctx.lineWidth=1.6;ctx.shadowBlur=f?18:5;ctx.beginPath();ctx.arc(0,0,r*.32,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;ctx.strokeStyle=col+(f?'55':'1e');ctx.lineWidth=1;for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.24,Math.sin(a)*r*.24);ctx.lineTo(Math.cos(a)*r*.32,Math.sin(a)*r*.32);ctx.stroke();}
-    ctx.shadowBlur=0;
-    // outer hex glow rim
-    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=2;hexPath(r*.88);ctx.stroke();ctx.shadowBlur=0;
-    // inner hex accent ring
-    ctx.strokeStyle=col+(f?'30':'10');ctx.lineWidth=.9;hexPath(r*.58);ctx.stroke();
-    // radial spokes hub→inner hex
-    for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;ctx.strokeStyle=col+(f?'22':'0c');ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.22,Math.sin(a)*r*.22);ctx.lineTo(Math.cos(a)*r*.58,Math.sin(a)*r*.58);ctx.stroke();}
-    // corner bolts with glow dot
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3-Math.PI/6,bs=r*.044;
-      ctx.save();ctx.translate(Math.cos(a)*r*.73,Math.sin(a)*r*.73);ctx.rotate(a);
-      ctx.fillStyle='#252525';ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=.8;
-      ctx.fillRect(-bs,-bs,bs*2,bs*2);ctx.strokeRect(-bs,-bs,bs*2,bs*2);
-      ctx.shadowColor=col;ctx.shadowBlur=f?5:0;ctx.fillStyle=col+(f?'88':'28');
-      ctx.beginPath();ctx.arc(0,0,bs*.36,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-      ctx.restore();
-    }
-    // ── ANGULAR ARM (rotates toward target)
-    ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    const shY=-r*.08,elbY=-r*.46,wristY=-r*.78,tipY=-r*.97;
-    const uaw=r*.13,faw=r*.09;
-    // UPPER ARM
-    ctx.fillStyle='#1d1d1d';ctx.strokeStyle=f?col+'44':col+'1c';ctx.lineWidth=1.3;
-    ctx.beginPath();ctx.moveTo(-uaw,shY);ctx.lineTo(uaw,shY);ctx.lineTo(uaw-r*.03,elbY);ctx.lineTo(-uaw+r*.03,elbY);ctx.closePath();ctx.fill();ctx.stroke();
-    // panel edge lines
-    ctx.strokeStyle='#333';ctx.lineWidth=.75;
-    ctx.beginPath();ctx.moveTo(-uaw+r*.014,shY);ctx.lineTo(-uaw+r*.035,elbY);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(uaw-r*.014,shY);ctx.lineTo(uaw-r*.035,elbY);ctx.stroke();
-    // energy spine
-    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.1;ctx.shadowColor=col;ctx.shadowBlur=f?7:0;
-    ctx.beginPath();ctx.moveTo(0,shY+r*.05);ctx.lineTo(0,elbY-r*.04);ctx.stroke();ctx.shadowBlur=0;
-    // panel bands
-    ctx.strokeStyle=col+(f?'28':'0d');ctx.lineWidth=.85;
-    for(let v=0;v<3;v++){const vy=shY+(elbY-shY)*(0.25+v*.24),lw=uaw*(0.75-v*.04);ctx.beginPath();ctx.moveTo(-lw,vy);ctx.lineTo(lw,vy);ctx.stroke();}
-    // FOREARM
-    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.moveTo(-faw,elbY);ctx.lineTo(faw,elbY);ctx.lineTo(faw-r*.02,wristY);ctx.lineTo(-faw+r*.02,wristY);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.strokeStyle='#2c2c2c';ctx.lineWidth=.7;
-    ctx.beginPath();ctx.moveTo(-faw+r*.012,elbY);ctx.lineTo(-faw+r*.026,wristY);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(faw-r*.012,elbY);ctx.lineTo(faw-r*.026,wristY);ctx.stroke();
-    ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=1;ctx.shadowColor=col;ctx.shadowBlur=f?5:0;
-    ctx.beginPath();ctx.moveTo(0,elbY-r*.03);ctx.lineTo(0,wristY+r*.04);ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle=col+(f?'35':'10');ctx.lineWidth=.9;
-    for(let v=0;v<3;v++){const vy=elbY+(wristY-elbY)*(0.27+v*.24),lw=(faw-r*.015)*(1-v*.03);ctx.beginPath();ctx.moveTo(-lw,vy);ctx.lineTo(lw,vy);ctx.stroke();}
-    // SHOULDER JOINT — circular rings
-    ctx.save();ctx.translate(0,shY);
-    ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#232323';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.6;
-    ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-    ctx.beginPath();ctx.arc(0,0,r*.14,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.fillStyle=f?col:col+'99';ctx.shadowBlur=f?12:4;
-    ctx.beginPath();ctx.arc(0,0,r*.057,0,Math.PI*2);ctx.fill();
-    ctx.shadowBlur=0;ctx.restore();
-    // ELBOW JOINT — circular rings
-    ctx.save();ctx.translate(0,elbY);
-    ctx.strokeStyle=col+(f?'38':'14');ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r*.175,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.3;
-    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    ctx.beginPath();ctx.arc(0,0,r*.105,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.fillStyle=f?col+'99':col+'44';ctx.shadowBlur=f?8:2;
-    ctx.beginPath();ctx.arc(0,0,r*.042,0,Math.PI*2);ctx.fill();
-    ctx.shadowBlur=0;ctx.restore();
-    // WRIST PLATE
-    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'77':col+'28';ctx.lineWidth=1.2;
-    ctx.fillRect(-r*.18,wristY-r*.052,r*.36,r*.104);ctx.strokeRect(-r*.18,wristY-r*.052,r*.36,r*.104);
-    ctx.fillStyle=f?col+'44':col+'1c';ctx.fillRect(-r*.045,wristY-r*.032,r*.09,r*.064);
-    ctx.strokeStyle=f?col+'55':col+'1c';ctx.lineWidth=.8;ctx.strokeRect(-r*.045,wristY-r*.032,r*.09,r*.064);
-    for(const sx of[-1,1]){ctx.shadowColor=col;ctx.shadowBlur=f?7:0;ctx.fillStyle=f?col+'66':col+'1e';ctx.beginPath();ctx.arc(sx*r*.125,wristY,r*.026,0,Math.PI*2);ctx.fill();}
-    ctx.shadowBlur=0;
-    // GRIPPER JAWS — L-shaped angular brackets
-    const spread=f?r*.28:r*.10,fw=r*.10,ph=r*.08,pl=r*.14;
-    for(const sx of[-1,1]){
-      const s=sx*spread,ow=sx*fw;
-      ctx.fillStyle='#191919';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.4;
-      ctx.shadowColor=col;ctx.shadowBlur=f?18:3;
-      ctx.beginPath();ctx.moveTo(s,wristY);ctx.lineTo(s+ow,wristY);ctx.lineTo(s+ow,tipY);ctx.lineTo(s-sx*pl,tipY);ctx.lineTo(s-sx*pl,tipY+ph);ctx.lineTo(s,tipY+ph);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.shadowBlur=0;
-      // inner jaw face depth
-      ctx.fillStyle=col+(f?'20':'0c');
-      ctx.beginPath();ctx.moveTo(s+ow*.2,wristY+r*.02);ctx.lineTo(s+ow*.8,wristY+r*.02);ctx.lineTo(s+ow*.8,tipY+r*.02);ctx.lineTo(s+ow*.2,tipY+r*.02);ctx.closePath();ctx.fill();
-      // tip prong accent
-      ctx.strokeStyle=col+(f?'cc':'40');ctx.lineWidth=1.1;ctx.shadowColor=col;ctx.shadowBlur=f?9:1;
-      ctx.beginPath();ctx.moveTo(s-sx*pl,tipY+ph);ctx.lineTo(s-sx*pl,tipY);ctx.stroke();ctx.shadowBlur=0;
-      // shaft midline
-      ctx.strokeStyle=col+(f?'38':'14');ctx.lineWidth=.8;
-      ctx.beginPath();ctx.moveTo(s,(wristY+tipY)*.5);ctx.lineTo(s+ow,(wristY+tipY)*.5);ctx.stroke();
-    }
-    if(f){
-      const mg=ctx.createRadialGradient(0,tipY+ph*.5,0,0,tipY+ph*.5,r*.32);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');
-      ctx.globalAlpha=.68;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,tipY+ph*.5,r*.32,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
-    }
-    ctx.restore();
-    // CENTER HUB
-    ctx.shadowColor=col;ctx.shadowBlur=f?24:8;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.20);
-    cg.addColorStop(0,'#fff');cg.addColorStop(.28,col);cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.20,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'cc':'55');ctx.lineWidth=1.4;ctx.shadowBlur=f?16:5;
-    ctx.beginPath();ctx.arc(0,0,r*.30,0,Math.PI*2);ctx.stroke();
-    ctx.shadowBlur=0;ctx.strokeStyle=col+(f?'55':'1e');ctx.lineWidth=.9;
-    for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.23,Math.sin(a)*r*.23);ctx.lineTo(Math.cos(a)*r*.30,Math.sin(a)*r*.30);ctx.stroke();}
     ctx.shadowBlur=0;
   }
   // AOE: 레이저 그리드 — 원형 베이스 + 격자선
@@ -1419,7 +1315,7 @@ class Tower{
   }
   _drawDroneOrbit(ctx){
     const rng=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
-    const orbitR=rng*0.62;
+    const orbitR=rng*(0.55+0.38*Math.sin(da*0.5));
     const sc=this.isMega?1:0.5;
     ctx.save();
     ctx.strokeStyle=col+'14';ctx.lineWidth=.8;ctx.setLineDash([3,9]);
@@ -1985,7 +1881,7 @@ const UI={
     document.getElementById('mi-name').textContent=tower.name;
     document.getElementById('mi-name').style.color=tower.color;
     const upgDone=tower.level-1;
-    const gradeLabel=`강화 ${upgDone} / 3`;
+    const gradeLabel=`업그레이드 ${upgDone} / 3`;
     const gradeCol=['#888','#EF5350','#FFD700','#00E5FF'][upgDone]||'#00E5FF';
     const lvEl=document.getElementById('mi-lvl');
     lvEl.textContent=gradeLabel;
