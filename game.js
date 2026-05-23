@@ -710,7 +710,7 @@ class Tower{
       const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;
       if(this._hitCooldown>0){this._hitCooldown-=dt;}
       else{
-        const laserR=1*TS;
+        const laserR=2*TS;
         let bestO=null,bestD=Infinity;
         for(const o of ores){
           if(!o.alive)continue;
