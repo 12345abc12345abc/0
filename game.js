@@ -269,19 +269,19 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:30,  spd:0.7,  range:2.4, upgMult:5.0, desc:'산업용 다관절 로봇암. 컨베이어 선두 원석에 정밀 공정을 수행한다. 처리 주기는 길지만 단발 공정 출력이 최고 수준이다.'},
-  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:18,  spd:1.8,  range:3.2, upgMult:3.5, desc:'쌍열 연속 공정포. 라인 선두 원석을 빠른 주기로 연속 타격한다. 안정적인 처리 속도로 초반 공정 라인을 지탱한다.'},
-  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.2, upgMult:3.0, desc:'두 제어 구체가 원석과 물리 접촉해 이송 속도를 50% 감속시킨다. 접촉 후 1초간 동일 원석에 재접촉 불가.'},
-  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:180, spd:0.25, range:5.5, upgMult:2.5, desc:'라인 전역을 스캔해 밀도가 가장 높은 원석을 선택 정밀 타격한다. 처리 간격이 길지만 단발 공정량이 막대하다.'},
-  magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:38,  spd:0,    range:5.5, upgMult:1.8, desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사해 집중 분해한다. 후미 누락 없이 철저히 제거해 공장 유출을 방지한다.'},
-  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:6,   spd:0.7,  range:2.4, upgMult:2.5, desc:'전자기 펄스로 원석을 처리하는 동시에 공정 부산물을 회수한다. 처리마다 추가 포트를 획득하는 수익형 공정 설비.'},
-  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:22,  spd:1.6,  range:2.6, upgMult:1.8, desc:'구역 내 격자 레이저망을 전개해 모든 원석을 동시 처리한다. 원석이 밀집할수록 처리 효율이 극대화된다.'},
-  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:50,  spd:1.0,  range:3.2, upgMult:1.5, desc:'연쇄 방전으로 원석 3개를 순차 타격하고 3초간 지속 분해 반응을 유발한다. 다수 원석이 밀집한 구간에서 효과적이다.'},
-  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:80,  spd:1.5,  range:2.4, upgMult:1.3, desc:'무인 공정 드론이 광역 구역을 선회하며 원석을 탐지해 정밀 레이저로 실시간 처리한다. 고정 설비의 사각 구역을 커버한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:28,  spd:3.75, range:5.5, upgMult:1.0, desc:'극고속 플라즈마 빔을 연속 발사해 일직선상의 원석을 최대 8개까지 관통 처리한다. 라인 밀집 시 처리 효율이 폭증한다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:45,  spd:1.0,  range:2.0, upgMult:20.0, desc:'단관절 산업용 로봇암. 컨베이어 선두 원석을 그리퍼로 직접 포착해 고출력 단발 공정을 수행한다. 처리 간격은 길지만 단발 공정력이 최고 수준이다.'},
+  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:22,  spd:2.0,  range:3.0, upgMult:7.5,  desc:'단열 중구경 공정포. 라인 선두 원석을 빠른 주기로 연속 타격한다. 안정적인 처리 속도와 넓은 사거리로 초반 라인을 지탱한다.'},
+  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:5,   spd:0,    range:1.0, upgMult:5.1,  desc:'궤도 제어 구체 2개가 반경 내를 선회하며 원석과 물리 접촉한다. 접촉된 원석은 1초간 이송 속도 50% 감소. 강화 시 감속 지속 시간 증가.'},
+  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:180, spd:0.25, range:5.0, upgMult:3.4,  desc:'전방위 광학 스캐너. 광역 범위를 분석해 체류 질량이 가장 높은 원석을 선별 정밀 타격한다. 4초 주기의 고출력 단발 공정 설비.'},
+  magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:25,  spd:0,    range:5.0, upgMult:2.2,  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 철저히 제거해 공장 유출을 차단하는 후방 방어 설비.'},
+  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:11,  spd:1.0,  range:2.0, upgMult:1.55, desc:'전자기 펄스 공정과 동시에 처리 부산물을 회수해 포트로 환원한다. 공정력은 낮지만 가동할수록 자본이 축적되는 수익형 설비.'},
+  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:22,  spd:1.0,  range:2.0, upgMult:1.0,  desc:'구역 내 격자 레이저망을 1초 주기로 전개해 범위 내 모든 원석을 동시 처리한다. 원석 밀집 구간에서 처리 효율이 극대화된다.'},
+  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:26,  spd:1.0,  range:3.0, upgMult:0.62, desc:'연쇄 방전으로 원석 3개를 순차 타격하고 3초간 지속 분해 반응을 유발한다. 다수 원석이 밀집한 구간에서 폭발적인 처리 효율을 낸다.'},
+  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:90,  spd:0.5,  range:2.0, upgMult:0.40, desc:'무인 공정 드론이 설비 반경 내를 자율 선회하며 원석을 탐지해 정밀 레이저로 처리한다. 고정 설비의 사각지대를 실시간으로 커버한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:10,  spd:6.0,  range:5.0, upgMult:0.26, desc:'극고속 플라즈마 빔을 1초에 6회 연속 발사해 일직선상의 원석을 최대 8개까지 관통 처리한다. 라인 밀집 시 처리 효율이 폭증한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
-const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
+const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
 // 원석 피해 저항 (1.0=기본, 낮을수록 저항)
 const ORE_RESIST={
   dense:   {single:.55},       // 고밀도: 단일공격에 강함 → 광역/관통 사용 필요
@@ -543,6 +543,8 @@ const R={
     const sfe=[...GS.effects].sort((a,b)=>(a.z||0)-(b.z||0));
     for(const e of sfe)e.draw(ctx,gt);
     for(const t of GS.towers)t.drawFX(ctx);
+    // drone aircraft on absolute top layer (physically airborne)
+    for(const t of GS.towers)if(t.type==='drone')t._drawDroneOrbit(ctx);
     for(const p of GS.particles)p.draw(ctx);
     for(const p of GS.popups)p.draw(ctx);
   }
@@ -620,26 +622,52 @@ class Ore{
     if(this.special==='boss'){ctx.shadowColor=this.color;ctx.shadowBlur=22+Math.sin(gt*2)*6;}
     if(this.flashT>0){ctx.shadowColor='#fff';ctx.shadowBlur=24;}
     ctx.save();ctx.rotate(sp);
-    const c=this.color,ty=this.type;
+    const c=this.color;
+    // unified 8-facet brilliant-cut crystal
     ctx.beginPath();
-    if(ty==='normal'){for(let i=0;i<6;i++){const a=i*Math.PI/3;i===0?ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r):ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}}
-    else if(ty==='fast'){ctx.moveTo(0,-r);ctx.lineTo(r*.52,0);ctx.lineTo(0,r*.72);ctx.lineTo(-r*.52,0);}
-    else if(ty==='multi'){for(let i=0;i<10;i++){const a=(i/10)*Math.PI*2-Math.PI/2,dr=i%2===0?r:r*.44;i===0?ctx.moveTo(Math.cos(a)*dr,Math.sin(a)*dr):ctx.lineTo(Math.cos(a)*dr,Math.sin(a)*dr);}}
-    else if(ty==='dense'){for(let i=0;i<8;i++){const a=i*Math.PI/4-Math.PI/8;i===0?ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r):ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}}
-    else if(ty==='pure'){for(let i=0;i<12;i++){const a=(i/12)*Math.PI*2-Math.PI/2,dr=i%2===0?r:r*.52;i===0?ctx.moveTo(Math.cos(a)*dr,Math.sin(a)*dr):ctx.lineTo(Math.cos(a)*dr,Math.sin(a)*dr);}}
-    else if(ty==='unstable'){for(let i=0;i<16;i++){const a=(i/16)*Math.PI*2,dr=i%2===0?r:r*(i%4===1?.34:.26);i===0?ctx.moveTo(Math.cos(a)*dr,Math.sin(a)*dr):ctx.lineTo(Math.cos(a)*dr,Math.sin(a)*dr);}}
-    else if(ty==='compres'){const s=r*.8,cut=r*.26;ctx.moveTo(-s+cut,-s);ctx.lineTo(s-cut,-s);ctx.lineTo(s,-s+cut);ctx.lineTo(s,s-cut);ctx.lineTo(s-cut,s);ctx.lineTo(-s+cut,s);ctx.lineTo(-s,s-cut);ctx.lineTo(-s,-s+cut);}
-    else{for(let i=0;i<16;i++){const a=(i/16)*Math.PI*2,dr=i%2===0?r:r*.6;i===0?ctx.moveTo(Math.cos(a)*dr,Math.sin(a)*dr):ctx.lineTo(Math.cos(a)*dr,Math.sin(a)*dr);}}
+    for(let i=0;i<16;i++){
+      const a=(i/16)*Math.PI*2-Math.PI/2;
+      const dr=i%2===0?r:r*.52;
+      i===0?ctx.moveTo(Math.cos(a)*dr,Math.sin(a)*dr):ctx.lineTo(Math.cos(a)*dr,Math.sin(a)*dr);
+    }
     ctx.closePath();
-    const g=ctx.createRadialGradient(-r*.14,-r*.18,r*.04,0,0,r);
-    g.addColorStop(0,'#fff');g.addColorStop(.2,c+'ff');g.addColorStop(.65,c+'cc');g.addColorStop(1,c+'33');
-    ctx.fillStyle=g;ctx.fill();ctx.strokeStyle=c;ctx.lineWidth=ty==='dense'?2.2:ty==='core'?1.8:1.4;ctx.stroke();
+    const g=ctx.createRadialGradient(-r*.1,-r*.14,r*.03,0,0,r);
+    g.addColorStop(0,'#fff');g.addColorStop(.14,c);g.addColorStop(.55,c+'cc');g.addColorStop(1,c+'44');
+    ctx.fillStyle=g;ctx.fill();
+    ctx.strokeStyle=c;ctx.lineWidth=this.grade>=3?2.0:1.4;ctx.stroke();
+    // facet spoke lines (center to each outer tip)
+    for(let i=0;i<8;i++){
+      const a=(i/8)*Math.PI*2-Math.PI/2;
+      ctx.strokeStyle=c+'44';ctx.lineWidth=.8;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);ctx.stroke();
+    }
+    // inner octagonal highlight table
     ctx.beginPath();
-    if(ty==='core'){for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2,dr=i%2===0?r*.56:r*.26;i===0?ctx.moveTo(Math.cos(a)*dr,Math.sin(a)*dr):ctx.lineTo(Math.cos(a)*dr,Math.sin(a)*dr);}ctx.closePath();}
-    else{ctx.arc(0,0,r*.5,0,Math.PI*2);}
-    const hi=ctx.createRadialGradient(-r*.18,-r*.22,0,0,0,r*.55);hi.addColorStop(0,'rgba(255,255,255,.4)');hi.addColorStop(.5,'rgba(255,255,255,.07)');hi.addColorStop(1,'transparent');ctx.fillStyle=hi;ctx.fill();
+    for(let i=0;i<8;i++){
+      const a=(i/8)*Math.PI*2-Math.PI/2+Math.PI/8;
+      i===0?ctx.moveTo(Math.cos(a)*r*.38,Math.sin(a)*r*.38):ctx.lineTo(Math.cos(a)*r*.38,Math.sin(a)*r*.38);
+    }
+    ctx.closePath();
+    const hi=ctx.createRadialGradient(-r*.12,-r*.17,0,0,0,r*.42);
+    hi.addColorStop(0,'rgba(255,255,255,.52)');hi.addColorStop(.55,'rgba(255,255,255,.08)');hi.addColorStop(1,'transparent');
+    ctx.fillStyle=hi;ctx.fill();
+    // specular reflection spot (off-center bright)
+    const sg=ctx.createRadialGradient(-r*.2,-r*.26,0,-r*.2,-r*.26,r*.32);
+    sg.addColorStop(0,'rgba(255,255,255,.68)');sg.addColorStop(.45,'rgba(255,255,255,.10)');sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg;ctx.beginPath();ctx.arc(-r*.2,-r*.26,r*.32,0,Math.PI*2);ctx.fill();
     ctx.restore();
-    if(this.special==='boss'){ctx.strokeStyle=c+'66';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(0,0,r*1.35,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
+    // boss extras: orbit ring + inner glow cross
+    if(this.special==='boss'){
+      ctx.strokeStyle=c+'66';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.arc(0,0,r*1.38,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+      ctx.save();ctx.rotate(-sp*.4);
+      ctx.strokeStyle=c+'33';ctx.lineWidth=1;
+      for(let i=0;i<4;i++){
+        const a=i*Math.PI/2;
+        ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);ctx.lineTo(Math.cos(a+Math.PI/2)*r*.55,Math.sin(a+Math.PI/2)*r*.55);ctx.stroke();
+      }
+      ctx.restore();
+    }
     if(this._twinSlowT>0){ctx.globalAlpha=.55;ctx.strokeStyle='#CE93D8';ctx.lineWidth=1.8;ctx.shadowColor='#9C27B0';ctx.shadowBlur=7;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(0,0,r*1.22,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;}
     ctx.shadowBlur=0;ctx.restore();
     const bw=r*2.4,bh=3.5,bx=this.x-bw/2,by=this.y-r-7;
@@ -668,7 +696,7 @@ class Tower{
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
-  getRange(){return TWR[this.tId].range*(this.isMega?2.0:1);}
+  getRange(){return TWR[this.tId].range;}
   update(dt,ores){
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
@@ -689,8 +717,8 @@ class Tower{
     }
     if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;let best=null,bestHp=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
     if(tp==='twinhub'){
-      const orbSpd=0.9+this._lm()*.1,dr=this.getRange()*TS,hitR=TS*.36;
-      const baseDur=[1.0,1.5,2.0,2.5][this.level-1]||1.0;
+      const orbSpd=Math.PI*2/5,dr=this.getRange()*TS,hitR=TS*.36;
+      const baseDur=[1.0,1.33,1.67,2.0][this.level-1]||1.0;
       const slowDur=this.isMega?baseDur*2.5:baseDur;
       const nOrbs=2;
       // both orbs rotate same direction (CCW)
@@ -713,14 +741,14 @@ class Tower{
       }
       return;
     }
-    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(2,Math.round(dmg*1.2));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
+    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(2,Math.round(dmg*1.5));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
     if(tp==='drone'){
-      this._droneAngle+=dt*(0.38+this._lm()*.06);
-      const dr=this.getRange()*TS;
-      const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;
+      this._droneAngle+=dt*(0.55+this._lm()*.08);
+      const rng=this.getRange()*TS;
+      const orbitR=rng*0.62;
+      const drX=this.cx+Math.cos(this._droneAngle)*orbitR,drY=this.cy+Math.sin(this._droneAngle)*orbitR;
       if(this._hitCooldown>0){this._hitCooldown-=dt;}
       else{
-        const rng=this.getRange()*TS;
         let bestO=null,bestD=Infinity;
         for(const o of ores){
           if(!o.alive)continue;
@@ -818,7 +846,6 @@ class Tower{
       ctx.strokeStyle='#fff';ctx.lineWidth=.9;ctx.globalAlpha=.65*p;ctx.shadowBlur=4;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
       ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
     }
-    if(this.type==='drone')this._drawDroneOrbit(ctx);
     if(this.type==='twinhub')this._drawTwinOrbit(ctx);
   }
   _base(ctx,r,col,sh='circle'){
@@ -927,10 +954,9 @@ class Tower{
     ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
-  // 픽셀 로봇암: 산업용 로봇팔 (탑뷰, 좌우대칭 듀얼암)
+  // 픽셀 로봇암: 단관절 산업용 로봇팔 (탑뷰, 정면 단일암, 그리퍼 타격 시 벌림)
   _dPA(ctx,r,t,f){
     const col=this.color;
-    // helper: draw a filled quadrilateral arm link between two points with given half-width
     const armLink=(x1,y1,x2,y2,hw,fill,stroke)=>{
       const ang=Math.atan2(y2-y1,x2-x1);
       const px=Math.sin(ang)*hw,py=-Math.cos(ang)*hw;
@@ -938,90 +964,91 @@ class Tower{
       ctx.moveTo(x1+px,y1+py);ctx.lineTo(x2+px,y2+py);
       ctx.lineTo(x2-px,y2-py);ctx.lineTo(x1-px,y1-py);
       ctx.closePath();ctx.fillStyle=fill;ctx.fill();
-      ctx.strokeStyle=stroke;ctx.lineWidth=1.2;ctx.stroke();
+      ctx.strokeStyle=stroke;ctx.lineWidth=1.3;ctx.stroke();
     };
-    // circular mount plate base
+    // circular mount base
     ctx.beginPath();ctx.arc(0,0,r*.84,0,Math.PI*2);
     ctx.fillStyle='#181818';ctx.fill();ctx.strokeStyle='#3a3a3a';ctx.lineWidth=1.8;ctx.stroke();
-    // concentric ring detail
     ctx.strokeStyle=col+'18';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.62,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle=col+'10';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(0,0,r*.4,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle=col+'10';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(0,0,r*.38,0,Math.PI*2);ctx.stroke();
     // 8 mounting bolts
     for(let i=0;i<8;i++){
       const a=i*Math.PI/4;
       ctx.fillStyle='#2e2e2e';ctx.strokeStyle=col+(f?'55':'22');ctx.lineWidth=.7;
       ctx.beginPath();ctx.arc(Math.cos(a)*r*.76,Math.sin(a)*r*.76,r*.04,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // rotating arm assembly
+    // single arm rotates toward target
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // DUAL ARM: left (sx=-1) and right (sx=1)
+    // joint positions along forward axis (Y-up = toward target)
+    const shX=0, shY=-r*.06;    // shoulder (near center)
+    const elbX=0, elbY=-r*.42;  // elbow (mid)
+    const wristX=0, wristY=-r*.74; // wrist
+    const tipY=-r*.92;           // gripper tip
+    // UPPER ARM (shoulder → elbow) — wide
+    armLink(shX,shY,elbX,elbY,r*.14,'#1e1e1e',f?col+'55':col+'22');
+    // hydraulic groove on upper arm
+    ctx.strokeStyle=col+(f?'33':'12');ctx.lineWidth=.9;
+    ctx.beginPath();ctx.moveTo(-r*.06,(shY+elbY)*.5);ctx.lineTo(r*.06,(shY+elbY)*.5);ctx.stroke();
+    // FOREARM (elbow → wrist) — narrower
+    armLink(elbX,elbY,wristX,wristY,r*.10,'#1a1a1a',f?col+'77':col+'33');
+    // detail lines on forearm
+    for(let v=0;v<2;v++){
+      const vy=elbY+(wristY-elbY)*(0.28+v*.36);
+      ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=1.3;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(-r*.07,vy);ctx.lineTo(r*.07,vy);ctx.stroke();
+      ctx.lineCap='butt';
+    }
+    // SHOULDER JOINT
+    ctx.fillStyle='#262626';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.6;
+    ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
+    ctx.beginPath();ctx.arc(shX,shY,r*.15,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.fillStyle=f?col:col+'77';ctx.beginPath();ctx.arc(shX,shY,r*.065,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col+(f?'55':'22');ctx.lineWidth=.8;ctx.beginPath();ctx.arc(shX,shY,r*.105,0,Math.PI*2);ctx.stroke();
+    // ELBOW JOINT
+    ctx.fillStyle='#222222';ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.4;
+    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
+    ctx.beginPath();ctx.arc(elbX,elbY,r*.12,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.fillStyle=f?col+'99':col+'44';ctx.beginPath();ctx.arc(elbX,elbY,r*.055,0,Math.PI*2);ctx.fill();
+    // WRIST PLATE
+    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'99':col+'33';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.roundRect(-r*.13,wristY-r*.045,r*.26,r*.1,r*.02);ctx.fill();ctx.stroke();
+    // wrist joint
+    ctx.fillStyle='#222';ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(wristX,wristY,r*.08,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=f?col+'88':col+'33';ctx.beginPath();ctx.arc(wristX,wristY,r*.038,0,Math.PI*2);ctx.fill();
+    // GRIPPER — 2 fingers that OPEN (spread) when firing
+    const spread=f?r*.22:r*.08;
     for(const sx of[-1,1]){
-      // joint positions (top-view: shoulder near center, elbow mid, wrist near end-effector)
-      const sx0=sx*r*.12, sy0=-r*.06;   // shoulder
-      const sx1=sx*r*.46, sy1=-r*.38;   // elbow
-      const sx2=sx*r*.22, sy2=-r*.76;   // wrist
-      // upper arm link (shoulder → elbow), wide solid box
-      armLink(sx0,sy0,sx1,sy1,r*.12,'#1e1e1e',f?col+'55':col+'22');
-      // forearm link (elbow → wrist), narrower
-      armLink(sx1,sy1,sx2,sy2,r*.09,'#1a1a1a',f?col+'66':col+'28');
-      // arm link center groove lines
-      const drawGroove=(x1,y1,x2,y2)=>{
-        const mx=(x1+x2)/2,my=(y1+y2)/2;
-        const ang=Math.atan2(y2-y1,x2-x1),len=Math.hypot(x2-x1,y2-y1);
-        ctx.save();ctx.translate(mx,my);ctx.rotate(ang);
-        ctx.strokeStyle=col+(f?'33':'14');ctx.lineWidth=.8;
-        ctx.beginPath();ctx.moveTo(-len*.35,0);ctx.lineTo(len*.35,0);ctx.stroke();
-        ctx.restore();
-      };
-      drawGroove(sx0,sy0,sx1,sy1);
-      drawGroove(sx1,sy1,sx2,sy2);
-      // SHOULDER JOINT
-      ctx.fillStyle='#262626';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.6;
-      ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-      ctx.beginPath();ctx.arc(sx0,sy0,r*.145,0,Math.PI*2);ctx.fill();ctx.stroke();
+      const gx=sx*spread;
+      // finger arm (angled out from wrist to tip)
+      armLink(sx*r*.06,wristY,gx,tipY,r*.055,'#1a1a1a',f?col+'cc':col+'55');
+      // finger tip pod
+      ctx.fillStyle='#181818';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.2;
+      ctx.shadowColor=col;ctx.shadowBlur=f?20:3;
+      ctx.beginPath();ctx.arc(gx,tipY,r*.065,0,Math.PI*2);ctx.fill();ctx.stroke();
       ctx.shadowBlur=0;
-      ctx.fillStyle=f?col:col+'77';ctx.beginPath();ctx.arc(sx0,sy0,r*.065,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle=col+(f?'55':'22');ctx.lineWidth=.7;ctx.beginPath();ctx.arc(sx0,sy0,r*.11,0,Math.PI*2);ctx.stroke();
-      // ELBOW JOINT
-      ctx.fillStyle='#222222';ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.4;
-      ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-      ctx.beginPath();ctx.arc(sx1,sy1,r*.115,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.shadowBlur=0;
-      ctx.fillStyle=f?col+'99':col+'44';ctx.beginPath();ctx.arc(sx1,sy1,r*.055,0,Math.PI*2);ctx.fill();
-      // WRIST JOINT (small)
-      ctx.fillStyle='#222222';ctx.strokeStyle=f?col+'99':col+'33';ctx.lineWidth=1.1;
-      ctx.beginPath();ctx.arc(sx2,sy2,r*.08,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.fillStyle=f?col+'88':col+'33';ctx.beginPath();ctx.arc(sx2,sy2,r*.04,0,Math.PI*2);ctx.fill();
-    }
-    // END-EFFECTOR: horizontal gripper/tool plate connecting both wrists
-    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'aa':col+'44';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.roundRect(-r*.3,-r*.84,r*.6,r*.16,r*.04);ctx.fill();ctx.stroke();
-    // gripper fingers (3 forward prongs)
-    for(const fx of[-r*.2,0,r*.2]){
-      ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1.1;
-      ctx.beginPath();ctx.rect(fx-r*.04,-r*.98,r*.08,r*.15);ctx.fill();ctx.stroke();
-      // finger tip glow
-      ctx.fillStyle=f?col:'#141414';ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
-      ctx.beginPath();ctx.arc(fx,-r*.98,r*.04,0,Math.PI*2);ctx.fill();
+      // inner dot glow
+      ctx.fillStyle=f?col:'#1e1e1e';ctx.shadowColor=col;ctx.shadowBlur=f?12:1;
+      ctx.beginPath();ctx.arc(gx,tipY,r*.03,0,Math.PI*2);ctx.fill();
       ctx.shadowBlur=0;
     }
-    // gripper detail dividers
-    for(const gx of[-r*.1,r*.1]){
-      ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=.8;
-      ctx.beginPath();ctx.moveTo(gx,-r*.84);ctx.lineTo(gx,-r*.68);ctx.stroke();
-    }
+    // gripper crossbar at wrist
+    ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(-r*.12,wristY+r*.04);ctx.lineTo(r*.12,wristY+r*.04);ctx.stroke();
     if(f){
-      const mg=ctx.createRadialGradient(0,-r*.96,0,0,-r*.96,r*.28);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.3,col);mg.addColorStop(1,col+'00');
-      ctx.globalAlpha=.6;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-r*.96,r*.28,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+      const mg=ctx.createRadialGradient(0,tipY,0,0,tipY,r*.32);
+      mg.addColorStop(0,'#fff');mg.addColorStop(.28,col);mg.addColorStop(1,col+'00');
+      ctx.globalAlpha=.65;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,tipY,r*.32,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
     }
     ctx.restore();
-    // center mount hub core
+    // center hub core
     ctx.shadowColor=col;ctx.shadowBlur=f?20:7;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.2);
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.18);
     cg.addColorStop(0,'#fff');cg.addColorStop(.35,col);cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.2,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'aa':'33');ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col+(f?'aa':'33');ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.25,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
   // AOE: 레이저 그리드 — 원형 베이스 + 격자선
@@ -1337,13 +1364,14 @@ class Tower{
     ctx.shadowBlur=0;
   }
   _drawDroneOrbit(ctx){
-    const dr=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
+    const rng=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
+    const orbitR=rng*0.62;
     const sc=this.isMega?1:0.5;
     ctx.save();
     ctx.strokeStyle=col+'14';ctx.lineWidth=.8;ctx.setLineDash([3,9]);
-    ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(this.cx,this.cy,rng,0,Math.PI*2);ctx.stroke();
     ctx.setLineDash([]);
-    const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
+    const drX=this.cx+Math.cos(da)*orbitR,drY=this.cy+Math.sin(da)*orbitR;
     ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI);ctx.scale(sc,sc);
     ctx.shadowColor=col;ctx.shadowBlur=f?18:6;
     // === STEALTH DELTA DRONE (nose=-y) ===
@@ -1913,14 +1941,13 @@ const UI={
     if(d.spd>0)s+=`<div class="tis">속도<span>${tower.getSpd().toFixed(1)}/초</span></div>`;
     s+=`<div class="tis">범위<span>${d.range}</span></div>`;
     if(tower.type==='focus')s+=`<div class="tis">집중 레이저<span>지속</span></div>`;
-    if(tower.type==='refinery'){const pg=Math.max(1,Math.round(tower.getDmg()*.5));s+=`<div class="tis">포트/발사<span>+◈${pg}</span></div>`;}
+    if(tower.type==='refinery'){const pg=Math.max(1,Math.round(tower.getDmg()*1.5));s+=`<div class="tis">포트/발사<span>+◈${pg}</span></div>`;}
     if(tower.type==='chain'){const sd=Math.round(tower.getDmg()*0.5);s+=`<div class="tis">연쇄<span>3개</span></div>`;s+=`<div class="tis">감전<span>DPS ${sd} / 3초</span></div>`;}
     if(tower.type==='pierce')s+=`<div class="tis">관통<span>8개</span></div>`;
-    if(tower.type==='twinhub'){const bd=[1.0,1.5,2.0,2.5][tower.level-1]||1.0;const dur=tower.isMega?bd*2.5:bd;s+=`<div class="tis">감속<span>50% / ${dur.toFixed(1)}초</span></div>`;s+=`<div class="tis">면역<span>접촉 후 1초</span></div>`;}
-    s+=`<div class="tis-desc">${d.desc}</div>`;
+    if(tower.type==='twinhub'){const bd=[1.0,1.33,1.67,2.0][tower.level-1]||1.0;const dur=tower.isMega?bd*5:bd;s+=`<div class="tis">감속<span>50% / ${dur.toFixed(1)}초</span></div>`;s+=`<div class="tis">면역<span>접촉 후 1초</span></div>`;}
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
-    if(tower.level>=4){bu.disabled=true;bu.textContent='최대';}
+    if(tower.isMega||tower.level>=4){bu.disabled=true;bu.textContent='최대';}
     else{const c=Math.round(tower.basePrice*(TWR[tower.tId].upgMult||1)*LVL[tower.level].cm);bu.disabled=!GS.eggActive&&GS.port<c;bu.textContent=`업그레이드 ◈${c}`;}
     document.getElementById('bsell').textContent=`매각 ◈${Math.round((tower.basePrice+tower.upgCost)*.6)}`;
   },
