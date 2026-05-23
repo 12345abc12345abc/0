@@ -1188,45 +1188,53 @@ class Tower{
     ctx.setLineDash([]);
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
     ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);ctx.scale(sc,sc);
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:5;
-    // outer hull ring
-    ctx.strokeStyle=f?col:col+'88';ctx.lineWidth=1.4;
-    ctx.fillStyle='#071410';
+    ctx.shadowColor=col;ctx.shadowBlur=f?14:5;
+    // disc hull
+    ctx.fillStyle='#071410';ctx.strokeStyle=f?col:col+'88';ctx.lineWidth=1.4;
     ctx.beginPath();ctx.arc(0,0,11,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // inner rim
+    // inner rim ring
     ctx.strokeStyle=col+'44';ctx.lineWidth=.8;
-    ctx.beginPath();ctx.arc(0,0,8.5,0,Math.PI*2);ctx.stroke();
-    // 4 thruster pods on rim (top/bottom/left/right)
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2;
-      const tx=Math.cos(a)*9.5,ty=Math.sin(a)*9.5;
-      ctx.save();ctx.translate(tx,ty);ctx.rotate(a);
-      ctx.fillStyle='#0c201a';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1;
-      ctx.beginPath();ctx.ellipse(0,0,2.8,1.6,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-      // thruster glow
-      if(f){ctx.fillStyle=col;ctx.globalAlpha=.7;ctx.beginPath();ctx.ellipse(0,0,1.4,.8,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
-      ctx.restore();
-    }
-    // spinning inner disc
+    ctx.beginPath();ctx.arc(0,0,8.2,0,Math.PI*2);ctx.stroke();
+    // spinning inner disc (dashed)
     ctx.save();ctx.rotate(this._droneAngle*3);
     ctx.strokeStyle=f?col+'cc':col+'33';ctx.lineWidth=1;ctx.setLineDash([4,5]);
-    ctx.beginPath();ctx.arc(0,0,6,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(0,0,5.8,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
     ctx.restore();
-    // 3 sensor fins
-    ctx.save();ctx.rotate(-this._droneAngle*1.5);
-    for(let i=0;i<3;i++){
-      const a=i*Math.PI*2/3;
-      ctx.strokeStyle=f?col:col+'77';ctx.lineWidth=1.2;ctx.lineCap='round';
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*4,Math.sin(a)*4);ctx.lineTo(Math.cos(a)*7.5,Math.sin(a)*7.5);ctx.stroke();
-      ctx.fillStyle=f?col:'#2a5045';
-      ctx.beginPath();ctx.arc(Math.cos(a)*7.5,Math.sin(a)*7.5,.9,0,Math.PI*2);ctx.fill();
+    // FRONT — triangular nose pointing forward (top = direction of flight)
+    ctx.fillStyle=f?col:'#1e5040';ctx.strokeStyle=f?col:col+'77';ctx.lineWidth=1;
+    ctx.shadowColor=col;ctx.shadowBlur=f?10:3;
+    ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(-4.5,-9.5);ctx.lineTo(4.5,-9.5);ctx.closePath();
+    ctx.fill();ctx.stroke();
+    // front sensor LED
+    ctx.fillStyle='#fff';ctx.shadowBlur=f?12:5;
+    ctx.beginPath();ctx.arc(0,-13,1.3,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    // REAR — dual thruster ports
+    for(const ox of [-4,4]){
+      ctx.fillStyle='#0c201a';ctx.strokeStyle=col+(f?'99':'44');ctx.lineWidth=1;
+      ctx.beginPath();ctx.ellipse(ox,10,2.2,1.4,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+      if(f){
+        ctx.fillStyle=col;ctx.globalAlpha=.85;ctx.shadowColor=col;ctx.shadowBlur=8;
+        ctx.beginPath();ctx.ellipse(ox,10,1.1,.7,0,0,Math.PI*2);ctx.fill();
+        // exhaust plume
+        const eg=ctx.createLinearGradient(ox,10,ox,17);
+        eg.addColorStop(0,col+'99');eg.addColorStop(1,col+'00');
+        ctx.fillStyle=eg;ctx.shadowBlur=0;ctx.globalAlpha=.6;
+        ctx.beginPath();ctx.ellipse(ox,14,1.4,3,0,0,Math.PI*2);ctx.fill();
+        ctx.globalAlpha=1;
+      }
     }
-    ctx.restore();
-    // core
-    ctx.shadowColor=col;ctx.shadowBlur=f?22:8;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,3.5);
+    // SIDES — stabilizer fins
+    for(const s of [-1,1]){
+      ctx.fillStyle=col+(f?'44':'22');ctx.strokeStyle=col+(f?'77':'33');ctx.lineWidth=.8;
+      ctx.beginPath();ctx.moveTo(s*11,-2);ctx.lineTo(s*15,-4);ctx.lineTo(s*15.5,2);ctx.lineTo(s*11,3);ctx.closePath();
+      ctx.fill();ctx.stroke();
+    }
+    // core glow
+    ctx.shadowColor=col;ctx.shadowBlur=f?20:8;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,3.8);
     cg.addColorStop(0,'#fff');cg.addColorStop(.4,col);cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,3.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,3.8,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;ctx.restore();ctx.restore();
   }
   _dScan(ctx,r,t){
