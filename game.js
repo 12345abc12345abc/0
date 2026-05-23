@@ -266,8 +266,8 @@ const ORE={
   core:    {name:'코어 원석',   color:'#E8F4FF',hp:1800,spd:12, reward:190, dmg:20, grade:4,special:'boss'},
 };
 
-const TWR_ORDER=['pixelArm','twinHub','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
-const UNLOCK_ORDER=['twinHub','coreShooter','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
+const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
+const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
   pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:1.1,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
   coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:18,  spd:2.6,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
@@ -694,7 +694,7 @@ class Tower{
       }
       return;
     }
-    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(1,Math.round(dmg*.5));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new LightningEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
+    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(1,Math.round(dmg*.5));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
     if(tp==='drone'){this._droneAngle+=dt*(0.38+this._lm()*.06);const dr=this.getRange()*TS;const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;const hitR=TS*.62;for(const o of ores){if(!o.alive)continue;if(Math.hypot(o.x-drX,o.y-drY)<hitR){o.takeDmg(this.getDmg()*dt,'single');if(this._hitCooldown<=0){this._eff(new RingEff(drX,drY,hitR*1.4,this.color));this._hitCooldown=.1;}this._firingT=.18;}}if(this._hitCooldown>0)this._hitCooldown-=dt;return;}
     if(tp==='focus'){
       if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
@@ -1225,6 +1225,28 @@ class GridFlashEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=co
   ctx.globalAlpha=p*.7;ctx.lineWidth=2;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p*.5,0,Math.PI*2);ctx.stroke();
   const hl=this.r*(0.92+(1-p)*.08);ctx.globalAlpha=p*.45;ctx.lineWidth=1.5;ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(this.x-hl,this.y);ctx.lineTo(this.x+hl,this.y);ctx.moveTo(this.x,this.y-hl);ctx.lineTo(this.x,this.y+hl);ctx.stroke();
   ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();}}
+class ZapEff{
+  constructor(x1,y1,x2,y2,col){
+    this.x1=x1;this.y1=y1;this.x2=x2;this.y2=y2;this.col=col;this.life=this.max=.17;this.z=0;
+    const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1;
+    const nx=-dy/len,ny=dx/len,sway=(Math.random()-.5)*Math.min(len*.1,12);
+    this.cpx=(x1+x2)/2+nx*sway;this.cpy=(y1+y2)/2+ny*sway;
+  }
+  update(dt){this.life-=dt;}
+  draw(ctx){
+    if(this.life<=0)return;
+    const p=this.life/this.max;
+    ctx.save();ctx.lineCap='round';
+    const arc=()=>{ctx.beginPath();ctx.moveTo(this.x1,this.y1);ctx.quadraticCurveTo(this.cpx,this.cpy,this.x2,this.y2);ctx.stroke();};
+    ctx.globalAlpha=p*.5;ctx.shadowColor=this.col;ctx.shadowBlur=22;ctx.strokeStyle=this.col;ctx.lineWidth=8;arc();
+    ctx.globalAlpha=p*.95;ctx.shadowBlur=10;ctx.lineWidth=2.5;arc();
+    ctx.strokeStyle='#fff';ctx.shadowBlur=3;ctx.lineWidth=.85;ctx.globalAlpha=p*.8;arc();
+    ctx.globalAlpha=p*.85;ctx.shadowColor=this.col;ctx.shadowBlur=18;ctx.fillStyle=this.col;ctx.beginPath();ctx.arc(this.x2,this.y2,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.shadowBlur=4;ctx.globalAlpha=p*.9;ctx.beginPath();ctx.arc(this.x2,this.y2,1.6,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=p*.65;ctx.shadowBlur=10;ctx.fillStyle=this.col;ctx.beginPath();ctx.arc(this.x1,this.y1,3,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
+  }
+}
 class LightningEff{
   constructor(x1,y1,x2,y2,col){
     this.col=col;this.life=this.max=.26;this.z=0;
@@ -1275,34 +1297,38 @@ class ExplodeEff{constructor(x,y,col){this.x=x;this.y=y;this.col=col;this.life=t
 class LaserEff{constructor(x,y,dir,len,col){this.x=x;this.y=y;this.dir=dir;this.len=len;this.col=col;this.life=this.max=.2;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.82;ctx.shadowColor=this.col;ctx.shadowBlur=6;ctx.strokeStyle=this.col;ctx.lineWidth=1.5+p*1.5;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(this.dir)*this.len,this.y+Math.sin(this.dir)*this.len);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class BoltEff{
   constructor(x1,y1,x2,y2,col){
-    this.col=col;this.life=this.max=.22;
-    const n=7;
-    this.pts=[{x:x1,y:y1}];
-    const dist=Math.hypot(x2-x1,y2-y1);
-    for(let i=1;i<n;i++){
-      const f=i/n,px=x1+(x2-x1)*f,py=y1+(y2-y1)*f;
-      const jitter=dist*.14;
-      this.pts.push({x:px+(Math.random()-.5)*jitter,y:py+(Math.random()-.5)*jitter});
-    }
-    this.pts.push({x:x2,y:y2});
+    this.col=col;this.life=this.max=.32;this.z=0;this.x2=x2;this.y2=y2;
+    const dist=Math.hypot(x2-x1,y2-y1)||1;
+    const px=-(y2-y1)/dist,py=(x2-x1)/dist;
+    const n=10,pts=[{x:x1,y:y1}];
+    for(let i=1;i<n;i++){const f=i/n,jit=dist*.22*Math.sin(f*Math.PI);pts.push({x:x1+(x2-x1)*f+px*(Math.random()-.5)*jit*2,y:y1+(y2-y1)*f+py*(Math.random()-.5)*jit*2});}
+    pts.push({x:x2,y:y2});this.pts=pts;
+    const bi=Math.floor(n*.38)+1,bp=pts[bi];
+    const bAng=Math.atan2(y2-y1,x2-x1)+Math.PI/2*(Math.random()>.5?1:-1),bLen=dist*.22+Math.random()*dist*.1;
+    this.branch=[{x:bp.x,y:bp.y},{x:bp.x+Math.cos(bAng)*bLen*.55+(Math.random()-.5)*dist*.05,y:bp.y+Math.sin(bAng)*bLen*.55+(Math.random()-.5)*dist*.05},{x:bp.x+Math.cos(bAng)*bLen,y:bp.y+Math.sin(bAng)*bLen}];
+    this.sparks=Array.from({length:6},()=>({a:Math.random()*Math.PI*2,l:5+Math.random()*9}));
   }
   update(dt){this.life-=dt;}
+  _s(ctx,pts){ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.stroke();}
   draw(ctx){
     if(this.life<=0)return;
     const p=this.life/this.max;
-    // 외곽 글로우
-    ctx.globalAlpha=p*.5;ctx.shadowColor=this.col;ctx.shadowBlur=10;
-    ctx.strokeStyle=this.col+'88';ctx.lineWidth=4;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(this.pts[0].x,this.pts[0].y);
-    for(let i=1;i<this.pts.length;i++)ctx.lineTo(this.pts[i].x,this.pts[i].y);
-    ctx.stroke();
-    // 코어 라인
-    ctx.globalAlpha=p*.95;ctx.shadowBlur=4;
-    ctx.strokeStyle='#fff';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.moveTo(this.pts[0].x,this.pts[0].y);
-    for(let i=1;i<this.pts.length;i++)ctx.lineTo(this.pts[i].x,this.pts[i].y);
-    ctx.stroke();
-    ctx.shadowBlur=0;ctx.globalAlpha=1;
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.shadowColor=this.col;ctx.shadowBlur=26;ctx.strokeStyle=this.col;
+    ctx.globalAlpha=p*.45;ctx.lineWidth=7;this._s(ctx,this.pts);
+    ctx.globalAlpha=p*.22;ctx.lineWidth=3.5;this._s(ctx,this.branch);
+    ctx.shadowBlur=9;
+    ctx.globalAlpha=p*.98;ctx.lineWidth=2.5;this._s(ctx,this.pts);
+    ctx.globalAlpha=p*.65;ctx.lineWidth=1.4;this._s(ctx,this.branch);
+    ctx.strokeStyle='#fff';ctx.shadowBlur=3;
+    ctx.globalAlpha=p*.88;ctx.lineWidth=.9;this._s(ctx,this.pts);
+    ctx.globalAlpha=p*.4;ctx.lineWidth=.5;this._s(ctx,this.branch);
+    ctx.shadowColor=this.col;ctx.shadowBlur=22;ctx.fillStyle=this.col;
+    ctx.globalAlpha=p*.9;ctx.beginPath();ctx.arc(this.x2,this.y2,4.5+p*3,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.shadowBlur=5;ctx.globalAlpha=p*.95;ctx.beginPath();ctx.arc(this.x2,this.y2,2,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=this.col;ctx.lineWidth=1.1;ctx.shadowBlur=10;
+    for(const s of this.sparks){ctx.globalAlpha=p*.48;ctx.beginPath();ctx.moveTo(this.x2,this.y2);ctx.lineTo(this.x2+Math.cos(s.a)*s.l*p,this.y2+Math.sin(s.a)*s.l*p);ctx.stroke();}
+    ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
   }
 }
 class Particle{constructor(x,y,col,i,n){this.x=x;this.y=y;this.col=col;const a=(i/n)*Math.PI*2+Math.random()*.5,sp=48+Math.random()*88;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.life=this.max=.48+Math.random()*.32;this.r=2+Math.random()*3;}update(dt){this.x+=this.vx*dt;this.y+=this.vy*dt;this.vy+=80*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p;ctx.fillStyle=this.col;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}}
