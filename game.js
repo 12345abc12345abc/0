@@ -278,7 +278,7 @@ const TWR={
   laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:25,  spd:1.8,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
   chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:55,  spd:1.0,  range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
   drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:90,  spd:1.8,  range:2.4, desc:'드론이 선회하며 인근 원석에 레이저를 발사해 처리한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:45,  spd:3.0,  range:5.5, desc:'최고 발사 속도로 직선상의 원석을 최대 8개 관통 처리한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:32,  spd:4.0,  range:5.5, desc:'최고 발사 속도로 직선상의 원석을 최대 8개 관통 처리한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
@@ -1138,7 +1138,7 @@ class Tower{
     ctx.strokeStyle=col+'1a';ctx.lineWidth=1;
     for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.58,Math.sin(a)*r*.58);ctx.lineTo(Math.cos(a)*r*.72,Math.sin(a)*r*.72);ctx.stroke();}
     // slow outer patrol ring
-    ctx.save();ctx.rotate(t*.4);
+    ctx.save();ctx.rotate(t*.2);
     ctx.strokeStyle=col+'66';ctx.lineWidth=1.8;ctx.setLineDash([r*.32,r*.07]);
     ctx.beginPath();ctx.arc(0,0,r*.8,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     // 4 axis-aligned radial arms (perfect symmetry: up/down/left/right)
@@ -1155,11 +1155,11 @@ class Tower{
       ctx.shadowBlur=0;
     }
     // counter-rotating inner ring
-    ctx.save();ctx.rotate(-t*2.5);
+    ctx.save();ctx.rotate(-t*.7);
     ctx.strokeStyle=f?col+'aa':col+'33';ctx.lineWidth=1.2;ctx.setLineDash([r*.12,r*.16]);
     ctx.beginPath();ctx.arc(0,0,r*.46,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     // 4-blade spinner (axis-aligned blades, perfect symmetry)
-    ctx.save();ctx.rotate(t*5.0);
+    ctx.save();ctx.rotate(t*1.4);
     for(let i=0;i<4;i++){
       const a=i*Math.PI/2;
       ctx.fillStyle=f?col:col+'88';ctx.shadowColor=col;ctx.shadowBlur=f?5:1;
