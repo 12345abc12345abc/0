@@ -1187,7 +1187,7 @@ class Tower{
     ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();
     ctx.setLineDash([]);
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
-    ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);ctx.scale(sc,sc);
+    ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI);ctx.scale(sc,sc);
     ctx.shadowColor=col;ctx.shadowBlur=f?14:5;
     // disc hull
     ctx.fillStyle='#071410';ctx.strokeStyle=f?col:col+'88';ctx.lineWidth=1.4;
