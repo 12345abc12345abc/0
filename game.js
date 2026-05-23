@@ -271,7 +271,7 @@ const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery',
 const TWR={
   pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:20.0, desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.'},
   coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:25,  spd:2.0,  range:3.0, upgMult:7.5,  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.'},
-  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  desc:'궤도 제어 구체 2기가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.'},
+  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  desc:'궤도 타격 임팩터 2기가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.'},
   scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.'},
   magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:32,  spd:0,    range:5.0, upgMult:2.2,  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.'},
   refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, desc:'전자기 펄스로 원석을 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.'},
@@ -841,96 +841,93 @@ class Tower{
   // 코어슈터: 십자 포가 + 단열 중포, 기본방향 위(↑)
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // cross-frame base: 4 structural arms forming X/+ shape
-    for(const rot of[0,Math.PI/2]){
-      ctx.save();ctx.rotate(rot);
-      ctx.fillStyle='#0e0818';ctx.strokeStyle=f?col+'44':'#2a1840';ctx.lineWidth=1.6;
-      ctx.beginPath();ctx.rect(-r*.88,-r*.28,r*1.76,r*.56);ctx.fill();ctx.stroke();
-      // arm vent grooves
-      for(const sx of[-1,1]){
-        for(let v=0;v<3;v++){
-          ctx.strokeStyle=col+(f?'2a':'0e');ctx.lineWidth=.8;
-          ctx.beginPath();ctx.moveTo(sx*(r*.42+v*r*.14),-r*.2);ctx.lineTo(sx*(r*.42+v*r*.14),r*.2);ctx.stroke();
-        }
-      }
-      ctx.restore();
+    // ── OCTAGONAL BASE (X-pattern inner dividers)
+    const bp=r*.86,bv=r*.16;
+    const oP=()=>{ctx.beginPath();ctx.moveTo(-bp+bv,-bp);ctx.lineTo(bp-bv,-bp);ctx.lineTo(bp,-bp+bv);ctx.lineTo(bp,bp-bv);ctx.lineTo(bp-bv,bp);ctx.lineTo(-bp+bv,bp);ctx.lineTo(-bp,bp-bv);ctx.lineTo(-bp,-bp+bv);ctx.closePath();};
+    oP();ctx.fillStyle='#0b0606';ctx.fill();
+    // diagonal quadrant shading (X-pattern)
+    for(let i=0;i<4;i++){
+      const a0=i*Math.PI/2-Math.PI/4,a1=a0+Math.PI/2;
+      ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,bp*1.4,a0,a1);ctx.closePath();ctx.clip();
+      oP();ctx.fillStyle=i%2===0?'#160808':'#100505';ctx.fill();ctx.restore();
     }
-    // 4 corner junction pods
+    oP();ctx.strokeStyle='#2a0d0d';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
+    oP();ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;
+    // diagonal dividers
+    ctx.strokeStyle='#1e0a0a';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.moveTo(-bp*.65,-bp*.65);ctx.lineTo(bp*.65,bp*.65);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(bp*.65,-bp*.65);ctx.lineTo(-bp*.65,bp*.65);ctx.stroke();
+    // cardinal glow nodes
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2,px=Math.cos(a)*bp*.72,py=Math.sin(a)*bp*.72;
+      ctx.fillStyle='#1e0808';ctx.strokeStyle=col+(f?'55':'1e');ctx.lineWidth=0.9;ctx.shadowColor=col;ctx.shadowBlur=f?6:0;
+      ctx.beginPath();ctx.arc(px,py,r*.052,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+      ctx.fillStyle=f?col+'77':col+'28';ctx.beginPath();ctx.arc(px,py,r*.026,0,Math.PI*2);ctx.fill();
+    }
+    // diagonal corner accents
     for(const a of[Math.PI/4,Math.PI*3/4,Math.PI*5/4,Math.PI*7/4]){
-      ctx.fillStyle='#160d24';ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=1.2;
-      ctx.shadowColor=col;ctx.shadowBlur=f?6:1;
-      ctx.beginPath();ctx.arc(Math.cos(a)*r*.64,Math.sin(a)*r*.64,r*.15,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.shadowBlur=0;
-      ctx.fillStyle=f?col+'44':col+'18';
-      ctx.beginPath();ctx.arc(Math.cos(a)*r*.64,Math.sin(a)*r*.64,r*.07,0,Math.PI*2);ctx.fill();
+      const bx=Math.cos(a)*(bp-bv*.8),by=Math.sin(a)*(bp-bv*.8);
+      ctx.fillStyle='#1c0808';ctx.strokeStyle=col+(f?'33':'10');ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.arc(bx,by,r*.04,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // rotating charge accumulator ring
-    ctx.save();ctx.rotate(t*2.2);
-    ctx.strokeStyle=f?col+'77':col+'2a';ctx.lineWidth=1.6;ctx.setLineDash([r*.26,r*.1]);
-    ctx.beginPath();ctx.arc(0,0,r*.46,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // second counter-rotating ring
-    ctx.save();ctx.rotate(-t*1.4);
-    ctx.strokeStyle=f?col+'44':col+'18';ctx.lineWidth=1;ctx.setLineDash([r*.14,r*.16]);
-    ctx.beginPath();ctx.arc(0,0,r*.62,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // turret with angled mantlet shield + single wide barrel
+    // counter-rotating rings
+    ctx.save();ctx.rotate(t*2.2);ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=1.4;ctx.setLineDash([r*.22,r*.08]);
+    ctx.beginPath();ctx.arc(0,0,r*.48,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.rotate(-t*1.5);ctx.strokeStyle=f?col+'40':col+'14';ctx.lineWidth=1;ctx.setLineDash([r*.11,r*.13]);
+    ctx.beginPath();ctx.arc(0,0,r*.64,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // ── TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // mantlet shield (angled armor plate, wide trapezoidal)
-    ctx.fillStyle='#0e0818';ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1.8;
-    ctx.beginPath();
-    ctx.moveTo(-r*.46,-r*.16);ctx.lineTo(r*.46,-r*.16);ctx.lineTo(r*.34,-r*.5);ctx.lineTo(-r*.34,-r*.5);
-    ctx.closePath();ctx.fill();ctx.stroke();
-    // mantlet armor bolts
-    for(const bx of[-r*.28,r*.28]){
-      ctx.fillStyle='#1a1030';ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=.7;
-      ctx.beginPath();ctx.arc(bx,-r*.32,r*.05,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // wide trapezoidal body
+    ctx.fillStyle='#0e0606';ctx.strokeStyle=f?col+'77':col+'2c';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.moveTo(-r*.36,-r*.08);ctx.lineTo(r*.36,-r*.08);ctx.lineTo(r*.26,-r*.42);ctx.lineTo(-r*.26,-r*.42);ctx.closePath();ctx.fill();ctx.stroke();
+    for(const bx of[-r*.22,r*.22]){
+      ctx.fillStyle='#180808';ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=.7;
+      ctx.beginPath();ctx.arc(bx,-r*.25,r*.046,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // mantlet center sight reticle
-    ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(-r*.1,-r*.33);ctx.lineTo(r*.1,-r*.33);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-r*.28);ctx.lineTo(0,-r*.38);ctx.stroke();
-    // single wide barrel
-    ctx.fillStyle='#0a0614';ctx.strokeStyle=f?col+'aa':col+'44';ctx.lineWidth=1.8;
-    ctx.beginPath();ctx.rect(-r*.18,-r*.98,r*.36,r*.5);ctx.fill();ctx.stroke();
-    // barrel cooling rings
-    for(let v=0;v<5;v++){
-      const vy=-r*.92+v*r*.1;
-      ctx.strokeStyle=col+(f?'66':'28');ctx.lineWidth=2;ctx.lineCap='square';
-      ctx.beginPath();ctx.moveTo(-r*.21,vy);ctx.lineTo(r*.21,vy);ctx.stroke();
-      ctx.lineCap='butt';
-    }
-    // barrel inner channel glow
-    ctx.fillStyle=f?col+'33':'#080410';
-    ctx.beginPath();ctx.rect(-r*.1,-r*.94,r*.2,r*.42);ctx.fill();
-    // 3-slot muzzle brake
-    ctx.fillStyle='#0a0614';ctx.strokeStyle=f?col+'cc':col+'66';ctx.lineWidth=1.8;
-    ctx.shadowColor=col;ctx.shadowBlur=f?20:4;
-    ctx.beginPath();ctx.rect(-r*.24,-r*1.02,r*.48,r*.1);ctx.fill();ctx.stroke();
-    ctx.shadowBlur=0;
-    // muzzle vent slots
-    for(const bx of[-r*.12,0,r*.12]){
-      ctx.fillStyle=f?col+'55':'#0a0614';
-      ctx.beginPath();ctx.rect(bx-r*.04,-r*1.02,r*.08,r*.08);ctx.fill();
-    }
-    if(f){
-      const mg=ctx.createRadialGradient(0,-r*.97,0,0,-r*.97,r*.24);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.28,col);mg.addColorStop(1,col+'00');
-      ctx.globalAlpha=.65;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-r*.97,r*.24,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
-    }
-    // side stabilizer fins
+    // side intake vanes
     for(const sx of[-1,1]){
-      ctx.fillStyle='#0e0818';ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=1.1;
-      ctx.beginPath();
-      ctx.moveTo(sx*r*.18,-r*.56);ctx.lineTo(sx*r*.44,-r*.68);ctx.lineTo(sx*r*.44,-r*.44);ctx.lineTo(sx*r*.18,-r*.44);
-      ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle='#0c0404';ctx.strokeStyle=f?col+'55':col+'1e';ctx.lineWidth=1.1;
+      ctx.beginPath();ctx.moveTo(sx*r*.26,-r*.12);ctx.lineTo(sx*r*.50,-r*.20);ctx.lineTo(sx*r*.50,-r*.38);ctx.lineTo(sx*r*.26,-r*.36);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle=col+(f?'44':'10');ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.moveTo(sx*r*.30,-r*.18);ctx.lineTo(sx*r*.48,-r*.24);ctx.stroke();
+    }
+    // twin barrels (visual cue for rapid fire)
+    for(const bx of[-r*.095,r*.095]){
+      ctx.fillStyle='#080308';ctx.strokeStyle=f?col+'99':col+'3c';ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?10:1;
+      ctx.beginPath();ctx.rect(bx-r*.058,-r*.96,r*.116,r*.56);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+      for(let v=0;v<4;v++){
+        const vy=-r*.90+v*r*.13;
+        ctx.strokeStyle=col+(f?'66':'22');ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.moveTo(bx-r*.075,vy);ctx.lineTo(bx+r*.075,vy);ctx.stroke();
+      }
+      ctx.fillStyle=f?col+'44':'#050208';ctx.beginPath();ctx.rect(bx-r*.035,-r*.92,r*.07,r*.44);ctx.fill();
+    }
+    // center bridge
+    ctx.fillStyle='#0a0404';ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=1;
+    ctx.beginPath();ctx.rect(-r*.036,-r*.80,r*.072,r*.24);ctx.fill();ctx.stroke();
+    // twin muzzle tips
+    ctx.fillStyle='#0a0404';ctx.shadowColor=col;ctx.shadowBlur=f?24:4;ctx.strokeStyle=f?col+'dd':col+'50';ctx.lineWidth=1.8;
+    for(const bx of[-r*.095,r*.095]){
+      ctx.beginPath();ctx.moveTo(bx-r*.082,-r*.98);ctx.lineTo(bx+r*.082,-r*.98);ctx.lineTo(bx+r*.066,-r*1.07);ctx.lineTo(bx-r*.066,-r*1.07);ctx.closePath();ctx.fill();ctx.stroke();
+    }
+    ctx.shadowBlur=0;
+    if(f){
+      ctx.globalAlpha=.8;
+      for(const bx of[-r*.095,r*.095]){
+        const mg=ctx.createRadialGradient(bx,-r*1.01,0,bx,-r*1.01,r*.17);
+        mg.addColorStop(0,'#fff');mg.addColorStop(.3,col);mg.addColorStop(1,col+'00');
+        ctx.fillStyle=mg;ctx.beginPath();ctx.arc(bx,-r*1.01,r*.17,0,Math.PI*2);ctx.fill();
+      }
+      ctx.globalAlpha=1;
     }
     ctx.restore();
-    // central energy core
-    ctx.shadowColor=col;ctx.shadowBlur=f?28:10;
+    // energy core
+    ctx.shadowColor=col;ctx.shadowBlur=f?30:10;
     const cg=ctx.createRadialGradient(0,0,0,0,0,r*.22);
     cg.addColorStop(0,'#fff');cg.addColorStop(.25,col);cg.addColorStop(.6,col+'55');cg.addColorStop(1,col+'00');
     ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
   // 픽셀 로봇암: 단관절 산업용 로봇팔 (탑뷰, 정면 단일암, 그리퍼 타격 시 벌림)
