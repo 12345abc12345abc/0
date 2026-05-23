@@ -256,29 +256,29 @@ applyScale();window.addEventListener('resize',applyScale);
 // 데이터
 // ═══════════════════════════════════════════════════════
 const ORE={
-  normal:  {name:'일반 원석',   color:'#78909C',hp:18,  spd:44, reward:6,   dmg:2,  grade:1},
-  fast:    {name:'고속 원석',   color:'#FFB300',hp:10,  spd:90, reward:8,   dmg:2,  grade:1},
-  multi:   {name:'다중 원석',   color:'#00E5FF',hp:35,  spd:46, reward:15,  dmg:3,  grade:2,special:'split'},
-  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:110, spd:26, reward:22,  dmg:5,  grade:3},
-  pure:    {name:'고순도 원석', color:'#FFD54F',hp:28,  spd:44, reward:35,  dmg:4,  grade:2},
-  unstable:{name:'불안정 원석', color:'#76FF03',hp:48,  spd:74, reward:26,  dmg:10, grade:2,special:'bigdmg'},
-  compres: {name:'압축 원석',   color:'#E040FB',hp:380, spd:20, reward:55,  dmg:8,  grade:3},
-  core:    {name:'코어 원석',   color:'#B3E5FC',hp:1800,spd:12, reward:190, dmg:20, grade:4,special:'boss'},
+  normal:  {name:'일반 원석',   color:'#78909C',hp:18,  spd:44, reward:8,   dmg:2,  grade:1},
+  fast:    {name:'고속 원석',   color:'#FFB300',hp:10,  spd:90, reward:11,  dmg:2,  grade:1},
+  multi:   {name:'다중 원석',   color:'#00E5FF',hp:35,  spd:46, reward:20,  dmg:3,  grade:2,special:'split'},
+  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:110, spd:26, reward:28,  dmg:5,  grade:3},
+  pure:    {name:'고순도 원석', color:'#FFD54F',hp:28,  spd:44, reward:45,  dmg:4,  grade:2},
+  unstable:{name:'불안정 원석', color:'#76FF03',hp:48,  spd:74, reward:34,  dmg:10, grade:2,special:'bigdmg'},
+  compres: {name:'압축 원석',   color:'#E040FB',hp:380, spd:20, reward:70,  dmg:8,  grade:3},
+  core:    {name:'코어 원석',   color:'#B3E5FC',hp:1800,spd:12, reward:250, dmg:20, grade:4,special:'boss'},
 };
 
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:45,  spd:1.0,  range:2.0, upgMult:20.0, desc:'단관절 산업용 로봇암. 컨베이어 선두 원석을 그리퍼로 직접 포착해 고출력 단발 공정을 수행한다. 처리 간격은 길지만 단발 공정력이 최고 수준이다.'},
-  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:22,  spd:2.0,  range:3.0, upgMult:7.5,  desc:'단열 중구경 공정포. 라인 선두 원석을 빠른 주기로 연속 타격한다. 안정적인 처리 속도와 넓은 사거리로 초반 라인을 지탱한다.'},
-  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:5,   spd:0,    range:1.0, upgMult:5.1,  desc:'궤도 제어 구체 2개가 반경 내를 선회하며 원석과 물리 접촉한다. 접촉된 원석은 1초간 이송 속도 50% 감소. 강화 시 감속 지속 시간 증가.'},
-  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:180, spd:0.25, range:5.0, upgMult:3.4,  desc:'전방위 광학 스캐너. 광역 범위를 분석해 체류 질량이 가장 높은 원석을 선별 정밀 타격한다. 4초 주기의 고출력 단발 공정 설비.'},
-  magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:25,  spd:0,    range:5.0, upgMult:2.2,  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 철저히 제거해 공장 유출을 차단하는 후방 방어 설비.'},
-  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:11,  spd:1.0,  range:2.0, upgMult:1.55, desc:'전자기 펄스 공정과 동시에 처리 부산물을 회수해 포트로 환원한다. 공정력은 낮지만 가동할수록 자본이 축적되는 수익형 설비.'},
-  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:22,  spd:1.0,  range:2.0, upgMult:1.0,  desc:'구역 내 격자 레이저망을 1초 주기로 전개해 범위 내 모든 원석을 동시 처리한다. 원석 밀집 구간에서 처리 효율이 극대화된다.'},
-  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:26,  spd:1.0,  range:3.0, upgMult:0.62, desc:'연쇄 방전으로 원석 3개를 순차 타격하고 3초간 지속 분해 반응을 유발한다. 다수 원석이 밀집한 구간에서 폭발적인 처리 효율을 낸다.'},
-  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:90,  spd:0.5,  range:2.0, upgMult:0.40, desc:'무인 공정 드론이 설비 반경 내를 자율 선회하며 원석을 탐지해 정밀 레이저로 처리한다. 고정 설비의 사각지대를 실시간으로 커버한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:10,  spd:6.0,  range:5.0, upgMult:0.26, desc:'극고속 플라즈마 빔을 1초에 6회 연속 발사해 일직선상의 원석을 최대 8개까지 관통 처리한다. 라인 밀집 시 처리 효율이 폭증한다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:40,  spd:1.1,  range:2.0, upgMult:20.0, desc:'단관절 산업용 로봇암. 컨베이어 선두 원석을 그리퍼로 직접 포착해 고출력 단발 공정을 수행한다. 처리 간격은 길지만 단발 공정력이 최고 수준이다.'},
+  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:28,  spd:2.2,  range:3.0, upgMult:7.5,  desc:'단열 중구경 공정포. 라인 선두 원석을 빠른 주기로 연속 타격한다. 안정적인 처리 속도와 넓은 사거리로 초반 라인을 지탱한다.'},
+  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  desc:'궤도 제어 구체 2개가 반경 내를 선회하며 원석과 물리 접촉한다. 접촉된 원석은 1초간 이송 속도 50% 감소. 강화 시 감속 지속 시간 증가.'},
+  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  desc:'전방위 광학 스캐너. 광역 범위를 분석해 체류 질량이 가장 높은 원석을 선별 정밀 타격한다. 4초 주기의 고출력 단발 공정 설비.'},
+  magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:32,  spd:0,    range:5.0, upgMult:2.2,  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 철저히 제거해 공장 유출을 차단하는 후방 방어 설비.'},
+  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:35,  spd:1.2,  range:2.0, upgMult:1.55, desc:'전자기 펄스로 원석을 직접 처리한다. 공정 완료 시 일반 유닛 대비 20% 추가 포트를 회수하는 수익형 설비.'},
+  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:30,  spd:1.0,  range:3.0, upgMult:1.0,  desc:'구역 내 격자 레이저망을 1초 주기로 전개해 범위 내 모든 원석을 동시 처리한다. 원석 밀집 구간에서 처리 효율이 극대화된다.'},
+  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, desc:'연쇄 방전으로 원석 3개를 순차 타격하고 3초간 지속 분해 반응을 유발한다. 다수 원석이 밀집한 구간에서 폭발적인 처리 효율을 낸다.'},
+  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:110, spd:0.6,  range:3.0, upgMult:0.40, desc:'무인 공정 드론이 설비 반경 내를 자율 선회하며 원석을 탐지해 정밀 레이저로 처리한다. 고정 설비의 사각지대를 실시간으로 커버한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, desc:'극고속 플라즈마 빔을 1초에 6회 연속 발사해 일직선상의 원석을 최대 8개까지 관통 처리한다. 라인 밀집 시 처리 효율이 폭증한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -340,18 +340,18 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W10:≈1.47 W20:≈2.1 W30:≈4.3 W40:≈11.8 W50:≈33.8 W60:≈113 W70:≈413 W80:≈1613 W90:≈6413 W100:≈25413
+  // W10:≈1.36 W20:≈2.06 W30:≈4.86 W40:≈11.36 W50:≈26.36 W60:≈61 W70:≈141 W80:≈261 W90:≈441 W100:≈661
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.052;
-  if(w<=20)return hpS(10)+(w-10)*0.065;
-  if(w<=30)return hpS(20)+(w-20)*0.22;
-  if(w<=40)return hpS(30)+(w-30)*0.75;
-  if(w<=50)return hpS(40)+(w-40)*2.2;
-  if(w<=60)return hpS(50)+(w-50)*8.0;
-  if(w<=70)return hpS(60)+(w-60)*30.0;
-  if(w<=80)return hpS(70)+(w-70)*120.0;
-  if(w<=90)return hpS(80)+(w-80)*480.0;
-  return hpS(90)+(w-90)*1900.0;
+  if(w<=10)return 1.0+(w-1)*0.04;
+  if(w<=20)return hpS(10)+(w-10)*0.07;
+  if(w<=30)return hpS(20)+(w-20)*0.28;
+  if(w<=40)return hpS(30)+(w-30)*0.65;
+  if(w<=50)return hpS(40)+(w-40)*1.50;
+  if(w<=60)return hpS(50)+(w-50)*3.5;
+  if(w<=70)return hpS(60)+(w-60)*8.0;
+  if(w<=80)return hpS(70)+(w-70)*12.0;
+  if(w<=90)return hpS(80)+(w-80)*18.0;
+  return hpS(90)+(w-90)*22.0;
 }
 function spdS(w){
   if(w<=20)return 1+Math.min(w-1,19)*0.008;
@@ -381,6 +381,7 @@ const GS={
   hovR:null,hovC:null,eggActive:false,
 };
 let _uid=0;const uid=()=>++_uid;
+function sweepArr(a,fn){let j=0;for(let i=0;i<a.length;i++)if(fn(a[i]))a[j++]=a[i];a.length=j;}
 
 // ═══════════════════════════════════════════════════════
 // 렌더러
@@ -414,6 +415,23 @@ const R={
         this._pathCells.push({r,c2,dir:getDir(r,c2),ie,ix});
       }
     }
+    // 경로 정적 레이어를 bgImg에 합성 (타일배경·레일·화살표) — 매 프레임 재드로우 불필요
+    const BR=4;
+    for(const{r,c2,dir,ie,ix}of this._pathCells){
+      const px=MAP_OX+c2*TS,py=MAP_OY+r*TS;
+      bx.fillStyle='#181818';bx.fillRect(px+1,py+1,TS-2,TS-2);
+      bx.strokeStyle='#272727';bx.lineWidth=.8;bx.strokeRect(px+.5,py+.5,TS-1,TS-1);
+      if(ie||ix||!dir)continue;
+      const isH=(dir==='R'||dir==='L');
+      bx.strokeStyle='#303030';bx.lineWidth=3;
+      if(isH){bx.beginPath();bx.moveTo(px,py+BR);bx.lineTo(px+TS,py+BR);bx.stroke();bx.beginPath();bx.moveTo(px,py+TS-BR);bx.lineTo(px+TS,py+TS-BR);bx.stroke();}
+      else{bx.beginPath();bx.moveTo(px+BR,py);bx.lineTo(px+BR,py+TS);bx.stroke();bx.beginPath();bx.moveTo(px+TS-BR,py);bx.lineTo(px+TS-BR,py+TS);bx.stroke();}
+      const mx=px+TS/2,my=py+TS/2,as=4;
+      bx.save();bx.translate(mx,my);
+      if(dir==='L')bx.rotate(Math.PI);else if(dir==='D')bx.rotate(Math.PI/2);else if(dir==='U')bx.rotate(-Math.PI/2);
+      bx.fillStyle='#ffffff1a';bx.beginPath();bx.moveTo(as,0);bx.lineTo(-as,as*.8);bx.lineTo(-as,-as*.8);bx.closePath();bx.fill();
+      bx.restore();
+    }
   },
   // 경로 타일을 매 프레임 그림 (컨베이어 벨트 애니메이션)
   _drawPath(ctx,gt){
@@ -422,68 +440,26 @@ const R={
     const RAIL=4;
 
     for(const{r,c2,dir,ie,ix}of this._pathCells){
-      const px=MAP_OX+c2*TS, py=MAP_OY+r*TS;
-
-      // 타일 배경
-      ctx.fillStyle='#181818'; ctx.fillRect(px+1,py+1,TS-2,TS-2);
-      ctx.strokeStyle='#272727'; ctx.lineWidth=.8; ctx.strokeRect(px+.5,py+.5,TS-1,TS-1);
-
-      if(ie||ix){ continue; }
-      if(!dir){ continue; }
-
+      if(ie||ix||!dir)continue;
+      const px=MAP_OX+c2*TS,py=MAP_OY+r*TS;
       ctx.save();
-      ctx.beginPath(); ctx.rect(px+1,py+1,TS-2,TS-2); ctx.clip();
-
+      ctx.beginPath();ctx.rect(px+1,py+1,TS-2,TS-2);ctx.clip();
       const isH=(dir==='R'||dir==='L');
       const fwd=(dir==='R'||dir==='D');
-
-      // 레일 (가장자리 2줄)
-      ctx.strokeStyle='#303030'; ctx.lineWidth=3;
-      if(isH){
-        ctx.beginPath();ctx.moveTo(px,py+RAIL);ctx.lineTo(px+TS,py+RAIL);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(px,py+TS-RAIL);ctx.lineTo(px+TS,py+TS-RAIL);ctx.stroke();
-      }else{
-        ctx.beginPath();ctx.moveTo(px+RAIL,py);ctx.lineTo(px+RAIL,py+TS);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(px+TS-RAIL,py);ctx.lineTo(px+TS-RAIL,py+TS);ctx.stroke();
-      }
-
       // 움직이는 줄무늬 — 맵 전체 좌표 기준 offset으로 타일 간 이음새 없애기
       const globalOff=(gt*SPD)%GAP;
-      ctx.strokeStyle='#3e3e3e'; ctx.lineWidth=1.8;
-
+      ctx.strokeStyle='#3e3e3e';ctx.lineWidth=1.8;
       if(isH){
-        // 가로 이동: 세로 줄무늬, 맵 X 기준
-        const origin=fwd? MAP_OX+c2*TS : MAP_OX+(c2+1)*TS;
-        const startX=fwd
-          ? origin - (( (origin - MAP_OX) % GAP ) - globalOff + GAP) % GAP
-          : origin + (( (MAP_OX + MAP_W - origin) % GAP ) - globalOff + GAP) % GAP;
-        const step=fwd? GAP : -GAP;
-        for(let x=startX; fwd?(x<px+TS+GAP):(x>px-GAP); x+=step){
-          ctx.beginPath(); ctx.moveTo(x, py+RAIL+1); ctx.lineTo(x, py+TS-RAIL-1); ctx.stroke();
-        }
+        const origin=fwd?MAP_OX+c2*TS:MAP_OX+(c2+1)*TS;
+        const startX=fwd?origin-(((origin-MAP_OX)%GAP)-globalOff+GAP)%GAP:origin+(((MAP_OX+MAP_W-origin)%GAP)-globalOff+GAP)%GAP;
+        const step=fwd?GAP:-GAP;
+        for(let x=startX;fwd?(x<px+TS+GAP):(x>px-GAP);x+=step){ctx.beginPath();ctx.moveTo(x,py+RAIL+1);ctx.lineTo(x,py+TS-RAIL-1);ctx.stroke();}
       }else{
-        // 세로 이동: 가로 줄무늬, 맵 Y 기준
-        const origin=fwd? MAP_OY+r*TS : MAP_OY+(r+1)*TS;
-        const startY=fwd
-          ? origin - (( (origin - MAP_OY) % GAP ) - globalOff + GAP) % GAP
-          : origin + (( (MAP_OY + MAP_H2 - origin) % GAP ) - globalOff + GAP) % GAP;
-        const step=fwd? GAP : -GAP;
-        for(let y=startY; fwd?(y<py+TS+GAP):(y>py-GAP); y+=step){
-          ctx.beginPath(); ctx.moveTo(px+RAIL+1, y); ctx.lineTo(px+TS-RAIL-1, y); ctx.stroke();
-        }
+        const origin=fwd?MAP_OY+r*TS:MAP_OY+(r+1)*TS;
+        const startY=fwd?origin-(((origin-MAP_OY)%GAP)-globalOff+GAP)%GAP:origin+(((MAP_OY+MAP_H2-origin)%GAP)-globalOff+GAP)%GAP;
+        const step=fwd?GAP:-GAP;
+        for(let y=startY;fwd?(y<py+TS+GAP):(y>py-GAP);y+=step){ctx.beginPath();ctx.moveTo(px+RAIL+1,y);ctx.lineTo(px+TS-RAIL-1,y);ctx.stroke();}
       }
-
-      // 중앙 화살표 (반투명)
-      const mx=px+TS/2, my=py+TS/2, as=4;
-      ctx.save(); ctx.translate(mx,my);
-      if(dir==='R')ctx.rotate(0);
-      else if(dir==='L')ctx.rotate(Math.PI);
-      else if(dir==='D')ctx.rotate(Math.PI/2);
-      else ctx.rotate(-Math.PI/2);
-      ctx.fillStyle='#ffffff1a';
-      ctx.beginPath();ctx.moveTo(as,0);ctx.lineTo(-as,as*.8);ctx.lineTo(-as,-as*.8);ctx.closePath();ctx.fill();
-      ctx.restore();
-
       ctx.restore();
     }
 
@@ -540,8 +516,7 @@ const R={
     for(const t of GS.towers)t.draw(ctx,gt);
     for(const o of GS.ores)o.draw(ctx,gt);
     for(const p of GS.projs)p.draw(ctx);
-    const sfe=[...GS.effects].sort((a,b)=>(a.z||0)-(b.z||0));
-    for(const e of sfe)e.draw(ctx,gt);
+    for(const e of GS.effects)e.draw(ctx,gt);
     for(const t of GS.towers)t.drawFX(ctx);
     // drone aircraft on absolute top layer (physically airborne)
     for(const t of GS.towers)if(t.type==='drone')t._drawDroneOrbit(ctx);
@@ -566,7 +541,7 @@ class Ore{
     this.alive=true;this.escaped=false;
     this.slowTimer=0;this._sR=0;this.ampRatio=0;this.ampTimer=0;
     this.shockTimer=0;this.shockDps=0;this.freezeTimer=0;this.freezeImmune=0;
-    this._twinSlowT=0;this._twinImmuneT=0;
+    this._twinSlowT=0;this._twinImmuneT=0;this._lastDmgType=null;
     this.flashT=0;this.spin=Math.random()*Math.PI*2;
     const sz=[0,TS*.21,TS*.26,TS*.32,TS*.40];this.radius=sz[this.grade]||TS*.21;
   }
@@ -601,13 +576,14 @@ class Ore{
     const res=ORE_RESIST[this.type];
     if(res&&res[dmgType]!==undefined)d*=res[dmgType];
     if(this.ampTimer>0)d*=(1+this.ampRatio);
+    this._lastDmgType=dmgType;
     this.hp-=d;this.flashT=.1;if(this.hp<=0){this.alive=false;this._die();}
   }
   _die(){
     SFX.hit(this.grade>=3);
     if(this.special==='split'){for(let i=0;i<3;i++){const o=new Ore('normal',this.wave);o.pathIdx=this.pathIdx;o.progress=this.progress;o.x=this.x;o.y=this.y;GS.ores.push(o);}}
     for(let i=0;i<12;i++)GS.particles.push(new Particle(this.x,this.y,this.color,i,12));
-    const pr=this.reward;
+    const pr=this._lastDmgType==='refinery'?Math.round(this.reward*1.2):this.reward;
     GS.port+=pr;GS.totalPort+=pr;GS.portHist.push({t:GS.time,v:pr});
     GS.popups.push(new Popup(this.x,this.y-this.radius-5,'+'+pr,'#FFD700'));UI.updHUD();
   }
@@ -623,38 +599,42 @@ class Ore{
     if(this.flashT>0){ctx.shadowColor='#fff';ctx.shadowBlur=24;}
     ctx.save();ctx.rotate(sp);
     const c=this.color;
-    // unified 8-facet brilliant-cut crystal
-    ctx.beginPath();
-    for(let i=0;i<16;i++){
-      const a=(i/16)*Math.PI*2-Math.PI/2;
-      const dr=i%2===0?r:r*.52;
-      i===0?ctx.moveTo(Math.cos(a)*dr,Math.sin(a)*dr):ctx.lineTo(Math.cos(a)*dr,Math.sin(a)*dr);
-    }
-    ctx.closePath();
-    const g=ctx.createRadialGradient(-r*.1,-r*.14,r*.03,0,0,r);
-    g.addColorStop(0,'#fff');g.addColorStop(.14,c);g.addColorStop(.55,c+'cc');g.addColorStop(1,c+'44');
+    // hexagonal mineral crystal — 6-facet prism with directional lighting
+    const N6=6,vs=[];
+    for(let i=0;i<N6;i++){const a=(i/N6)*Math.PI*2-Math.PI/2;const ir=[1.0,.96,1.0,.95,1.0,.97][i];vs.push([Math.cos(a)*r*ir,Math.sin(a)*r*ir]);}
+    // outer glow ring (grade-based)
+    if(this.grade>=2){ctx.shadowColor=c;ctx.shadowBlur=this.grade>=4?14:7;ctx.strokeStyle=c+(this.grade>=4?'66':'40');ctx.lineWidth=this.grade>=4?2.2:1.4;ctx.beginPath();vs.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();ctx.stroke();ctx.shadowBlur=0;}
+    // base body gradient
+    ctx.beginPath();vs.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();
+    const g=ctx.createRadialGradient(-r*.16,-r*.22,r*.04,0,0,r);
+    g.addColorStop(0,'#fff');g.addColorStop(.13,c);g.addColorStop(.54,c+'cc');g.addColorStop(1,c+'30');
     ctx.fillStyle=g;ctx.fill();
+    // per-facet directional lighting (upper-left light source)
+    const ft=['rgba(255,255,255,.22)','rgba(0,0,0,.07)','rgba(0,0,0,.18)','rgba(0,0,0,.26)','rgba(0,0,0,.12)','rgba(255,255,255,.30)'];
+    for(let i=0;i<N6;i++){const[x1,y1]=vs[i],[x2,y2]=vs[(i+1)%N6];ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x1,y1);ctx.lineTo(x2,y2);ctx.closePath();ctx.fillStyle=ft[i];ctx.fill();}
+    // crystal edge
+    ctx.beginPath();vs.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();
     ctx.strokeStyle=c;ctx.lineWidth=this.grade>=3?2.0:1.4;ctx.stroke();
-    // facet spoke lines (center to each outer tip)
-    for(let i=0;i<8;i++){
-      const a=(i/8)*Math.PI*2-Math.PI/2;
-      ctx.strokeStyle=c+'44';ctx.lineWidth=.8;
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);ctx.stroke();
-    }
-    // inner octagonal highlight table
+    // bright lit-edge highlight (upper-left edges, simulates surface plane angle)
+    ctx.strokeStyle='rgba(255,255,255,.50)';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(vs[5][0],vs[5][1]);ctx.lineTo(vs[0][0],vs[0][1]);ctx.lineTo(vs[1][0],vs[1][1]);ctx.stroke();
+    // facet division spokes
+    for(let i=0;i<N6;i++){const[x,y]=vs[i];ctx.strokeStyle=c+'28';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x,y);ctx.stroke();}
+    // inner hexagonal table (depth indicator — gemstone "girdle")
     ctx.beginPath();
-    for(let i=0;i<8;i++){
-      const a=(i/8)*Math.PI*2-Math.PI/2+Math.PI/8;
-      i===0?ctx.moveTo(Math.cos(a)*r*.38,Math.sin(a)*r*.38):ctx.lineTo(Math.cos(a)*r*.38,Math.sin(a)*r*.38);
-    }
+    for(let i=0;i<6;i++){const a=(i/6)*Math.PI*2-Math.PI/2;i===0?ctx.moveTo(Math.cos(a)*r*.42,Math.sin(a)*r*.42):ctx.lineTo(Math.cos(a)*r*.42,Math.sin(a)*r*.42);}
     ctx.closePath();
-    const hi=ctx.createRadialGradient(-r*.12,-r*.17,0,0,0,r*.42);
-    hi.addColorStop(0,'rgba(255,255,255,.52)');hi.addColorStop(.55,'rgba(255,255,255,.08)');hi.addColorStop(1,'transparent');
-    ctx.fillStyle=hi;ctx.fill();
-    // specular reflection spot (off-center bright)
-    const sg=ctx.createRadialGradient(-r*.2,-r*.26,0,-r*.2,-r*.26,r*.32);
-    sg.addColorStop(0,'rgba(255,255,255,.68)');sg.addColorStop(.45,'rgba(255,255,255,.10)');sg.addColorStop(1,'transparent');
-    ctx.fillStyle=sg;ctx.beginPath();ctx.arc(-r*.2,-r*.26,r*.32,0,Math.PI*2);ctx.fill();
+    const hi=ctx.createRadialGradient(-r*.11,-r*.16,0,0,0,r*.46);
+    hi.addColorStop(0,'rgba(255,255,255,.60)');hi.addColorStop(.48,'rgba(255,255,255,.12)');hi.addColorStop(1,'transparent');
+    ctx.fillStyle=hi;ctx.fill();ctx.strokeStyle=c+'38';ctx.lineWidth=.75;ctx.stroke();
+    // culet inner glow (deep core light)
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.26);
+    cg.addColorStop(0,'rgba(255,255,255,.58)');cg.addColorStop(.42,c+'77');cg.addColorStop(1,'transparent');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fill();
+    // specular bright spot (sharp surface reflection)
+    const sg=ctx.createRadialGradient(-r*.22,-r*.3,0,-r*.22,-r*.3,r*.28);
+    sg.addColorStop(0,'rgba(255,255,255,.86)');sg.addColorStop(.36,'rgba(255,255,255,.16)');sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg;ctx.beginPath();ctx.arc(-r*.22,-r*.3,r*.28,0,Math.PI*2);ctx.fill();
     ctx.restore();
     // boss extras: orbit ring + inner glow cross
     if(this.special==='boss'){
@@ -692,7 +672,7 @@ class Tower{
   }
   _lm(){return LVL[this.level-1].mult;}
   _megaMult(){return this.isMega?5:1;}
-  _eff(e){e.z=this.basePrice*(this.isMega?4:1);GS.effects.push(e);return e;}
+  _eff(e){e.z=this.basePrice*(this.isMega?4:1);const z=e.z,arr=GS.effects;let i=arr.length;while(i>0&&(arr[i-1].z||0)>z)i--;arr.splice(i,0,e);return e;}
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
@@ -701,21 +681,21 @@ class Tower{
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
     if(tp==='pulseslow'){
-      const rng=this.getRange()*TS;
-      const hasOre=ores.some(o=>o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng);
+      const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;
+      const hasOre=ores.some(o=>{if(!o.alive)return false;const _x=o.x-cx0,_y=o.y-cy0;return _x*_x+_y*_y<=rng2;});
       if(hasOre){
         this._pulseT=(this._pulseT||0)+dt;
         const iv=2.2/Math.max(.5,this._lm());
         if(this._pulseT>=iv){
           this._pulseT=0;
           const sr=Math.min(.45*this._lm()*this._megaMult(),.92);
-          for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(Math.random()<.55)o.applySlow(sr,2.2);}
+          for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;if(Math.random()<.55)o.applySlow(sr,2.2);}
           this._eff(new RingEff(this.cx,this.cy,rng,this.color));
         }
       }
       return;
     }
-    if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;let best=null,bestHp=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
+    if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;let best=null,bestHp=-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
     if(tp==='twinhub'){
       const orbSpd=Math.PI*2/5,dr=this.getRange()*TS,hitR=TS*.36;
       const baseDur=[1.0,1.33,1.67,2.0][this.level-1]||1.0;
@@ -730,7 +710,7 @@ class Tower{
         for(const o of ores){
           if(!o.alive)continue;
           if(o._twinImmuneT>0||o._twinSlowT>0)continue;
-          if(Math.hypot(o.x-ox,o.y-oy)<hitR+o.radius){
+          const _hr=hitR+o.radius;if((o.x-ox)*(o.x-ox)+(o.y-oy)*(o.y-oy)<_hr*_hr){
             o.takeDmg(this.getDmg(),'twinhub');
             o._twinSlowT=slowDur;
             this._twin_hcd[i]=0.35;this._firingT=.22;
@@ -741,18 +721,18 @@ class Tower{
       }
       return;
     }
-    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(2,Math.round(dmg*1.5));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
+    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);tgt.takeDmg(this.getDmg(),'refinery');this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
     if(tp==='drone'){
       this._droneAngle+=dt*(0.55+this._lm()*.08);
-      const rng=this.getRange()*TS;
+      const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;
       const orbitR=rng*0.62;
-      const drX=this.cx+Math.cos(this._droneAngle)*orbitR,drY=this.cy+Math.sin(this._droneAngle)*orbitR;
+      const drX=cx0+Math.cos(this._droneAngle)*orbitR,drY=cy0+Math.sin(this._droneAngle)*orbitR;
       if(this._hitCooldown>0){this._hitCooldown-=dt;}
       else{
         let bestO=null,bestD=Infinity;
         for(const o of ores){
           if(!o.alive)continue;
-          if(Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;
+          const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;
           const d=Math.hypot(o.x-drX,o.y-drY);
           if(d<bestD){bestD=d;bestO=o;}
         }
@@ -767,7 +747,7 @@ class Tower{
       return;
     }
     if(tp==='focus'){
-      if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
+      if(this._focusTgt){const _rng=this.getRange()*TS;const _dx=this._focusTgt.x-this.cx,_dy=this._focusTgt.y-this.cy;if(!this._focusTgt.alive||_dx*_dx+_dy*_dy>_rng*_rng)this._focusTgt=null;}
       if(!this._focusTgt)this._focusTgt=this._findTgt(ores);
       if(this._focusTgt){
         this._focusTgt.takeDmg(this.getDmg()*dt,'focus');
@@ -779,7 +759,7 @@ class Tower{
     }
     if(tp==='aoe'){
       this._aoeT+=dt;const iv=1/Math.max(.1,this.getSpd());
-      if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;let hit=false;for(const o of ores)if(o.alive&&Math.hypot(o.x-this.cx,o.y-this.cy)<=rng){o.takeDmg(this.getDmg()*iv,'aoe');hit=true;}if(hit){this._firingT=.28;this._eff(new GridFlashEff(this.cx,this.cy,rng,this.color));SFX.shoot('aoe');}}return;}
+      if(this._aoeT>=iv){this._aoeT=0;const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;let hit=false;for(const o of ores){const _x=o.x-cx0,_y=o.y-cy0;if(o.alive&&_x*_x+_y*_y<=rng2){o.takeDmg(this.getDmg()*iv,'aoe');hit=true;}}if(hit){this._firingT=.28;this._eff(new GridFlashEff(cx0,cy0,rng,this.color));SFX.shoot('aoe');}}return;}
     if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}
     if(tp==='pierce'){
       const hasTgt=this._findTgt(ores);if(!hasTgt)return;
@@ -794,7 +774,7 @@ class Tower{
     if(this.tId==='pixelArm')this._armAngle=this.angle;
     this._fire(tgt);this.cooldown=1;this._firingT=.15;SFX.shoot(this.tId);
   }
-  _findTgt(ores){const rng=this.getRange()*TS;const isLast=this.tId==='magnetCannon';let best=null,bestP=isLast?Infinity:-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;const p=o.pathIdx+o.progress;if(isLast?p<bestP:p>bestP){bestP=p;best=o;}}return best;}
+  _findTgt(ores){const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;const isLast=this.tId==='magnetCannon';let best=null,bestP=isLast?Infinity:-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;const p=o.pathIdx+o.progress;if(isLast?p<bestP:p>bestP){bestP=p;best=o;}}return best;}
   _fire(tgt){
     if(this.tId==='pixelArm'){
       const dir=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);
@@ -804,8 +784,8 @@ class Tower{
       GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),{color:this.color,slow:null,size:1}));
     }
   }
-  _firePierce(ores){const rng=this.getRange()*TS;let best=null,bestP=-1;for(const o of ores){if(!o.alive||Math.hypot(o.x-this.cx,o.y-this.cy)>rng)continue;const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);const dx=Math.cos(this.angle),dy=Math.sin(this.angle);let hit=0;for(const o of ores){if(!o.alive||hit>=8)continue;const ex=o.x-this.cx,ey=o.y-this.cy,dot=ex*dx+ey*dy;if(dot<0||dot>rng)continue;if(Math.abs(ex*dy-ey*dx)<TS*.5){o.takeDmg(this.getDmg(),'pierce');hit++;}}this._eff(new LaserEff(this.cx,this.cy,this.angle,rng,this.color));}
-  _fireChain(ores){const rng=this.getRange()*TS;const first=this._findTgt(ores);if(!first)return;this.angle=Math.atan2(first.y-this.cy,first.x-this.cx);const targets=[first];let last=first;for(let i=1;i<3;i++){let nx=null,bd=rng*1.6;for(const o of ores){if(!o.alive||targets.includes(o))continue;const d=Math.hypot(o.x-last.x,o.y-last.y);if(d<bd){bd=d;nx=o;}}if(!nx)break;targets.push(nx);last=nx;}const base=this.getDmg(),mults=[1,.80,.60];const shockDps=base*0.5,shockDur=3.0;for(let i=0;i<targets.length;i++){targets[i].takeDmg(base*mults[i],'chain');targets[i].applyShock(shockDps*mults[i],shockDur);if(i>0)this._eff(new BoltEff(targets[i-1].x,targets[i-1].y,targets[i].x,targets[i].y,this.color));}this._eff(new BoltEff(this.cx,this.cy,targets[0].x,targets[0].y,this.color));}
+  _firePierce(ores){const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;let best=null,bestP=-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);const dx=Math.cos(this.angle),dy=Math.sin(this.angle);let hit=0;for(const o of ores){if(!o.alive||hit>=8)continue;const ex=o.x-this.cx,ey=o.y-this.cy,dot=ex*dx+ey*dy;if(dot<0||dot>rng)continue;if(Math.abs(ex*dy-ey*dx)<TS*.5){o.takeDmg(this.getDmg(),'pierce');hit++;}}this._eff(new LaserEff(this.cx,this.cy,this.angle,rng,this.color));}
+  _fireChain(ores){const rng=this.getRange()*TS;const first=this._findTgt(ores);if(!first)return;this.angle=Math.atan2(first.y-this.cy,first.x-this.cx);const targets=[first];let last=first;for(let i=1;i<3;i++){let nx=null,bd=(rng*1.6)*(rng*1.6);for(const o of ores){if(!o.alive||targets.includes(o))continue;const _cx=o.x-last.x,_cy=o.y-last.y,d2=_cx*_cx+_cy*_cy;if(d2<bd){bd=d2;nx=o;}}if(!nx)break;targets.push(nx);last=nx;}const base=this.getDmg(),mults=[1,.80,.60];const shockDps=base*0.5,shockDur=3.0;for(let i=0;i<targets.length;i++){targets[i].takeDmg(base*mults[i],'chain');targets[i].applyShock(shockDps*mults[i],shockDur);if(i>0)this._eff(new BoltEff(targets[i-1].x,targets[i-1].y,targets[i].x,targets[i].y,this.color));}this._eff(new BoltEff(this.cx,this.cy,targets[0].x,targets[0].y,this.color));}
 
   draw(ctx,gt){
     const r=TS*.44,t=this._animT,f=this._firingT>0;
@@ -957,90 +937,80 @@ class Tower{
   // 픽셀 로봇암: 단관절 산업용 로봇팔 (탑뷰, 정면 단일암, 그리퍼 타격 시 벌림)
   _dPA(ctx,r,t,f){
     const col=this.color;
-    const armLink=(x1,y1,x2,y2,hw,fill,stroke)=>{
-      const ang=Math.atan2(y2-y1,x2-x1);
-      const px=Math.sin(ang)*hw,py=-Math.cos(ang)*hw;
-      ctx.beginPath();
-      ctx.moveTo(x1+px,y1+py);ctx.lineTo(x2+px,y2+py);
-      ctx.lineTo(x2-px,y2-py);ctx.lineTo(x1-px,y1-py);
-      ctx.closePath();ctx.fillStyle=fill;ctx.fill();
-      ctx.strokeStyle=stroke;ctx.lineWidth=1.3;ctx.stroke();
-    };
-    // circular mount base
-    ctx.beginPath();ctx.arc(0,0,r*.84,0,Math.PI*2);
-    ctx.fillStyle='#181818';ctx.fill();ctx.strokeStyle='#3a3a3a';ctx.lineWidth=1.8;ctx.stroke();
-    ctx.strokeStyle=col+'18';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.62,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle=col+'10';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(0,0,r*.38,0,Math.PI*2);ctx.stroke();
-    // 8 mounting bolts
-    for(let i=0;i<8;i++){
-      const a=i*Math.PI/4;
-      ctx.fillStyle='#2e2e2e';ctx.strokeStyle=col+(f?'55':'22');ctx.lineWidth=.7;
-      ctx.beginPath();ctx.arc(Math.cos(a)*r*.76,Math.sin(a)*r*.76,r*.04,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // ── HEXAGONAL MOUNT BASE
+    ctx.beginPath();
+    for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;i===0?ctx.moveTo(Math.cos(a)*r*.83,Math.sin(a)*r*.83):ctx.lineTo(Math.cos(a)*r*.83,Math.sin(a)*r*.83);}
+    ctx.closePath();ctx.fillStyle='#161616';ctx.fill();ctx.strokeStyle='#3c3c3c';ctx.lineWidth=1.8;ctx.stroke();
+    // inner hex ring
+    ctx.beginPath();
+    for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;i===0?ctx.moveTo(Math.cos(a)*r*.56,Math.sin(a)*r*.56):ctx.lineTo(Math.cos(a)*r*.56,Math.sin(a)*r*.56);}
+    ctx.closePath();ctx.strokeStyle=col+(f?'28':'10');ctx.lineWidth=.9;ctx.stroke();
+    // hex corner bolts (square)
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3-Math.PI/6;const bs=r*.042;
+      ctx.save();ctx.translate(Math.cos(a)*r*.72,Math.sin(a)*r*.72);ctx.rotate(a);
+      ctx.fillStyle='#2b2b2b';ctx.strokeStyle=col+(f?'33':'14');ctx.lineWidth=.7;
+      ctx.fillRect(-bs,-bs,bs*2,bs*2);ctx.strokeRect(-bs,-bs,bs*2,bs*2);
+      ctx.restore();
     }
-    // single arm rotates toward target
+    // ── ANGULAR ARM (rotates toward target)
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // joint positions along forward axis (Y-up = toward target)
-    const shX=0, shY=-r*.06;    // shoulder (near center)
-    const elbX=0, elbY=-r*.42;  // elbow (mid)
-    const wristX=0, wristY=-r*.74; // wrist
-    const tipY=-r*.92;           // gripper tip
-    // UPPER ARM (shoulder → elbow) — wide
-    armLink(shX,shY,elbX,elbY,r*.14,'#1e1e1e',f?col+'55':col+'22');
-    // hydraulic groove on upper arm
-    ctx.strokeStyle=col+(f?'33':'12');ctx.lineWidth=.9;
-    ctx.beginPath();ctx.moveTo(-r*.06,(shY+elbY)*.5);ctx.lineTo(r*.06,(shY+elbY)*.5);ctx.stroke();
-    // FOREARM (elbow → wrist) — narrower
-    armLink(elbX,elbY,wristX,wristY,r*.10,'#1a1a1a',f?col+'77':col+'33');
-    // detail lines on forearm
-    for(let v=0;v<2;v++){
-      const vy=elbY+(wristY-elbY)*(0.28+v*.36);
-      ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=1.3;ctx.lineCap='round';
-      ctx.beginPath();ctx.moveTo(-r*.07,vy);ctx.lineTo(r*.07,vy);ctx.stroke();
-      ctx.lineCap='butt';
-    }
-    // SHOULDER JOINT
-    ctx.fillStyle='#262626';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.6;
+    const shY=-r*.08,elbY=-r*.46,wristY=-r*.78,tipY=-r*.96;
+    const uaw=r*.13,faw=r*.10;
+    // UPPER ARM — tapered angular rect
+    ctx.fillStyle='#1d1d1d';ctx.strokeStyle=f?col+'44':col+'1a';ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(-uaw,shY);ctx.lineTo(uaw,shY);ctx.lineTo(uaw-r*.03,elbY);ctx.lineTo(-uaw+r*.03,elbY);ctx.closePath();ctx.fill();ctx.stroke();
+    // upper arm groove bands
+    ctx.strokeStyle=col+(f?'30':'0f');ctx.lineWidth=.9;
+    for(let v=0;v<3;v++){const vy=shY+(elbY-shY)*(0.24+v*.24);const lw=uaw*(0.82-v*.04);ctx.beginPath();ctx.moveTo(-lw,vy);ctx.lineTo(lw,vy);ctx.stroke();}
+    // FOREARM — tapered angular rect
+    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'60':col+'26';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(-faw,elbY);ctx.lineTo(faw,elbY);ctx.lineTo(faw-r*.02,wristY);ctx.lineTo(-faw+r*.02,wristY);ctx.closePath();ctx.fill();ctx.stroke();
+    // forearm hydraulic bands
+    ctx.strokeStyle=col+(f?'40':'15');ctx.lineWidth=1;
+    for(let v=0;v<3;v++){const vy=elbY+(wristY-elbY)*(0.26+v*.24);const lw=(faw-r*.015)*(1-v*.03);ctx.beginPath();ctx.moveTo(-lw,vy);ctx.lineTo(lw,vy);ctx.stroke();}
+    // SHOULDER JOINT — diamond (square rotated 45°)
+    ctx.save();ctx.translate(0,shY);ctx.rotate(Math.PI/4);
+    const sj=r*.14;
+    ctx.fillStyle='#252525';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.6;
     ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-    ctx.beginPath();ctx.arc(shX,shY,r*.15,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.shadowBlur=0;
-    ctx.fillStyle=f?col:col+'77';ctx.beginPath();ctx.arc(shX,shY,r*.065,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'55':'22');ctx.lineWidth=.8;ctx.beginPath();ctx.arc(shX,shY,r*.105,0,Math.PI*2);ctx.stroke();
-    // ELBOW JOINT
-    ctx.fillStyle='#222222';ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.4;
-    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    ctx.beginPath();ctx.arc(elbX,elbY,r*.12,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.shadowBlur=0;
-    ctx.fillStyle=f?col+'99':col+'44';ctx.beginPath();ctx.arc(elbX,elbY,r*.055,0,Math.PI*2);ctx.fill();
-    // WRIST PLATE
-    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'99':col+'33';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.roundRect(-r*.13,wristY-r*.045,r*.26,r*.1,r*.02);ctx.fill();ctx.stroke();
-    // wrist joint
-    ctx.fillStyle='#222';ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1;
-    ctx.beginPath();ctx.arc(wristX,wristY,r*.08,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.fillStyle=f?col+'88':col+'33';ctx.beginPath();ctx.arc(wristX,wristY,r*.038,0,Math.PI*2);ctx.fill();
-    // GRIPPER — 2 fingers that OPEN (spread) when firing
-    const spread=f?r*.22:r*.08;
+    ctx.fillRect(-sj,-sj,sj*2,sj*2);ctx.strokeRect(-sj,-sj,sj*2,sj*2);
+    ctx.shadowBlur=0;ctx.fillStyle=f?col:col+'88';ctx.fillRect(-sj*.38,-sj*.38,sj*.76,sj*.76);
+    ctx.restore();
+    // ELBOW JOINT — smaller diamond
+    ctx.save();ctx.translate(0,elbY);ctx.rotate(Math.PI/4);
+    const ej=r*.11;
+    ctx.fillStyle='#202020';ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.3;
+    ctx.shadowColor=col;ctx.shadowBlur=f?9:2;
+    ctx.fillRect(-ej,-ej,ej*2,ej*2);ctx.strokeRect(-ej,-ej,ej*2,ej*2);
+    ctx.shadowBlur=0;ctx.fillStyle=f?col+'88':col+'40';ctx.fillRect(-ej*.4,-ej*.4,ej*.8,ej*.8);
+    ctx.restore();
+    // WRIST PLATE — angular bar + center bolt
+    ctx.fillStyle='#1d1d1d';ctx.strokeStyle=f?col+'88':col+'30';ctx.lineWidth=1.2;
+    ctx.fillRect(-r*.17,wristY-r*.048,r*.34,r*.096);ctx.strokeRect(-r*.17,wristY-r*.048,r*.34,r*.096);
+    ctx.fillStyle=f?col+'55':col+'22';ctx.fillRect(-r*.04,wristY-r*.028,r*.08,r*.056);ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=.8;ctx.strokeRect(-r*.04,wristY-r*.028,r*.08,r*.056);
+    // GRIPPER JAWS — L-shaped angular brackets (open on fire)
+    const spread=f?r*.27:r*.09,fw=r*.10,ph=r*.09,pl=r*.13;
     for(const sx of[-1,1]){
-      const gx=sx*spread;
-      // finger arm (angled out from wrist to tip)
-      armLink(sx*r*.06,wristY,gx,tipY,r*.055,'#1a1a1a',f?col+'cc':col+'55');
-      // finger tip pod
-      ctx.fillStyle='#181818';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.2;
-      ctx.shadowColor=col;ctx.shadowBlur=f?20:3;
-      ctx.beginPath();ctx.arc(gx,tipY,r*.065,0,Math.PI*2);ctx.fill();ctx.stroke();
+      const s=sx*spread,ow=sx*fw;
+      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.3;
+      ctx.shadowColor=col;ctx.shadowBlur=f?14:2;
+      // L-bracket: shaft + inward prong at tip
+      ctx.beginPath();
+      ctx.moveTo(s,wristY);ctx.lineTo(s+ow,wristY);
+      ctx.lineTo(s+ow,tipY);ctx.lineTo(s-sx*pl,tipY);
+      ctx.lineTo(s-sx*pl,tipY+ph);ctx.lineTo(s,tipY+ph);
+      ctx.closePath();ctx.fill();ctx.stroke();
       ctx.shadowBlur=0;
-      // inner dot glow
-      ctx.fillStyle=f?col:'#1e1e1e';ctx.shadowColor=col;ctx.shadowBlur=f?12:1;
-      ctx.beginPath();ctx.arc(gx,tipY,r*.03,0,Math.PI*2);ctx.fill();
-      ctx.shadowBlur=0;
+      // shaft midline groove
+      ctx.strokeStyle=col+(f?'40':'18');ctx.lineWidth=.8;
+      ctx.beginPath();ctx.moveTo(s,( wristY+tipY)*.5);ctx.lineTo(s+ow,(wristY+tipY)*.5);ctx.stroke();
     }
-    // gripper crossbar at wrist
-    ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.moveTo(-r*.12,wristY+r*.04);ctx.lineTo(r*.12,wristY+r*.04);ctx.stroke();
+    // grip-point glow when firing
     if(f){
-      const mg=ctx.createRadialGradient(0,tipY,0,0,tipY,r*.32);
+      const mg=ctx.createRadialGradient(0,tipY+ph*.5,0,0,tipY+ph*.5,r*.3);
       mg.addColorStop(0,'#fff');mg.addColorStop(.28,col);mg.addColorStop(1,col+'00');
-      ctx.globalAlpha=.65;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,tipY,r*.32,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+      ctx.globalAlpha=.60;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,tipY+ph*.5,r*.3,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
     }
     ctx.restore();
     // center hub core
@@ -1773,7 +1743,7 @@ function checkMerge(){
         const mega=new Tower(tA.tId,r,c);
         mega.isMega=true;
         mega.megaCells=[[r,c],[r,c+1],[r+1,c],[r+1,c+1]];
-        mega.level=1;
+        mega.level=4;
         mega.name='메가 '+TWR[tA.tId].name;
         mega.cx=R.tx(c)+TS/2;mega.cy=R.ty(r)+TS/2;
         mega.basePrice=tA.basePrice*5;
@@ -2049,7 +2019,7 @@ const UI={
     ctx.restore();
     ovly.classList.add('show');
     const gf=document.getElementById('unlk-gauge-fill');
-    gf.style.background=d.color||'#00E5FF';
+    gf.style.background='#ffffff';
     gf.style.width='100%';
     if(this._unlkIv)clearInterval(this._unlkIv);
     let elapsed=0;const total=30;
@@ -2193,7 +2163,7 @@ const G={
       const o=GS.ores[i];
       if(o.escaped){GS.stability-=o.escapeDmg;GS.popups.push(new Popup(R.tx(EXIT.c),R.ty(EXIT.r),'-'+o.escapeDmg,'#EF5350'));GS.ores.splice(i,1);UI.updHUD();if(GS.stability<=0){GS.stability=0;GS.running=false;SFX.gameOver();UI.showGO();return;}}
     }
-    GS.ores=GS.ores.filter(o=>o.alive);
+    sweepArr(GS.ores,o=>o.alive);
     if(GS.waveActive&&GS.oreQ.length===0&&GS.ores.length===0){
       GS.waveActive=false;
       // 클리어 보상: 초반엔 넉넉히, 후반엔 크게
@@ -2205,10 +2175,10 @@ const G={
       checkUnlocks(GS.wave,()=>{if(GS.autoWave){GS.autoActive=true;GS.autoTimer=5;}});
     }
     for(const t of GS.towers)t.update(dt,GS.ores);
-    for(const p of GS.projs)p.update(dt);GS.projs=GS.projs.filter(p=>p.alive);
-    for(const p of GS.particles)p.update(dt);GS.particles=GS.particles.filter(p=>p.life>0);
-    for(const p of GS.popups)p.update(dt);GS.popups=GS.popups.filter(p=>p.life>0);
-    for(const e of GS.effects)e.update(dt);GS.effects=GS.effects.filter(e=>e.life>0);
+    for(const p of GS.projs)p.update(dt);sweepArr(GS.projs,p=>p.alive);
+    for(const p of GS.particles)p.update(dt);sweepArr(GS.particles,p=>p.life>0);
+    for(const p of GS.popups)p.update(dt);sweepArr(GS.popups,p=>p.life>0);
+    for(const e of GS.effects)e.update(dt);sweepArr(GS.effects,e=>e.life>0);
     const sec=Math.floor(GS.time);if(sec!==this._lhSec){this._lhSec=sec;UI.updHUD();}
   },
 
