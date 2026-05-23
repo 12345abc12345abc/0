@@ -1243,38 +1243,43 @@ class Tower{
     // outer bezel ring
     ctx.strokeStyle=col+'70';ctx.lineWidth=1.4;
     ctx.beginPath();ctx.arc(0,0,r*.84,0,Math.PI*2);ctx.stroke();
-    // bezel tick marks — major at 90°, minor at 30°
+    // 12 bezel ticks — 4-fold symmetric (major at 90°, minor at 30°)
     for(let i=0;i<12;i++){
       const a=i*Math.PI/6,major=i%3===0;
-      const r1=r*.84,r2=r*(major?.73:.79);
       ctx.strokeStyle=col+(major?'99':'44');ctx.lineWidth=major?1.2:.7;
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*r1,Math.sin(a)*r1);ctx.lineTo(Math.cos(a)*r2,Math.sin(a)*r2);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.84,Math.sin(a)*r*.84);
+      ctx.lineTo(Math.cos(a)*r*(major?.73:.79),Math.sin(a)*r*(major?.73:.79));ctx.stroke();
     }
-    // 3 concentric range rings (circles only, no lines)
+    // 3 range rings
     for(let i=1;i<=3;i++){
       ctx.strokeStyle=col+(i===3?'55':i===2?'30':'1a');ctx.lineWidth=i===3?1:.5;
       ctx.beginPath();ctx.arc(0,0,r*.28*i,0,Math.PI*2);ctx.stroke();
     }
-    // phosphor trail (wide, vivid)
-    const sweepA=t*1.2;
-    const trailArc=Math.PI*.95;
-    for(let i=0;i<30;i++){
-      const frac=i/30;
-      const a0=sweepA-trailArc+frac*trailArc;
-      const a1=sweepA-trailArc+(i+1)/30*trailArc;
-      ctx.globalAlpha=frac*(f?.58:.32);
-      ctx.fillStyle=col;
-      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.76,a0,a1);ctx.closePath();ctx.fill();
+    // 4 rotating scan arms (90° apart) — 4-fold symmetric
+    ctx.save();ctx.rotate(t*1.2);
+    const trailArc=Math.PI*.38;
+    for(let i=0;i<4;i++){
+      const base=i*Math.PI/2;
+      // phosphor trail behind each arm
+      for(let j=0;j<16;j++){
+        const frac=j/16;
+        const a0=base-trailArc+frac*trailArc;
+        const a1=base-trailArc+(j+1)/16*trailArc;
+        ctx.globalAlpha=frac*(f?.52:.28);
+        ctx.fillStyle=col;
+        ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.76,a0,a1);ctx.closePath();ctx.fill();
+      }
+      ctx.globalAlpha=1;
+      // arm
+      ctx.strokeStyle=f?col+'ee':col+'99';ctx.lineWidth=f?1.8:1.2;ctx.lineCap='round';
+      ctx.shadowColor=col;ctx.shadowBlur=f?18:7;
+      const ax=Math.cos(base),ay=Math.sin(base);
+      ctx.beginPath();ctx.moveTo(ax*r*.15,ay*r*.15);ctx.lineTo(ax*r*.74,ay*r*.74);ctx.stroke();
+      ctx.fillStyle=f?'#fff':col;ctx.shadowBlur=f?12:5;
+      ctx.beginPath();ctx.arc(ax*r*.74,ay*r*.74,r*.05,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
     }
-    ctx.globalAlpha=1;
-    // sweep arm
-    ctx.save();ctx.rotate(sweepA);
-    ctx.strokeStyle=f?'#eefff8':col+'ee';ctx.lineWidth=f?2.2:1.6;ctx.lineCap='round';
-    ctx.shadowColor=col;ctx.shadowBlur=f?24:12;
-    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-r*.76);ctx.stroke();
-    ctx.fillStyle=f?'#fff':col;ctx.shadowBlur=f?18:8;
-    ctx.beginPath();ctx.arc(0,-r*.76,r*.055,0,Math.PI*2);ctx.fill();
-    ctx.shadowBlur=0;ctx.restore();
+    ctx.restore();
     // central hub
     ctx.shadowColor=col;ctx.shadowBlur=f?22:10;
     ctx.fillStyle='#091510';ctx.strokeStyle=col;ctx.lineWidth=1.4;
