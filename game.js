@@ -658,7 +658,7 @@ class Tower{
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
-  getRange(){return TWR[this.tId].range*(this.isMega?1.5:1);}
+  getRange(){return TWR[this.tId].range*(this.isMega?2.0:1);}
   update(dt,ores){
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
@@ -945,66 +945,53 @@ class Tower{
     ctx.globalAlpha=1;
     this._core(ctx,r,col);
   }
-  // 마그넷 레이저: 전자기 집중포
+  // 마그넷 레이저: 전자기 인력포
   _dSlow(ctx,r,t,f){
     const col=this.color;
-    // diamond-cut armored base
+    this._base(ctx,r,col,'circle');
+    // EM field background
+    ctx.fillStyle=col+'0a';ctx.beginPath();ctx.arc(0,0,r*.82,0,Math.PI*2);ctx.fill();
+    // fast outer rotating field ring
+    ctx.save();ctx.rotate(-t*1.1);
+    ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=2.2;ctx.setLineDash([r*.28,r*.09]);
+    ctx.beginPath();ctx.arc(0,0,r*.78,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // slow inner counter ring
+    ctx.save();ctx.rotate(t*1.7);
+    ctx.strokeStyle=f?col+'55':col+'28';ctx.lineWidth=1.1;ctx.setLineDash([r*.12,r*.2]);
+    ctx.beginPath();ctx.arc(0,0,r*.56,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // 4 magnetic pole coils (diagonal placement)
     ctx.save();ctx.rotate(Math.PI/4);
-    ctx.fillStyle='#111';ctx.strokeStyle=col+'55';ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.roundRect(-r*.7,-r*.7,r*1.4,r*1.4,r*.06);ctx.fill();ctx.stroke();
-    ctx.restore();
-    // outer EM field ring (rotating segments)
-    ctx.save();ctx.rotate(-t*.7);
-    ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=2.2;ctx.setLineDash([r*.32,r*.08]);
-    ctx.beginPath();ctx.arc(0,0,r*.82,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // inner focused ring
-    ctx.save();ctx.rotate(t*1.2);
-    ctx.strokeStyle=f?col+'66':col+'28';ctx.lineWidth=1;ctx.setLineDash([r*.12,r*.2]);
-    ctx.beginPath();ctx.arc(0,0,r*.6,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // directional barrel
-    ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // shoulder brackets
-    ctx.fillStyle='#1c1c2a';ctx.strokeStyle=col+'44';ctx.lineWidth=1;
-    ctx.beginPath();ctx.roundRect(-r*.42,-r*.1,r*.84,r*.24,r*.04);ctx.fill();ctx.stroke();
-    // side rails
-    for(const sx of[-1,1]){
-      ctx.fillStyle='#282838';ctx.strokeStyle=col+'55';ctx.lineWidth=.9;
-      ctx.beginPath();ctx.roundRect(sx*r*.12,-r*.88,sx>0?r*.28:-r*.28,r*.78,r*.03);
-      // just draw as rect:
-      ctx.beginPath();ctx.roundRect(sx>0?r*.12:-r*.4,-r*.88,r*.28,r*.78,r*.03);ctx.fill();ctx.stroke();
-    }
-    // main barrel body
-    ctx.fillStyle='#1a1a28';ctx.strokeStyle=col+'66';ctx.lineWidth=1.6;
-    ctx.beginPath();ctx.roundRect(-r*.12,-r*.92,r*.24,r*.82,r*.04);ctx.fill();ctx.stroke();
-    // charged energy channel (inner)
-    ctx.fillStyle=f?col+'44':'#0a0a14';
-    ctx.beginPath();ctx.roundRect(-r*.055,-r*.88,r*.11,r*.74,r*.02);ctx.fill();
-    if(f){ctx.strokeStyle=col;ctx.lineWidth=.8;ctx.shadowColor=col;ctx.shadowBlur=8;ctx.beginPath();ctx.roundRect(-r*.055,-r*.88,r*.11,r*.74,r*.02);ctx.stroke();ctx.shadowBlur=0;}
-    // accelerator rings along barrel
     for(let i=0;i<4;i++){
-      const y=-r*.82+i*r*.18,lit=f&&i%2===0;
-      ctx.fillStyle=lit?col:'#202030';ctx.strokeStyle=lit?col+'cc':col+'33';ctx.lineWidth=1;
-      ctx.shadowColor=lit?col:'transparent';ctx.shadowBlur=lit?8:0;
-      ctx.beginPath();ctx.roundRect(-r*.17,y,r*.34,r*.07,r*.02);ctx.fill();ctx.stroke();
+      const a=i*Math.PI/2;
+      const px=Math.cos(a)*r*.52,py=Math.sin(a)*r*.52;
+      // arm
+      ctx.strokeStyle=col+(f?'66':'33');ctx.lineWidth=1.4;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.2,Math.sin(a)*r*.2);ctx.lineTo(px,py);ctx.stroke();
+      // coil arc around each pole
+      ctx.strokeStyle=f?col+'aa':col+'55';ctx.lineWidth=1.8;
+      ctx.beginPath();ctx.arc(px,py,r*.17,a+Math.PI*.55,a+Math.PI*1.45);ctx.stroke();
+      ctx.beginPath();ctx.arc(px,py,r*.17,a-Math.PI*.45,a+Math.PI*.45);ctx.stroke();
+      // pole core
+      ctx.fillStyle='#14142a';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.1;
+      ctx.shadowColor=col;ctx.shadowBlur=f?12:4;
+      ctx.beginPath();ctx.arc(px,py,r*.1,0,Math.PI*2);ctx.fill();ctx.stroke();
       ctx.shadowBlur=0;
-    }
-    // muzzle cap
-    if(f){
-      ctx.shadowColor=col;ctx.shadowBlur=20;
-      ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,-r*.94,r*.1,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#fff';ctx.shadowBlur=8;ctx.globalAlpha=.85;
-      ctx.beginPath();ctx.arc(0,-r*.94,r*.05,0,Math.PI*2);ctx.fill();
-      ctx.globalAlpha=1;ctx.shadowBlur=0;
-    }else{
-      ctx.fillStyle='#252535';ctx.strokeStyle=col+'44';ctx.lineWidth=1.2;
-      ctx.beginPath();ctx.roundRect(-r*.16,-r*.97,r*.32,r*.1,r*.03);ctx.fill();ctx.stroke();
+      ctx.fillStyle=f?col+'bb':col+'33';
+      ctx.beginPath();ctx.arc(px,py,r*.06,0,Math.PI*2);ctx.fill();
     }
     ctx.restore();
-    // central targeting core
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:6;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.16);
-    cg.addColorStop(0,'#fff');cg.addColorStop(.5,col);cg.addColorStop(1,col+'22');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();
+    // target beam direction indicator (faint line toward target)
+    ctx.save();ctx.rotate(this.angle+Math.PI/2);
+    ctx.strokeStyle=col+(f?'44':'1a');ctx.lineWidth=1;ctx.setLineDash([2,5]);
+    ctx.beginPath();ctx.moveTo(0,-r*.24);ctx.lineTo(0,-r*.74);ctx.stroke();ctx.setLineDash([]);
+    ctx.restore();
+    // central focusing lens
+    ctx.shadowColor=col;ctx.shadowBlur=f?20:8;
+    ctx.strokeStyle=f?col+'cc':col+'55';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.stroke();
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.18);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.4,col);cg.addColorStop(.75,col+'44');cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
   }
   // 플라즈마 커터: 중이온 쌍포
@@ -1213,35 +1200,43 @@ class Tower{
   _dScan(ctx,r,t){
     const col=this.color,f=this._firingT>0;
     this._base(ctx,r,col,'circle');
-    // outer rotating scan ring
-    ctx.save();ctx.rotate(t*1.4);
-    ctx.strokeStyle=col+'55';ctx.lineWidth=1.3;ctx.setLineDash([r*.26,r*.1]);
-    ctx.beginPath();ctx.arc(0,0,r*.75,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // counter inner ring
-    ctx.save();ctx.rotate(-t*1.0);
-    ctx.strokeStyle=col+'33';ctx.lineWidth=.8;ctx.setLineDash([r*.12,r*.2]);
-    ctx.beginPath();ctx.arc(0,0,r*.5,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // fixed upward sweep sector
-    ctx.save();ctx.rotate(-Math.PI/2);
-    ctx.fillStyle=col+(f?'44':'1e');ctx.shadowColor=col;ctx.shadowBlur=f?10:0;
-    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.72,-Math.PI*.26,Math.PI*.26);ctx.closePath();ctx.fill();
+    // static outer marker ring
+    ctx.strokeStyle=col+'28';ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(0,0,r*.76,0,Math.PI*2);ctx.stroke();
+    // pulsing concentric scan rings
+    for(let i=0;i<3;i++){
+      const pulse=(Math.sin(t*2.5-i*1.1)+1)*.5;
+      const ir=r*(0.28+i*0.18+pulse*0.06);
+      ctx.strokeStyle=col+(f?'55':'2a');ctx.lineWidth=f?.9:.6;
+      ctx.beginPath();ctx.arc(0,0,ir,0,Math.PI*2);ctx.stroke();
+    }
+    // 3 spinning scan arms with sweep sector
+    ctx.save();ctx.rotate(t*1.6);
+    // sweep sector
+    ctx.fillStyle=col+(f?'30':'16');
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.7,-Math.PI*.22,Math.PI*.22);ctx.closePath();ctx.fill();
+    // 3 arms
+    ctx.strokeStyle=f?col+'cc':col+'88';ctx.lineWidth=1.5;ctx.lineCap='round';
+    ctx.shadowColor=col;ctx.shadowBlur=f?8:2;
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3;
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.14,Math.sin(a)*r*.14);ctx.lineTo(Math.cos(a)*r*.68,Math.sin(a)*r*.68);ctx.stroke();
+      // sensor node at tip
+      ctx.fillStyle=f?col:col+'88';
+      ctx.beginPath();ctx.arc(Math.cos(a)*r*.68,Math.sin(a)*r*.68,r*.07,0,Math.PI*2);ctx.fill();
+    }
     ctx.shadowBlur=0;ctx.restore();
-    // crosshair lines
-    ctx.strokeStyle=col+'44';ctx.lineWidth=.9;
-    ctx.beginPath();ctx.moveTo(-r*.44,0);ctx.lineTo(r*.44,0);ctx.moveTo(0,-r*.44);ctx.lineTo(0,r*.44);ctx.stroke();
-    // upward sensor mast
-    ctx.fillStyle='#181818';ctx.strokeStyle=col+'88';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.roundRect(-r*.07,-r*.78,r*.14,r*.36,r*.03);ctx.fill();ctx.stroke();
-    ctx.fillStyle=col+'33';ctx.beginPath();ctx.roundRect(-r*.04,-r*.75,r*.08,r*.28,r*.02);ctx.fill();
-    // sensor tip
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:5;
-    ctx.fillStyle=f?col:'#252525';ctx.strokeStyle=col;ctx.lineWidth=1.1;
-    ctx.beginPath();ctx.arc(0,-r*.78,r*.09,0,Math.PI*2);ctx.fill();ctx.stroke();
-    if(f){ctx.fillStyle='#fff';ctx.shadowBlur=8;ctx.globalAlpha=.85;ctx.beginPath();ctx.arc(0,-r*.78,r*.045,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+    // 6 static scan grid lines (crosshair-like but sparse)
+    ctx.strokeStyle=col+'22';ctx.lineWidth=.7;
+    for(let i=0;i<3;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.72,Math.sin(a)*r*.72);ctx.lineTo(Math.cos(a+Math.PI)*r*.72,Math.sin(a+Math.PI)*r*.72);ctx.stroke();}
+    // central processor hub
+    ctx.shadowColor=col;ctx.shadowBlur=f?18:7;
+    ctx.fillStyle='#181818';ctx.strokeStyle=col;ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();ctx.stroke();
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.18);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.45,col);cg.addColorStop(1,col+'22');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
-    // center core
-    ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,r*.14,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#fff';ctx.globalAlpha=.5;ctx.beginPath();ctx.arc(-r*.04,-r*.04,r*.055,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
   }
   _dRefinery(ctx,r,t){
     const col=this.color,f=this._firingT>0;
