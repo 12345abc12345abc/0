@@ -277,7 +277,7 @@ const TWR={
   refinery:    {name:'포트 정제소',   price:1150, color:'#FFD700',type:'refinery', dmg:7,   spd:0.65, range:2.4, desc:'원석에 전격을 발사해 처리하며 다른 유닛보다 포트를 더 많이 획득한다.'},
   laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:22,  spd:1.6,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
   chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:50,  spd:0.9,  range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
-  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:180, spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
+  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:80,  spd:1.5,  range:2.4, desc:'드론이 선회하며 인근 원석에 레이저를 발사해 처리한다.'},
   plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:110, spd:0.42, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
@@ -704,7 +704,29 @@ class Tower{
       return;
     }
     if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(2,Math.round(dmg*1.2));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
-    if(tp==='drone'){this._droneAngle+=dt*(0.38+this._lm()*.06);const dr=this.getRange()*TS;const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;const hitR=TS*.62;for(const o of ores){if(!o.alive)continue;if(Math.hypot(o.x-drX,o.y-drY)<hitR){o.takeDmg(this.getDmg()*dt,'single');if(this._hitCooldown<=0){this._eff(new RingEff(drX,drY,hitR*1.4,this.color));this._hitCooldown=.1;}this._firingT=.18;}}if(this._hitCooldown>0)this._hitCooldown-=dt;return;}
+    if(tp==='drone'){
+      this._droneAngle+=dt*(0.38+this._lm()*.06);
+      const dr=this.getRange()*TS;
+      const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;
+      if(this._hitCooldown>0){this._hitCooldown-=dt;}
+      else{
+        const laserR=4*TS;
+        let bestO=null,bestD=Infinity;
+        for(const o of ores){
+          if(!o.alive)continue;
+          const d=Math.hypot(o.x-drX,o.y-drY);
+          if(d<laserR&&d<bestD){bestD=d;bestO=o;}
+        }
+        if(bestO){
+          const dir=Math.atan2(bestO.y-drY,bestO.x-drX);
+          bestO.takeDmg(this.getDmg(),'single');
+          this._eff(new LaserEff(drX,drY,dir,bestD,this.color));
+          this._firingT=.18;
+          this._hitCooldown=1/Math.max(0.1,this.getSpd());
+        }
+      }
+      return;
+    }
     if(tp==='focus'){
       if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
       if(!this._focusTgt)this._focusTgt=this._findTgt(ores);
@@ -1200,42 +1222,43 @@ class Tower{
   _dScan(ctx,r,t){
     const col=this.color,f=this._firingT>0;
     this._base(ctx,r,col,'circle');
-    // static outer marker ring
-    ctx.strokeStyle=col+'28';ctx.lineWidth=1;
-    ctx.beginPath();ctx.arc(0,0,r*.76,0,Math.PI*2);ctx.stroke();
-    // pulsing concentric scan rings
-    for(let i=0;i<3;i++){
-      const pulse=(Math.sin(t*2.5-i*1.1)+1)*.5;
-      const ir=r*(0.28+i*0.18+pulse*0.06);
-      ctx.strokeStyle=col+(f?'55':'2a');ctx.lineWidth=f?.9:.6;
-      ctx.beginPath();ctx.arc(0,0,ir,0,Math.PI*2);ctx.stroke();
+    // 3 concentric radar range rings
+    for(let i=1;i<=3;i++){
+      ctx.strokeStyle=col+(i===3?'50':'28');ctx.lineWidth=i===3?1:.5;
+      ctx.beginPath();ctx.arc(0,0,r*i*.25,0,Math.PI*2);ctx.stroke();
     }
-    // 3 spinning scan arms with sweep sector
-    ctx.save();ctx.rotate(t*1.6);
-    // sweep sector
-    ctx.fillStyle=col+(f?'30':'16');
-    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.7,-Math.PI*.22,Math.PI*.22);ctx.closePath();ctx.fill();
-    // 3 arms
-    ctx.strokeStyle=f?col+'cc':col+'88';ctx.lineWidth=1.5;ctx.lineCap='round';
-    ctx.shadowColor=col;ctx.shadowBlur=f?8:2;
-    for(let i=0;i<3;i++){
-      const a=i*Math.PI*2/3;
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.14,Math.sin(a)*r*.14);ctx.lineTo(Math.cos(a)*r*.68,Math.sin(a)*r*.68);ctx.stroke();
-      // sensor node at tip
-      ctx.fillStyle=f?col:col+'88';
-      ctx.beginPath();ctx.arc(Math.cos(a)*r*.68,Math.sin(a)*r*.68,r*.07,0,Math.PI*2);ctx.fill();
+    // crosshair lines
+    ctx.strokeStyle=col+'22';ctx.lineWidth=.6;
+    ctx.beginPath();ctx.moveTo(-r*.76,0);ctx.lineTo(r*.76,0);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-r*.76);ctx.lineTo(0,r*.76);ctx.stroke();
+    // phosphor sweep trail behind arm
+    const sweepA=t*1.2;
+    const trailArc=Math.PI*.85;
+    const nSteps=20;
+    for(let i=0;i<nSteps;i++){
+      const frac=i/nSteps;
+      const a0=sweepA-trailArc+(frac*trailArc);
+      const a1=sweepA-trailArc+((i+1)/nSteps*trailArc);
+      ctx.globalAlpha=frac*(f?.40:.22);
+      ctx.fillStyle=col;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.72,a0,a1);ctx.closePath();ctx.fill();
     }
+    ctx.globalAlpha=1;
+    // rotating sweep arm
+    ctx.save();ctx.rotate(sweepA);
+    ctx.strokeStyle=f?col:col+'cc';ctx.lineWidth=f?2:1.4;ctx.lineCap='round';
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:7;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-r*.72);ctx.stroke();
+    ctx.fillStyle=f?'#fff':col;
+    ctx.beginPath();ctx.arc(0,-r*.72,r*.06,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;ctx.restore();
-    // 6 static scan grid lines (crosshair-like but sparse)
-    ctx.strokeStyle=col+'22';ctx.lineWidth=.7;
-    for(let i=0;i<3;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.72,Math.sin(a)*r*.72);ctx.lineTo(Math.cos(a+Math.PI)*r*.72,Math.sin(a+Math.PI)*r*.72);ctx.stroke();}
-    // central processor hub
-    ctx.shadowColor=col;ctx.shadowBlur=f?18:7;
+    // central hub
+    ctx.shadowColor=col;ctx.shadowBlur=f?18:8;
     ctx.fillStyle='#181818';ctx.strokeStyle=col;ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();ctx.stroke();
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.18);
-    cg.addColorStop(0,'#fff');cg.addColorStop(.45,col);cg.addColorStop(1,col+'22');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();ctx.stroke();
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.16);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.5,col);cg.addColorStop(1,col+'22');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
   }
   _dRefinery(ctx,r,t){
