@@ -269,9 +269,9 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:8,   spd:1.2,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:9,   spd:1.3,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
   coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:18,  spd:2.2,  range:3.2, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
-  twinHub:     {name:'트윈 허브',     price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.8, desc:'두 궤도 드론이 원석을 처리하고 50% 감속시킨다. 감속 후 1초간 재접촉 불가.'},
+  twinHub:     {name:'트윈 허브',     price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.2, desc:'두 에너지 구체가 원석을 처리하고 50% 감속시킨다. 감속 후 1초간 재접촉 불가.'},
   scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:90,  spd:0.28, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
   magnetCannon:{name:'마그넷 레이저', price:850,  color:'#FF6D00',type:'focus',    dmg:30,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
   refinery:    {name:'포트 정제소',   price:1150, color:'#FFD700',type:'refinery', dmg:7,   spd:0.65, range:2.4, desc:'원석에 전격을 발사해 처리하며 다른 유닛보다 포트를 더 많이 획득한다.'},
@@ -658,7 +658,7 @@ class Tower{
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
-  getRange(){return TWR[this.tId].range*(this.isMega?2.0:1);}
+  getRange(){return TWR[this.tId].range;}
   update(dt,ores){
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
@@ -1198,41 +1198,43 @@ class Tower{
   }
   _drawTwinOrbit(ctx){
     const dr=this.getRange()*TS,col=this.color,nOrbs=this.isMega?5:2;
+    const orbR=this.isMega?6:4;
     ctx.save();ctx.strokeStyle=col+'18';ctx.lineWidth=.8;ctx.setLineDash([3,8]);
     ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     for(let i=0;i<nOrbs;i++){
       const da=this._twinAngles[i],active=this._twin_hcd[i]>0;
-      const ox=this.cx+Math.cos(da)*dr,oy=this.cy+Math.sin(da)*dr;
-      const sc=this.isMega?1.8:1;
-      ctx.save();ctx.translate(ox,oy);ctx.rotate(da+Math.PI/2);ctx.scale(sc,sc);
-      ctx.shadowColor=col;ctx.shadowBlur=active?12:5;
-      // body
-      ctx.fillStyle=active?col:'#c8c8c8';ctx.strokeStyle=col;ctx.lineWidth=.9;
-      ctx.beginPath();ctx.roundRect(-2,-3,4,6,1);ctx.fill();ctx.stroke();
-      ctx.fillStyle='rgba(255,255,255,.28)';ctx.beginPath();ctx.roundRect(-1.3,-2.6,2.6,2.5,1);ctx.fill();
-      // 4 arms + rotors
-      const AP=[[-2,-2.5],[2,-2.5],[2,2.5],[-2,2.5]],TP=[[-5.5,-5.5],[5.5,-5.5],[5.5,5.5],[-5.5,5.5]];
-      ctx.strokeStyle=col;ctx.lineWidth=1;ctx.lineCap='round';
-      for(let j=0;j<4;j++){ctx.beginPath();ctx.moveTo(AP[j][0],AP[j][1]);ctx.lineTo(TP[j][0],TP[j][1]);ctx.stroke();}
-      const rs=da*(i%2===0?9:-9);
-      for(const[tx,ty]of TP){
-        ctx.fillStyle=col+'22';ctx.beginPath();ctx.arc(tx,ty,2.6,0,Math.PI*2);ctx.fill();
-        ctx.strokeStyle=active?col:'#555';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(tx,ty,2,0,Math.PI*2);ctx.stroke();
-        ctx.save();ctx.translate(tx,ty);ctx.rotate(rs);
-        ctx.strokeStyle=active?'#fff':col+'88';ctx.lineWidth=.7;ctx.globalAlpha=.72;
-        ctx.beginPath();ctx.moveTo(-1.8,0);ctx.lineTo(1.8,0);ctx.stroke();
-        ctx.globalAlpha=1;ctx.restore();
-        ctx.fillStyle=active?col:'#555';ctx.beginPath();ctx.arc(tx,ty,.8,0,Math.PI*2);ctx.fill();
+      // trail (points behind the orb along orbit)
+      for(let t=1;t<=12;t++){
+        const ta=da-t*0.13;
+        const tx=this.cx+Math.cos(ta)*dr,ty=this.cy+Math.sin(ta)*dr;
+        const tp=1-t/12;
+        ctx.globalAlpha=tp*.32;ctx.fillStyle=col;
+        ctx.beginPath();ctx.arc(tx,ty,orbR*tp*.75,0,Math.PI*2);ctx.fill();
       }
-      ctx.shadowBlur=0;
+      ctx.globalAlpha=1;
+      const ox=this.cx+Math.cos(da)*dr,oy=this.cy+Math.sin(da)*dr;
+      ctx.save();ctx.translate(ox,oy);
+      // outer aura
+      ctx.shadowColor=col;ctx.shadowBlur=active?22:10;
+      ctx.globalAlpha=active?.5:.2;ctx.fillStyle=col;
+      ctx.beginPath();ctx.arc(0,0,orbR*2,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;
+      // sphere gradient
+      const sg=ctx.createRadialGradient(-orbR*.35,-orbR*.35,0,0,0,orbR);
+      sg.addColorStop(0,'#fff');sg.addColorStop(.45,col);sg.addColorStop(1,col+'44');
+      ctx.fillStyle=sg;ctx.beginPath();ctx.arc(0,0,orbR,0,Math.PI*2);ctx.fill();
+      // equator ring
+      ctx.strokeStyle=active?'rgba(255,255,255,.7)':col+'66';ctx.lineWidth=.9;ctx.globalAlpha=.6;
+      ctx.beginPath();ctx.arc(0,0,orbR*.65,0,Math.PI*2);ctx.stroke();
+      ctx.globalAlpha=1;
+      // hit pulse ring
       if(active){
         const p=this._twin_hcd[i]/0.35;
-        ctx.globalAlpha=p*.5;ctx.strokeStyle='#CE93D8';ctx.lineWidth=1.2;
-        ctx.beginPath();ctx.arc(0,0,9+p*3,0,Math.PI*2);ctx.stroke();
-        ctx.globalAlpha=p*.22;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,12+p*2,0,Math.PI*2);ctx.stroke();
+        ctx.globalAlpha=p*.55;ctx.strokeStyle='#CE93D8';ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.arc(0,0,orbR+p*5,0,Math.PI*2);ctx.stroke();
         ctx.globalAlpha=1;
       }
-      ctx.restore();
+      ctx.shadowBlur=0;ctx.restore();
     }
   }
 }
