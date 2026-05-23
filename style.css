@@ -303,15 +303,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #bspd{
   height:44px;flex-shrink:0;
   border-radius:9px;
-  background:#1a1a1a;border:1.5px solid #ffffff14;
-  cursor:pointer;font-size:13px;color:#777;
+  background:#1a1a1a;border:1.5px solid #FFD70030;
+  cursor:pointer;font-size:13px;color:#FFD700;
   font-weight:900;transition:all .15s;
   display:flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;letter-spacing:.5px;
 }
 #bspd::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;
   background:linear-gradient(180deg,#ffffff03,transparent);pointer-events:none;}
-#bspd.on{border-color:#4CAF5055;color:#4CAF50;box-shadow:0 0 8px #4CAF5022;}
+#bspd.on{border-color:#FFD70055;color:#FFD700;box-shadow:0 0 10px #FFD70030;}
 #bspd:active{transform:scale(.94);}
 
 /* ── 해금 오버레이 ── */

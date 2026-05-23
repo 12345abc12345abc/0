@@ -269,16 +269,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:20.0, desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 초당 1회 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.'},
-  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:100, spd:0.5,  range:3.0, upgMult:7.5,  desc:'2초 충전 후 포트 코어 에너지를 집중 발사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 발사 주기는 길지만 단발 공정력이 강해 고밀도 원석 처리에 최적화된 설비.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:20.0, desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.'},
+  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:100, spd:0.5,  range:3.0, upgMult:7.5,  desc:'포트 코어 에너지를 집중 발사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 발사 주기는 길지만 단발 공정력이 강해 고밀도 원석 처리에 최적화된 설비.'},
   twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  desc:'궤도 제어 구체 2기가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.'},
-  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  desc:'전방위 광학 분석기가 4초마다 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.'},
+  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.'},
   magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:32,  spd:0,    range:5.0, upgMult:2.2,  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.'},
-  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, desc:'전자기 펄스로 원석을 초당 1회 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.'},
-  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:30,  spd:1.0,  range:3.0, upgMult:1.0,  desc:'격자 레이저망을 1초 주기로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.'},
-  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 동시에 3초간 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.'},
-  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:45,  spd:2.0,  range:3.0, upgMult:0.40, desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 초당 2회 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, desc:'극고속 플라즈마 빔을 초당 6회 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.'},
+  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, desc:'전자기 펄스로 원석을 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.'},
+  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:30,  spd:1.0,  range:3.0, upgMult:1.0,  desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.'},
+  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.'},
+  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:45,  spd:2.0,  range:3.0, upgMult:0.40, desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -936,7 +936,7 @@ class Tower{
   // 픽셀 로봇암: 단관절 산업용 로봇팔 (탑뷰, 정면 단일암, 그리퍼 타격 시 벌림)
   _dPA(ctx,r,t,f){
     const col=this.color;
-    // ── DIAMOND BASE (square rotated 45°)
+    // ── DIAMOND BASE
     const db=r*.82;
     const dPath=()=>{ctx.beginPath();ctx.moveTo(0,-db);ctx.lineTo(db,0);ctx.lineTo(0,db);ctx.lineTo(-db,0);ctx.closePath();};
     dPath();ctx.fillStyle='#141414';ctx.fill();
@@ -957,24 +957,17 @@ class Tower{
       ctx.beginPath();ctx.moveTo(0,-r*.072);ctx.lineTo(0,r*.072);ctx.stroke();ctx.shadowBlur=0;
       ctx.restore();
     }
-    // ── ARM (rotates toward target)
+    // ── ARM + GRIPPER
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    const j0y=-r*.06,j1y=-r*.50,tipY=-r*.95;
-    const aw=r*.155,ew=r*.10;
-    // MAIN CYLINDER
+    const j0y=-r*.06,j1y=-r*.52;
+    const aw=r*.12;
+    // ARM BODY (tapered)
     ctx.fillStyle='#1b1b1b';ctx.strokeStyle=f?col+'3a':col+'16';ctx.lineWidth=1.3;
-    ctx.beginPath();ctx.moveTo(-aw,j0y);ctx.lineTo(aw,j0y);ctx.lineTo(aw-r*.025,j1y);ctx.lineTo(-aw+r*.025,j1y);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.fillStyle='#111';ctx.strokeStyle=col+(f?'25':'0d');ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.rect(-ew*.48,j0y,ew*.96,j1y-j0y);ctx.fill();ctx.stroke();
-    ctx.strokeStyle=col+(f?'66':'1e');ctx.lineWidth=1.2;ctx.shadowColor=col;ctx.shadowBlur=f?8:0;
+    ctx.beginPath();ctx.moveTo(-aw,j0y);ctx.lineTo(aw,j0y);ctx.lineTo(aw-r*.02,j1y);ctx.lineTo(-aw+r*.02,j1y);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.strokeStyle=col+(f?'66':'1e');ctx.lineWidth=1.1;ctx.shadowColor=col;ctx.shadowBlur=f?7:0;
     ctx.beginPath();ctx.moveTo(0,j0y-r*.02);ctx.lineTo(0,j1y+r*.03);ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle=col+(f?'22':'0b');ctx.lineWidth=0.8;
-    for(let v=0;v<4;v++){const vy=j0y+(j1y-j0y)*(.18+v*.2),lw=aw-r*.01-r*.008*v;ctx.beginPath();ctx.moveTo(-lw,vy);ctx.lineTo(lw,vy);ctx.stroke();}
-    // EXTENSION ROD
-    ctx.fillStyle='#161616';ctx.strokeStyle=f?col+'44':col+'1c';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.moveTo(-ew,j1y);ctx.lineTo(ew,j1y);ctx.lineTo(ew-r*.015,tipY+r*.02);ctx.lineTo(-ew+r*.015,tipY+r*.02);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=1;ctx.shadowColor=col;ctx.shadowBlur=f?5:0;
-    ctx.beginPath();ctx.moveTo(0,j1y-r*.02);ctx.lineTo(0,tipY+r*.04);ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=col+(f?'22':'0b');ctx.lineWidth=0.75;
+    for(let v=0;v<3;v++){const vy=j0y+(j1y-j0y)*(.2+v*.26),lw=aw-r*.008*v;ctx.beginPath();ctx.moveTo(-lw,vy);ctx.lineTo(lw,vy);ctx.stroke();}
     // SHOULDER JOINT
     ctx.save();ctx.translate(0,j0y);
     ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(0,0,r*.235,0,Math.PI*2);ctx.stroke();
@@ -982,26 +975,36 @@ class Tower{
     ctx.strokeStyle=col+(f?'88':'2c');ctx.lineWidth=1.1;
     for(let i=0;i<4;i++){const a=t*.9+i*Math.PI/2;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.078,Math.sin(a)*r*.078);ctx.lineTo(Math.cos(a)*r*.13,Math.sin(a)*r*.13);ctx.stroke();}
     ctx.shadowColor=col;ctx.shadowBlur=f?22:6;ctx.fillStyle=f?'#fff':col;ctx.beginPath();ctx.arc(0,0,r*.054,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.restore();
-    // PIVOT JOINT
+    // WRIST PLATE
+    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'55':col+'20';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.rect(-r*.27,j1y-r*.03,r*.54,r*.06);ctx.fill();ctx.stroke();
+    // WRIST JOINT
     ctx.save();ctx.translate(0,j1y);
     ctx.strokeStyle=col+(f?'38':'14');ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r*.185,0,Math.PI*2);ctx.stroke();
     ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'cc':col+'50';ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?10:2;ctx.beginPath();ctx.arc(0,0,r*.115,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
     ctx.strokeStyle=col+(f?'66':'22');ctx.lineWidth=1;
     for(let i=0;i<3;i++){const a=t*(-1.1)+i*Math.PI*2/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.058,Math.sin(a)*r*.058);ctx.lineTo(Math.cos(a)*r*.1,Math.sin(a)*r*.1);ctx.stroke();}
     ctx.fillStyle=f?col+'99':col+'33';ctx.beginPath();ctx.arc(0,0,r*.04,0,Math.PI*2);ctx.fill();ctx.restore();
-    // IMPACT STAMP HEAD
-    const iw=r*.25;
-    ctx.fillStyle='#141414';ctx.strokeStyle=f?col+'77':col+'28';ctx.lineWidth=1.5;ctx.shadowColor=col;ctx.shadowBlur=f?20:3;
-    ctx.beginPath();ctx.moveTo(-iw+r*.03,tipY+r*.02);ctx.lineTo(iw-r*.03,tipY+r*.02);ctx.lineTo(iw,tipY+r*.05);ctx.lineTo(iw,tipY+r*.13);ctx.lineTo(-iw,tipY+r*.13);ctx.lineTo(-iw,tipY+r*.05);ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    for(let i=-2;i<=2;i++){
-      const xc=i*r*.085,bright=i===0;
-      ctx.fillStyle=f?col+(bright?'dd':Math.abs(i)===1?'88':'44'):col+'18';
-      ctx.strokeStyle=col+(f?bright?'66':'33':'0e');ctx.lineWidth=0.7;ctx.shadowColor=col;ctx.shadowBlur=f?bright?14:7:0;
-      ctx.beginPath();ctx.rect(xc-r*.028,tipY+r*.03,r*.056,r*.075);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    // ── GRIPPER JAWS (open=idle, closed=gripping when firing)
+    const gX=f?r*.04:r*.14; // half-gap between inner jaw edges
+    const jfw=r*.09,jfl=r*.30,jfh=r*.085; // finger width, length, hook depth
+    for(const sx of[-1,1]){
+      const ix=sx*gX,ox=ix+sx*jfw;
+      ctx.shadowColor=col;ctx.shadowBlur=f?18:3;
+      ctx.fillStyle='#191919';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.4;
+      // finger shaft
+      ctx.beginPath();ctx.moveTo(ix,j1y);ctx.lineTo(ox,j1y);ctx.lineTo(ox,j1y-jfl);ctx.lineTo(ix,j1y-jfl);ctx.closePath();ctx.fill();ctx.stroke();
+      // inward hook at tip
+      ctx.beginPath();ctx.moveTo(ix,j1y-jfl*.5);ctx.lineTo(ix-sx*jfh,j1y-jfl*.5);ctx.lineTo(ix-sx*jfh,j1y-jfl);ctx.lineTo(ix,j1y-jfl);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.shadowBlur=0;
+      // grip serrations on inner face
+      ctx.strokeStyle=col+(f?'88':'28');ctx.lineWidth=0.8;ctx.shadowColor=col;ctx.shadowBlur=f?5:0;
+      for(let s=0;s<3;s++){const sy=j1y-jfl*.55-s*r*.033;ctx.beginPath();ctx.moveTo(ix,sy);ctx.lineTo(ix-sx*jfh*.7,sy);ctx.stroke();}
+      ctx.shadowBlur=0;
+      ctx.fillStyle=f?col+'88':col+'22';ctx.shadowColor=col;ctx.shadowBlur=f?7:0;
+      ctx.beginPath();ctx.arc(ix+sx*jfw*.5,j1y-jfl*.28,r*.022,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
     }
-    ctx.strokeStyle=col+(f?'cc':'33');ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?16:2;
-    ctx.beginPath();ctx.moveTo(-iw*.8,tipY+r*.02);ctx.lineTo(iw*.8,tipY+r*.02);ctx.stroke();ctx.shadowBlur=0;
-    if(f){const mg=ctx.createRadialGradient(0,tipY+r*.07,0,0,tipY+r*.07,r*.38);mg.addColorStop(0,'#fff');mg.addColorStop(.2,col);mg.addColorStop(1,col+'00');ctx.globalAlpha=.72;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,tipY+r*.07,r*.38,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+    if(f){const gy=j1y-jfl*.75;const mg=ctx.createRadialGradient(0,gy,0,0,gy,r*.2);mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');ctx.globalAlpha=.65;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,gy,r*.2,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
     ctx.restore();
     // CENTER HUB
     ctx.shadowColor=col;ctx.shadowBlur=f?28:9;
