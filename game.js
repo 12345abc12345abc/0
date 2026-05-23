@@ -270,15 +270,15 @@ const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','re
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
   pixelArm:    {name:'픽셀 로봇암',   price:80,   color:'#2196F3',type:'single',   dmg:7,   spd:1.1,  range:2.4, desc:'기본 처리 장비. 가장 앞선 원석부터 순차 처리한다.'},
-  coreShooter: {name:'코어 슈터',     price:320,  color:'#E53935',type:'single',   dmg:18,  spd:2.6,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
-  scanner:     {name:'비전 스캐너',   price:480,  color:'#00C853',type:'scan',     dmg:55,  spd:0.22, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
-  magnetCannon:{name:'마그넷 레이저', price:700,  color:'#FF6D00',type:'focus',    dmg:18,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
-  refinery:    {name:'포트 정제소',   price:1050, color:'#FFD700',type:'refinery', dmg:4,   spd:0.6,  range:2.4, desc:'원석에 전격을 발사해 처리하며 포트를 추가 획득한다.'},
-  laserGrid:   {name:'레이저 그리드', price:1500, color:'#F44336',type:'aoe',      dmg:13,  spd:1.5,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
-  chainBolt:   {name:'체인 볼트',     price:2100, color:'#03A9F4',type:'chain',    dmg:32,  spd:0.85, range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
-  twinHub:     {name:'트윈 허브',     price:160,  color:'#9C27B0',type:'twinhub',  dmg:7,   spd:0,    range:1.8, desc:'두 궤도 드론이 원석을 처리하고 50% 감속시킨다. 감속 후 2초간 재접촉 불가.'},
-  drone:       {name:'레이스 드론',   price:3200, color:'#00E5CC',type:'drone',    dmg:130, spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:3800, color:'#EEEEEE',type:'pierce',   dmg:72,  spd:0.38, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
+  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:15,  spd:2.0,  range:3.0, desc:'빠른 발사로 가장 앞선 원석을 신속히 처리한다.'},
+  twinHub:     {name:'트윈 허브',     price:380,  color:'#9C27B0',type:'twinhub',  dmg:7,   spd:0,    range:1.8, desc:'두 궤도 드론이 원석을 처리하고 50% 감속시킨다. 감속 후 2초간 재접촉 불가.'},
+  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:60,  spd:0.22, range:5.5, desc:'HP가 가장 높은 원석을 탐지해 강력한 폭발을 발생시킨다.'},
+  magnetCannon:{name:'마그넷 레이저', price:850,  color:'#FF6D00',type:'focus',    dmg:22,  spd:0,    range:5.5, desc:'가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
+  refinery:    {name:'포트 정제소',   price:1150, color:'#FFD700',type:'refinery', dmg:5,   spd:0.5,  range:2.4, desc:'원석에 전격을 발사해 처리하며 다른 유닛보다 포트를 더 많이 획득한다.'},
+  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:15,  spd:1.5,  range:2.6, desc:'주기적으로 범위 내 원석 전체를 동시에 광역 처리한다.'},
+  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:36,  spd:0.85, range:3.2, desc:'원석에 연쇄 번개를 발사하고 일정 시간 감전시킨다.'},
+  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:120, spd:0,    range:3.2, desc:'드론이 범위를 선회하며 원석을 지속 처리한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:82,  spd:0.38, range:5.5, desc:'직선으로 여러 원석을 동시에 관통 처리한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
@@ -644,7 +644,7 @@ class Tower{
     this.cx=R.tx(col);this.cy=R.ty(row);
     this.angle=-Math.PI/2;this.cooldown=0;this._aoeT=0;this._animT=0;this._firingT=0;
     this._tDmg=0;this._tSpd=0;this._armAngle=-Math.PI/2;this._focusTgt=null;this._soundT=0;this._droneAngle=0;this._hitCooldown=0;
-    this._twinAngles=[0,Math.PI];this._twin_hcd=[0,0];
+    this._twinAngles=[0,Math.PI*2/5,Math.PI*4/5,Math.PI*6/5,Math.PI*8/5];this._twin_hcd=[0,0,0,0,0];
     this.isMega=false;this.megaCells=[];
   }
   _lm(){return LVL[this.level-1].mult;}
@@ -676,7 +676,8 @@ class Tower{
     if(tp==='twinhub'){
       const orbSpd=0.9+this._lm()*.1,dr=this.getRange()*TS,hitR=TS*.36;
       const slowDur=[1.0,1.5,2.0,2.5][this.level-1]||1.0;
-      for(let i=0;i<2;i++){
+      const nOrbs=this.isMega?5:2;
+      for(let i=0;i<nOrbs;i++){
         this._twinAngles[i]+=dt*orbSpd;
         if(this._twin_hcd[i]>0){this._twin_hcd[i]-=dt;continue;}
         const ox=this.cx+Math.cos(this._twinAngles[i])*dr,oy=this.cy+Math.sin(this._twinAngles[i])*dr;
@@ -694,7 +695,7 @@ class Tower{
       }
       return;
     }
-    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(1,Math.round(dmg*.5));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
+    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);const dmg=this.getDmg();tgt.takeDmg(dmg,'refinery');const pg=Math.max(2,Math.round(dmg*1.2));GS.port+=pg;GS.totalPort+=pg;GS.portHist.push({t:GS.time,v:pg});GS.popups.push(new Popup(tgt.x,tgt.y-tgt.radius-12,'+◈'+pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
     if(tp==='drone'){this._droneAngle+=dt*(0.38+this._lm()*.06);const dr=this.getRange()*TS;const drX=this.cx+Math.cos(this._droneAngle)*dr,drY=this.cy+Math.sin(this._droneAngle)*dr;const hitR=TS*.62;for(const o of ores){if(!o.alive)continue;if(Math.hypot(o.x-drX,o.y-drY)<hitR){o.takeDmg(this.getDmg()*dt,'single');if(this._hitCooldown<=0){this._eff(new RingEff(drX,drY,hitR*1.4,this.color));this._hitCooldown=.1;}this._firingT=.18;}}if(this._hitCooldown>0)this._hitCooldown-=dt;return;}
     if(tp==='focus'){
       if(this._focusTgt&&(!this._focusTgt.alive||Math.hypot(this._focusTgt.x-this.cx,this._focusTgt.y-this.cy)>this.getRange()*TS))this._focusTgt=null;
@@ -936,33 +937,47 @@ class Tower{
     ctx.globalAlpha=1;
     this._core(ctx,r,col);
   }
-  // 마그넷 캐논: 전자기포, 기본방향 위(↑)
+  // 마그넷 레이저: 중전자기포, 기본방향 위(↑)
   _dSlow(ctx,r,t,f){
     const col=this.color;
-    this._base(ctx,r,col,'circle');
-    // 전자기 링
-    for(let i=0;i<3;i++){
-      const rr=r*(.82-i*.14);
-      ctx.strokeStyle=i===0?(f?col+'cc':'#555'):i===1?'#444':'#333';
-      ctx.lineWidth=i===0?2.5:1.5;
-      ctx.setLineDash(i%2===0?[]:[rr*.3,rr*.15]);
-      ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.stroke();
-    }
-    ctx.setLineDash([]);
+    this._base(ctx,r,col,'oct');
+    // counter-rotating EM field rings
+    ctx.save();ctx.rotate(-t*.85);
+    ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=2.4;ctx.setLineDash([r*.28,r*.1]);
+    ctx.beginPath();ctx.arc(0,0,r*.84,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.rotate(t*1.15);
+    ctx.strokeStyle=f?col+'55':col+'26';ctx.lineWidth=1.3;ctx.setLineDash([r*.15,r*.18]);
+    ctx.beginPath();ctx.arc(0,0,r*.64,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // 포신 몸체
-    ctx.fillStyle='#2a2a2a';ctx.strokeStyle='#666';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.roundRect(-r*.13,-r*.78,r*.26,r*.58,r*.06);ctx.fill();ctx.stroke();
-    // 포신 내부 코일 줄
-    ctx.strokeStyle=col+'55';ctx.lineWidth=1;
-    for(let i=0;i<4;i++){const y=-r*.68+i*r*.12;ctx.beginPath();ctx.moveTo(-r*.1,y);ctx.lineTo(r*.1,y);ctx.stroke();}
-    // 포구 (앞쪽 끝)
-    ctx.fillStyle=f?col:'#EF5350';
-    ctx.beginPath();ctx.arc(0,-r*.78,r*.09,0,Math.PI*2);ctx.fill();
-    if(f){ctx.fillStyle='#ffffffcc';ctx.beginPath();ctx.arc(0,-r*.78,r*.12,0,Math.PI*2);ctx.fill();}
+    // armored base plate
+    ctx.fillStyle='#2c2c2c';ctx.strokeStyle='#505050';ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.roundRect(-r*.36,-r*.15,r*.72,r*.3,r*.05);ctx.fill();ctx.stroke();
+    ctx.fillStyle=col+'30';ctx.beginPath();ctx.roundRect(-r*.36,-.01*r,r*.72,r*.1,0);ctx.fill();
+    // main barrel (thick)
+    ctx.fillStyle='#2e2e2e';ctx.strokeStyle='#5a5a5a';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(-r*.18,-r*.9,r*.36,r*.78,r*.05);ctx.fill();ctx.stroke();
+    // inner channel
+    ctx.fillStyle='#161616';ctx.beginPath();ctx.roundRect(-r*.08,-r*.86,r*.16,r*.7,r*.03);ctx.fill();
+    // EM coil segments (5 rings)
+    for(let i=0;i<5;i++){
+      const y=-r*.78+i*r*.14,lit=f&&(i%2===0);
+      ctx.fillStyle=lit?col+'cc':col+'3a';ctx.strokeStyle=col+(f?'88':'38');ctx.lineWidth=.9;
+      ctx.beginPath();ctx.roundRect(-r*.22,y,r*.44,r*.09,r*.02);ctx.fill();ctx.stroke();
+      if(lit){ctx.shadowColor=col;ctx.shadowBlur=9;ctx.fillStyle=col+'55';ctx.beginPath();ctx.roundRect(-r*.22,y,r*.44,r*.09,r*.02);ctx.fill();ctx.shadowBlur=0;}
+    }
+    // muzzle
+    if(f){
+      ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=18;
+      ctx.beginPath();ctx.arc(0,-r*.93,r*.11,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff';ctx.shadowBlur=6;ctx.globalAlpha=.82;
+      ctx.beginPath();ctx.arc(0,-r*.93,r*.055,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.shadowBlur=0;
+    } else {
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle='#404040';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.roundRect(-r*.22,-r*.96,r*.44,r*.09,r*.03);ctx.fill();ctx.stroke();
+    }
     ctx.restore();
-    ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fillStyle='#1a1a1a';ctx.fill();
-    ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.stroke();
+    this._core(ctx,r,col);
   }
   // 플라즈마 커터: 육각 베이스 + 레일건 포신
   _dPierce(ctx,r,t,f){
@@ -1073,13 +1088,6 @@ class Tower{
     ctx.strokeStyle=col+'14';ctx.lineWidth=.8;ctx.setLineDash([3,9]);
     ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();
     ctx.setLineDash([]);
-    // short trail
-    for(let j=7;j>=0;j--){
-      const ta=da-j*.13,a=(1-j/7)*.36;
-      ctx.globalAlpha=a;ctx.fillStyle=col;
-      ctx.beginPath();ctx.arc(this.cx+Math.cos(ta)*dr,this.cy+Math.sin(ta)*dr,2.8*(1-j/7)+.3,0,Math.PI*2);ctx.fill();
-    }
-    ctx.globalAlpha=1;
     // drone body
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
     ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI/2);
@@ -1160,56 +1168,64 @@ class Tower{
     ctx.fillStyle=cg;ctx.fill();
   }
   _dTwinHub(ctx,r,t){
-    const col=this.color;this._base(ctx,r,col,'hex');
-    // counter-rotating orbit indicators
-    ctx.save();ctx.rotate(t*.55);ctx.strokeStyle=col+'44';ctx.lineWidth=1.2;ctx.setLineDash([r*.18,r*.14]);
-    ctx.beginPath();ctx.arc(0,0,r*.7,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    ctx.save();ctx.rotate(-t*.72);ctx.strokeStyle=col+'26';ctx.lineWidth=.8;ctx.setLineDash([r*.12,r*.2]);
-    ctx.beginPath();ctx.arc(0,0,r*.5,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // 4 diagonal support struts
-    ctx.strokeStyle='#383838';ctx.lineWidth=1.2;ctx.lineCap='round';
-    for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.19,Math.sin(a)*r*.19);ctx.lineTo(Math.cos(a)*r*.56,Math.sin(a)*r*.56);ctx.stroke();}
-    // strut end nodes
-    ctx.fillStyle=col+'66';
-    for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4;ctx.beginPath();ctx.arc(Math.cos(a)*r*.56,Math.sin(a)*r*.56,r*.055,0,Math.PI*2);ctx.fill();}
-    // central hex housing
-    ctx.fillStyle='#2a2a2a';ctx.strokeStyle='#484848';ctx.lineWidth=1.2;
-    ctx.beginPath();for(let i=0;i<6;i++){const a=i/6*Math.PI*2;if(i===0)ctx.moveTo(Math.cos(a)*r*.21,Math.sin(a)*r*.21);else ctx.lineTo(Math.cos(a)*r*.21,Math.sin(a)*r*.21);}ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.fillStyle=col+'40';
-    ctx.beginPath();for(let i=0;i<6;i++){const a=i/6*Math.PI*2;if(i===0)ctx.moveTo(Math.cos(a)*r*.13,Math.sin(a)*r*.13);else ctx.lineTo(Math.cos(a)*r*.13,Math.sin(a)*r*.13);}ctx.closePath();ctx.fill();
+    const col=this.color;this._base(ctx,r,col,'circle');
+    // orbit track
+    ctx.save();ctx.rotate(t*.45);ctx.strokeStyle=col+'30';ctx.lineWidth=.9;ctx.setLineDash([r*.15,r*.12]);
+    ctx.beginPath();ctx.arc(0,0,r*.76,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // two drone dock arms (left/right)
+    ctx.strokeStyle='#363636';ctx.lineWidth=1.6;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(-r*.2,0);ctx.lineTo(-r*.58,0);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(r*.2,0);ctx.lineTo(r*.58,0);ctx.stroke();
+    // dock pads
+    for(const sx of [-1,1]){
+      const px=sx*r*.58;
+      ctx.fillStyle='#252525';ctx.strokeStyle=col+'66';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.arc(px,0,r*.17,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle=col+'44';ctx.lineWidth=.8;
+      ctx.beginPath();ctx.moveTo(px-r*.1,0);ctx.lineTo(px+r*.1,0);ctx.moveTo(px,-.1*r);ctx.lineTo(px,r*.1);ctx.stroke();
+    }
+    // central emitter
+    ctx.fillStyle='#242424';ctx.strokeStyle='#484848';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=col+'38';ctx.beginPath();ctx.arc(0,0,r*.14,0,Math.PI*2);ctx.fill();
     this._core(ctx,r,col);
   }
   _drawTwinOrbit(ctx){
-    const dr=this.getRange()*TS,col=this.color;
-    // orbit path ring
+    const dr=this.getRange()*TS,col=this.color,nOrbs=this.isMega?5:2;
     ctx.save();ctx.strokeStyle=col+'18';ctx.lineWidth=.8;ctx.setLineDash([3,8]);
     ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    for(let i=0;i<2;i++){
+    for(let i=0;i<nOrbs;i++){
       const da=this._twinAngles[i],active=this._twin_hcd[i]>0;
-      // trail
-      for(let j=5;j>=0;j--){
-        const ta=da-j*.2,a=(1-j/5)*.38;
-        ctx.globalAlpha=a;ctx.fillStyle=col;
-        ctx.beginPath();ctx.arc(this.cx+Math.cos(ta)*dr,this.cy+Math.sin(ta)*dr,2.8*(1-j/5)+.3,0,Math.PI*2);ctx.fill();
-      }
-      ctx.globalAlpha=1;
-      // orb
       const ox=this.cx+Math.cos(da)*dr,oy=this.cy+Math.sin(da)*dr;
-      ctx.save();
-      ctx.shadowColor=col;ctx.shadowBlur=active?18:7;
-      const g=ctx.createRadialGradient(ox-.8,oy-.8,.3,ox,oy,5.2);
-      g.addColorStop(0,'#fff');g.addColorStop(.35,col);g.addColorStop(1,col+'33');
-      ctx.fillStyle=g;ctx.beginPath();ctx.arc(ox,oy,5.2,0,Math.PI*2);ctx.fill();
+      ctx.save();ctx.translate(ox,oy);ctx.rotate(da+Math.PI/2);
+      ctx.shadowColor=col;ctx.shadowBlur=active?12:5;
+      // body
+      ctx.fillStyle=active?col:'#c8c8c8';ctx.strokeStyle=col;ctx.lineWidth=.9;
+      ctx.beginPath();ctx.roundRect(-2,-3,4,6,1);ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.28)';ctx.beginPath();ctx.roundRect(-1.3,-2.6,2.6,2.5,1);ctx.fill();
+      // 4 arms + rotors
+      const AP=[[-2,-2.5],[2,-2.5],[2,2.5],[-2,2.5]],TP=[[-5.5,-5.5],[5.5,-5.5],[5.5,5.5],[-5.5,5.5]];
+      ctx.strokeStyle=col;ctx.lineWidth=1;ctx.lineCap='round';
+      for(let j=0;j<4;j++){ctx.beginPath();ctx.moveTo(AP[j][0],AP[j][1]);ctx.lineTo(TP[j][0],TP[j][1]);ctx.stroke();}
+      const rs=da*(i%2===0?9:-9);
+      for(const[tx,ty]of TP){
+        ctx.fillStyle=col+'22';ctx.beginPath();ctx.arc(tx,ty,2.6,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=active?col:'#555';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(tx,ty,2,0,Math.PI*2);ctx.stroke();
+        ctx.save();ctx.translate(tx,ty);ctx.rotate(rs);
+        ctx.strokeStyle=active?'#fff':col+'88';ctx.lineWidth=.7;ctx.globalAlpha=.72;
+        ctx.beginPath();ctx.moveTo(-1.8,0);ctx.lineTo(1.8,0);ctx.stroke();
+        ctx.globalAlpha=1;ctx.restore();
+        ctx.fillStyle=active?col:'#555';ctx.beginPath();ctx.arc(tx,ty,.8,0,Math.PI*2);ctx.fill();
+      }
+      ctx.shadowBlur=0;
       if(active){
-        // slow ripple rings
         const p=this._twin_hcd[i]/0.35;
         ctx.globalAlpha=p*.5;ctx.strokeStyle='#CE93D8';ctx.lineWidth=1.2;
-        ctx.beginPath();ctx.arc(ox,oy,8+p*4,0,Math.PI*2);ctx.stroke();
-        ctx.globalAlpha=p*.25;ctx.lineWidth=2.2;
-        ctx.beginPath();ctx.arc(ox,oy,11+p*3,0,Math.PI*2);ctx.stroke();
+        ctx.beginPath();ctx.arc(0,0,9+p*3,0,Math.PI*2);ctx.stroke();
+        ctx.globalAlpha=p*.22;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,12+p*2,0,Math.PI*2);ctx.stroke();
         ctx.globalAlpha=1;
       }
-      ctx.shadowBlur=0;ctx.restore();
+      ctx.restore();
     }
   }
 }
