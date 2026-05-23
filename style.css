@@ -108,7 +108,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 }
 #help-main-title{
   font-size:30px;font-weight:900;color:#fff;
-  letter-spacing:-0.5px;line-height:1;text-align:center;margin-bottom:3px;
+  letter-spacing:-0.5px;line-height:1;text-align:center;margin-bottom:18px;
 }
 #help-main-title span{color:#FF4500;}
 #help-titlesub{
@@ -120,7 +120,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   background:linear-gradient(90deg,transparent,#FF4500,transparent);
   margin-bottom:14px;
 }
-#help-items{width:100%;display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+#help-items{width:100%;display:flex;flex-direction:column;gap:7px;margin-bottom:18px;border-top:1px solid #FF450033;padding-top:16px;}
 .hi{
   display:flex;align-items:flex-start;gap:11px;
   background:#ffffff07;border:1px solid #ffffff0e;border-radius:8px;

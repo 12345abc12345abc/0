@@ -532,10 +532,10 @@ const R={
         const px=MAP_OX+c2*TS,py=MAP_OY+r*TS;
         ctx.fillStyle=ok?'rgba(255,255,255,.12)':'rgba(239,83,80,.12)';ctx.fillRect(px,py,TS,TS);
         ctx.strokeStyle=ok?'#ffffff':'#EF5350';ctx.lineWidth=2;ctx.strokeRect(px+1,py+1,TS-2,TS-2);
-        if(ok&&TWR[UI.selCard])this.drawRange(ctx,this.tx(c2),this.ty(r),TWR[UI.selCard].range,TWR[UI.selCard].color);
+        if(ok&&TWR[UI.selCard]){const _d=TWR[UI.selCard];const _rng=_d.type==='drone'?_d.range+2:_d.range;this.drawRange(ctx,this.tx(c2),this.ty(r),_rng,_d.color);}
       }
     }
-    if(UI.selTwr)this.drawRange(ctx,UI.selTwr.cx,UI.selTwr.cy,UI.selTwr.getRange(),UI.selTwr.color);
+    if(UI.selTwr){const _rng=UI.selTwr.type==='drone'?UI.selTwr.getRange()+2:UI.selTwr.getRange();this.drawRange(ctx,UI.selTwr.cx,UI.selTwr.cy,_rng,UI.selTwr.color);}
     // 4. 게임 오브젝트 — 레이어 순서: 타워기본 → 광물 → 발사체 → 타워오버레이(빔/궤도) → 이펙트 → 파티클 → 팝업
     for(const t of GS.towers)t.draw(ctx,gt);
     for(const o of GS.ores)o.draw(ctx,gt);
@@ -1232,42 +1232,47 @@ class Tower{
   _dScan(ctx,r,t){
     const col=this.color,f=this._firingT>0;
     this._base(ctx,r,col,'circle');
-    // 3 concentric radar range rings
-    for(let i=1;i<=3;i++){
-      ctx.strokeStyle=col+(i===3?'50':'28');ctx.lineWidth=i===3?1:.5;
-      ctx.beginPath();ctx.arc(0,0,r*i*.25,0,Math.PI*2);ctx.stroke();
+    // outer bezel ring
+    ctx.strokeStyle=col+'70';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(0,0,r*.84,0,Math.PI*2);ctx.stroke();
+    // bezel tick marks — major at 90°, minor at 30°
+    for(let i=0;i<12;i++){
+      const a=i*Math.PI/6,major=i%3===0;
+      const r1=r*.84,r2=r*(major?.73:.79);
+      ctx.strokeStyle=col+(major?'99':'44');ctx.lineWidth=major?1.2:.7;
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r1,Math.sin(a)*r1);ctx.lineTo(Math.cos(a)*r2,Math.sin(a)*r2);ctx.stroke();
     }
-    // crosshair lines
-    ctx.strokeStyle=col+'22';ctx.lineWidth=.6;
-    ctx.beginPath();ctx.moveTo(-r*.76,0);ctx.lineTo(r*.76,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-r*.76);ctx.lineTo(0,r*.76);ctx.stroke();
-    // phosphor sweep trail behind arm
+    // 3 concentric range rings (circles only, no lines)
+    for(let i=1;i<=3;i++){
+      ctx.strokeStyle=col+(i===3?'55':i===2?'30':'1a');ctx.lineWidth=i===3?1:.5;
+      ctx.beginPath();ctx.arc(0,0,r*.28*i,0,Math.PI*2);ctx.stroke();
+    }
+    // phosphor trail (wide, vivid)
     const sweepA=t*1.2;
-    const trailArc=Math.PI*.85;
-    const nSteps=20;
-    for(let i=0;i<nSteps;i++){
-      const frac=i/nSteps;
-      const a0=sweepA-trailArc+(frac*trailArc);
-      const a1=sweepA-trailArc+((i+1)/nSteps*trailArc);
-      ctx.globalAlpha=frac*(f?.40:.22);
+    const trailArc=Math.PI*.95;
+    for(let i=0;i<30;i++){
+      const frac=i/30;
+      const a0=sweepA-trailArc+frac*trailArc;
+      const a1=sweepA-trailArc+(i+1)/30*trailArc;
+      ctx.globalAlpha=frac*(f?.58:.32);
       ctx.fillStyle=col;
-      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.72,a0,a1);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.76,a0,a1);ctx.closePath();ctx.fill();
     }
     ctx.globalAlpha=1;
-    // rotating sweep arm
+    // sweep arm
     ctx.save();ctx.rotate(sweepA);
-    ctx.strokeStyle=f?col:col+'cc';ctx.lineWidth=f?2:1.4;ctx.lineCap='round';
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:7;
-    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-r*.72);ctx.stroke();
-    ctx.fillStyle=f?'#fff':col;
-    ctx.beginPath();ctx.arc(0,-r*.72,r*.06,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=f?'#eefff8':col+'ee';ctx.lineWidth=f?2.2:1.6;ctx.lineCap='round';
+    ctx.shadowColor=col;ctx.shadowBlur=f?24:12;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-r*.76);ctx.stroke();
+    ctx.fillStyle=f?'#fff':col;ctx.shadowBlur=f?18:8;
+    ctx.beginPath();ctx.arc(0,-r*.76,r*.055,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;ctx.restore();
     // central hub
-    ctx.shadowColor=col;ctx.shadowBlur=f?18:8;
-    ctx.fillStyle='#181818';ctx.strokeStyle=col;ctx.lineWidth=1.4;
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:10;
+    ctx.fillStyle='#091510';ctx.strokeStyle=col;ctx.lineWidth=1.4;
     ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();ctx.stroke();
     const cg=ctx.createRadialGradient(0,0,0,0,0,r*.16);
-    cg.addColorStop(0,'#fff');cg.addColorStop(.5,col);cg.addColorStop(1,col+'22');
+    cg.addColorStop(0,'#fff');cg.addColorStop(.38,col);cg.addColorStop(1,col+'00');
     ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
   }
