@@ -269,16 +269,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:30,  spd:0.7,  range:2.4, upgMult:5.0, desc:'느린 공속이지만 강력한 공정력으로 가장 앞선 원석을 집중 처리한다.'},
-  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:18,  spd:1.8,  range:3.2, upgMult:3.5, desc:'균형 잡힌 공속과 공정력으로 가장 앞선 원석을 안정적으로 처리한다.'},
-  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.2, upgMult:3.0, desc:'두 구체가 궤도를 돌며 원석에 접촉해 50% 감속시킨다. 접촉 후 1초간 재접촉 불가.'},
-  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:180, spd:0.25, range:5.5, upgMult:2.5, desc:'느린 공속이지만 폭발적인 공정력으로 HP가 가장 높은 원석을 집중 타격한다.'},
-  magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:38,  spd:0,    range:5.5, upgMult:1.8, desc:'범위 내 가장 뒤처진 원석에 집중 레이저를 지속 발사한다.'},
-  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:6,   spd:0.7,  range:2.4, upgMult:2.5, desc:'전격을 발사해 원석을 처리하고 발사마다 포트를 추가 획득한다.'},
-  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:22,  spd:1.6,  range:2.6, upgMult:1.8, desc:'주기적으로 범위 내 모든 원석을 동시에 광역 처리한다.'},
-  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:50,  spd:1.0,  range:3.2, upgMult:1.5, desc:'3개 원석에 연쇄 번개를 발사하고 3초간 지속 피해를 입힌다.'},
-  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:80,  spd:1.5,  range:2.4, upgMult:1.3, desc:'드론이 넓은 범위를 선회하며 적당한 공속과 공정력으로 원석에 레이저를 발사한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:28,  spd:3.75, range:5.5, upgMult:1.0, desc:'최고 공속으로 직선상의 원석을 최대 8개 관통 처리한다.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:30,  spd:0.7,  range:2.4, upgMult:5.0, desc:'산업용 다관절 로봇암. 컨베이어 선두 원석에 정밀 공정을 수행한다. 처리 주기는 길지만 단발 공정 출력이 최고 수준이다.'},
+  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:18,  spd:1.8,  range:3.2, upgMult:3.5, desc:'쌍열 연속 공정포. 라인 선두 원석을 빠른 주기로 연속 타격한다. 안정적인 처리 속도로 초반 공정 라인을 지탱한다.'},
+  twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.2, upgMult:3.0, desc:'두 제어 구체가 원석과 물리 접촉해 이송 속도를 50% 감속시킨다. 접촉 후 1초간 동일 원석에 재접촉 불가.'},
+  scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:180, spd:0.25, range:5.5, upgMult:2.5, desc:'라인 전역을 스캔해 밀도가 가장 높은 원석을 선택 정밀 타격한다. 처리 간격이 길지만 단발 공정량이 막대하다.'},
+  magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:38,  spd:0,    range:5.5, upgMult:1.8, desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사해 집중 분해한다. 후미 누락 없이 철저히 제거해 공장 유출을 방지한다.'},
+  refinery:    {name:'포트 허브',     price:1150, color:'#FFD700',type:'refinery', dmg:6,   spd:0.7,  range:2.4, upgMult:2.5, desc:'전자기 펄스로 원석을 처리하는 동시에 공정 부산물을 회수한다. 처리마다 추가 포트를 획득하는 수익형 공정 설비.'},
+  laserGrid:   {name:'레이저 그리드', price:1700, color:'#F44336',type:'aoe',      dmg:22,  spd:1.6,  range:2.6, upgMult:1.8, desc:'구역 내 격자 레이저망을 전개해 모든 원석을 동시 처리한다. 원석이 밀집할수록 처리 효율이 극대화된다.'},
+  chainBolt:   {name:'체인 볼트',     price:2500, color:'#03A9F4',type:'chain',    dmg:50,  spd:1.0,  range:3.2, upgMult:1.5, desc:'연쇄 방전으로 원석 3개를 순차 타격하고 3초간 지속 분해 반응을 유발한다. 다수 원석이 밀집한 구간에서 효과적이다.'},
+  drone:       {name:'레이스 드론',   price:3400, color:'#00E5CC',type:'drone',    dmg:80,  spd:1.5,  range:2.4, upgMult:1.3, desc:'무인 공정 드론이 광역 구역을 선회하며 원석을 탐지해 정밀 레이저로 실시간 처리한다. 고정 설비의 사각 구역을 커버한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4500, color:'#EEEEEE',type:'pierce',   dmg:28,  spd:3.75, range:5.5, upgMult:1.0, desc:'극고속 플라즈마 빔을 연속 발사해 일직선상의 원석을 최대 8개까지 관통 처리한다. 라인 밀집 시 처리 효율이 폭증한다.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.5,cm:.9},{mult:2.2,cm:1.8},{mult:3.2,cm:2.8}];
@@ -1272,66 +1272,51 @@ class Tower{
   }
   _dDrone(ctx,r,t){
     const col=this.color,f=this._firingT>0;
-    // hexagonal landing pad
-    ctx.beginPath();
-    for(let i=0;i<6;i++){const a=i*Math.PI/3+Math.PI/6;if(i===0)ctx.moveTo(Math.cos(a)*r*.88,Math.sin(a)*r*.88);else ctx.lineTo(Math.cos(a)*r*.88,Math.sin(a)*r*.88);}
-    ctx.closePath();ctx.fillStyle='#061412';ctx.fill();
-    ctx.strokeStyle=f?col+'77':'#1a3028';ctx.lineWidth=1.8;ctx.stroke();
-    // inner hex frame
-    ctx.strokeStyle=col+(f?'2a':'14');ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let i=0;i<6;i++){const a=i*Math.PI/3+Math.PI/6;if(i===0)ctx.moveTo(Math.cos(a)*r*.64,Math.sin(a)*r*.64);else ctx.lineTo(Math.cos(a)*r*.64,Math.sin(a)*r*.64);}
-    ctx.closePath();ctx.stroke();
-    // 6 pad track lines (hub-to-edge)
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3+Math.PI/6;
-      ctx.strokeStyle=col+(f?'33':'16');ctx.lineWidth=.9;
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.26,Math.sin(a)*r*.26);ctx.lineTo(Math.cos(a)*r*.68,Math.sin(a)*r*.68);ctx.stroke();
-    }
-    // 3 launch cradle assemblies (every 120°, pointing up/±120°)
-    for(let i=0;i<3;i++){
-      const a=i*Math.PI*2/3-Math.PI/2;
-      const ox=Math.cos(a)*r*.5,oy=Math.sin(a)*r*.5;
-      // parallel rail pair
-      for(const s of[-1,1]){
-        const perp=a+Math.PI/2;
-        ctx.strokeStyle=f?col+'88':col+'44';ctx.lineWidth=1.4;
-        ctx.beginPath();
-        ctx.moveTo(ox+Math.cos(perp)*s*r*.07,oy+Math.sin(perp)*s*r*.07);
-        ctx.lineTo(ox+Math.cos(a)*r*.3+Math.cos(perp)*s*r*.07,oy+Math.sin(a)*r*.3+Math.sin(perp)*s*r*.07);
-        ctx.stroke();
-      }
-      // launch beacon at cradle end
-      const bx=Math.cos(a)*r*.76,by=Math.sin(a)*r*.76;
-      ctx.fillStyle='#082018';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.2;
-      ctx.shadowColor=col;ctx.shadowBlur=f?14:4;
-      ctx.beginPath();ctx.arc(bx,by,r*.1,0,Math.PI*2);ctx.fill();ctx.stroke();
-      if(f){ctx.fillStyle=col;ctx.beginPath();ctx.arc(bx,by,r*.055,0,Math.PI*2);ctx.fill();}
+    const hw=r*.82;
+    // square armored dispatch platform
+    ctx.fillStyle='#061412';ctx.strokeStyle=f?col+'77':'#1a3028';ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.rect(-hw,-hw,hw*2,hw*2);ctx.fill();ctx.stroke();
+    // inner square frame
+    ctx.strokeStyle=col+(f?'28':'12');ctx.lineWidth=1;
+    ctx.beginPath();ctx.rect(-hw*.76,-hw*.76,hw*1.52,hw*1.52);ctx.stroke();
+    // diagonal X crossbeams
+    ctx.strokeStyle=col+(f?'33':'16');ctx.lineWidth=1.1;
+    ctx.beginPath();ctx.moveTo(-hw*.7,-hw*.7);ctx.lineTo(hw*.7,hw*.7);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(hw*.7,-hw*.7);ctx.lineTo(-hw*.7,hw*.7);ctx.stroke();
+    // 4 corner drone launch pillars
+    for(const[sx,sy]of[[-1,-1],[1,-1],[-1,1],[1,1]]){
+      const px=sx*hw*.64,py=sy*hw*.64;
+      ctx.fillStyle='#0a1e1a';ctx.strokeStyle=f?col+'77':col+'33';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.rect(px-r*.13,py-r*.13,r*.26,r*.26);ctx.fill();ctx.stroke();
+      // launch indicator (lit when active)
+      ctx.fillStyle=f?col+'cc':col+'44';ctx.shadowColor=col;ctx.shadowBlur=f?14:4;
+      ctx.beginPath();ctx.rect(px-r*.06,py-r*.06,r*.12,r*.12);ctx.fill();
       ctx.shadowBlur=0;
     }
-    // central deployment ring (slowly rotating)
-    ctx.save();ctx.rotate(t*.6);
-    ctx.strokeStyle=f?col+'99':col+'33';ctx.lineWidth=1.4;ctx.setLineDash([r*.2,r*.1]);
-    ctx.beginPath();ctx.arc(0,0,r*.34,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // deployment platform disk
-    ctx.fillStyle='#091c18';ctx.strokeStyle=f?col+'88':'#1a3028';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // 3 chevron direction markers (between cradles)
-    for(let i=0;i<3;i++){
-      const a=i*Math.PI*2/3;
-      const mx=Math.cos(a)*r*.53,my=Math.sin(a)*r*.53;
-      ctx.save();ctx.translate(mx,my);ctx.rotate(a+Math.PI/2);
-      ctx.strokeStyle=col+(f?'55':'22');ctx.lineWidth=.9;ctx.lineCap='round';
-      for(const s of[0,r*.1]){
-        ctx.beginPath();ctx.moveTo(-r*.09,s-r*.06);ctx.lineTo(0,s+r*.02);ctx.lineTo(r*.09,s-r*.06);ctx.stroke();
-      }
-      ctx.lineCap='butt';ctx.restore();
+    // axis tick marks at edge midpoints
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2;
+      ctx.strokeStyle=col+(f?'44':'1c');ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*hw*.76,Math.sin(a)*hw*.76);ctx.lineTo(Math.cos(a)*hw*.88,Math.sin(a)*hw*.88);ctx.stroke();
     }
-    // core launch glow
-    ctx.shadowColor=col;ctx.shadowBlur=f?28:10;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.18);
+    // central control console (square)
+    ctx.fillStyle='#091c18';ctx.strokeStyle=f?col+'88':'#1a3028';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.rect(-r*.26,-r*.26,r*.52,r*.52);ctx.fill();ctx.stroke();
+    ctx.strokeStyle=col+(f?'44':'1a');ctx.lineWidth=.9;
+    ctx.beginPath();ctx.rect(-r*.15,-r*.15,r*.3,r*.3);ctx.stroke();
+    // slowly rotating dispatch pointer (4-way cross)
+    ctx.save();ctx.rotate(t*.5);
+    ctx.strokeStyle=f?col+'88':col+'2a';ctx.lineWidth=1.2;
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2+Math.PI/4;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r*.2,Math.sin(a)*r*.2);ctx.stroke();
+    }
+    ctx.restore();
+    // core glow
+    ctx.shadowColor=col;ctx.shadowBlur=f?26:9;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.16);
     cg.addColorStop(0,'#fff');cg.addColorStop(.35,col);cg.addColorStop(.7,col+'44');cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
   }
   _drawDroneOrbit(ctx){
@@ -1343,63 +1328,57 @@ class Tower{
     ctx.setLineDash([]);
     const drX=this.cx+Math.cos(da)*dr,drY=this.cy+Math.sin(da)*dr;
     ctx.save();ctx.translate(drX,drY);ctx.rotate(da+Math.PI);ctx.scale(sc,sc);
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:5;
-    // === ANGULAR BLOCK DRONE (nose=-y) ===
-    // rear body platform
+    ctx.shadowColor=col;ctx.shadowBlur=f?18:6;
+    // === STEALTH DELTA DRONE (nose=-y) ===
+    // central fuselage spine
     ctx.fillStyle='#071412';ctx.strokeStyle=f?col:col+'77';ctx.lineWidth=1.3;
-    ctx.beginPath();ctx.rect(-7,-1,14,14);ctx.fill();ctx.stroke();
-    // forward fuselage
-    ctx.fillStyle='#091a16';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.rect(-4,-14,8,14);ctx.fill();ctx.stroke();
-    // left wing
-    ctx.fillStyle='#081612';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.1;
-    ctx.beginPath();ctx.rect(-17,-4,11,8);ctx.fill();ctx.stroke();
-    // right wing
-    ctx.beginPath();ctx.rect(6,-4,11,8);ctx.fill();ctx.stroke();
-    // panel seam lines
-    ctx.strokeStyle=col+(f?'44':'1c');ctx.lineWidth=.7;
-    ctx.beginPath();ctx.moveTo(-4,-1);ctx.lineTo(-4,13);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(4,-1);ctx.lineTo(4,13);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(-6,0);ctx.lineTo(6,0);ctx.stroke();
-    // left nacelle (tall block)
-    ctx.fillStyle='#0c2018';ctx.strokeStyle=col+(f?'aa':'55');ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.rect(-20,-6,5,12);ctx.fill();ctx.stroke();
-    // right nacelle
-    ctx.beginPath();ctx.rect(15,-6,5,12);ctx.fill();ctx.stroke();
-    // nacelle engine glow
-    for(const nx of [-19.5,15.5]){
-      ctx.fillStyle=f?col+'aa':'#172e24';ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-      ctx.beginPath();ctx.rect(nx,2,4,3);ctx.fill();ctx.shadowBlur=0;
-    }
-    // nose sensor block
-    ctx.fillStyle='#0d2820';ctx.strokeStyle=f?col:col+'88';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.rect(-3,-16,6,4);ctx.fill();ctx.stroke();
-    ctx.fillStyle=f?'#fff':col;ctx.shadowColor=col;ctx.shadowBlur=f?14:5;
-    ctx.beginPath();ctx.rect(-1.3,-15.5,2.6,2.5);ctx.fill();ctx.shadowBlur=0;
-    // twin exhausts (rear, square)
-    for(const ex of [-3,3]){
-      ctx.fillStyle='#0c1e18';ctx.strokeStyle=col+(f?'99':'44');ctx.lineWidth=1;
-      ctx.beginPath();ctx.rect(ex-2,13,4,3);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-18);ctx.lineTo(3.5,-5);ctx.lineTo(3.5,12);ctx.lineTo(-3.5,12);ctx.lineTo(-3.5,-5);ctx.closePath();ctx.fill();ctx.stroke();
+    // left delta wing
+    ctx.fillStyle='#081614';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.1;
+    ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(-22,5);ctx.lineTo(-21,10);ctx.lineTo(-5,10);ctx.lineTo(-3.5,-3);ctx.closePath();ctx.fill();ctx.stroke();
+    // right delta wing
+    ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(22,5);ctx.lineTo(21,10);ctx.lineTo(5,10);ctx.lineTo(3.5,-3);ctx.closePath();ctx.fill();ctx.stroke();
+    // leading edge highlight lines
+    ctx.strokeStyle=col+(f?'77':'2a');ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,-15);ctx.lineTo(-22,5);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-15);ctx.lineTo(22,5);ctx.stroke();
+    // wing panel detail lines
+    ctx.strokeStyle=col+(f?'3a':'14');ctx.lineWidth=.7;
+    ctx.beginPath();ctx.moveTo(-1,-12);ctx.lineTo(-14,4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(1,-12);ctx.lineTo(14,4);ctx.stroke();
+    // twin engine pods at rear
+    for(const ex of[-5.5,5.5]){
+      ctx.fillStyle='#0c2018';ctx.strokeStyle=col+(f?'aa':'44');ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.rect(ex-3,9,6,5);ctx.fill();ctx.stroke();
+      ctx.fillStyle=f?col+'aa':'#172e24';ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
+      ctx.beginPath();ctx.rect(ex-2,11,4,2.5);ctx.fill();ctx.shadowBlur=0;
       if(f){
-        ctx.globalAlpha=.85;ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=8;
-        ctx.beginPath();ctx.rect(ex-1.2,13.5,2.4,2);ctx.fill();
-        const pg=ctx.createLinearGradient(ex,16,ex,21);
-        pg.addColorStop(0,col+'bb');pg.addColorStop(1,col+'00');
-        ctx.fillStyle=pg;ctx.shadowBlur=0;ctx.globalAlpha=.5;
-        ctx.beginPath();ctx.rect(ex-1.5,16,3,5);ctx.fill();
+        const pg=ctx.createLinearGradient(0,14,0,21);
+        pg.addColorStop(0,col+'cc');pg.addColorStop(1,col+'00');
+        ctx.fillStyle=pg;ctx.globalAlpha=.55;
+        ctx.beginPath();ctx.rect(ex-2,14,4,7);ctx.fill();
         ctx.globalAlpha=1;
       }
     }
-    // spinning energy ring
-    ctx.save();ctx.rotate(this._droneAngle*4);
-    ctx.strokeStyle=f?col+'bb':col+'2a';ctx.lineWidth=.9;ctx.setLineDash([3,4]);
-    ctx.beginPath();ctx.arc(0,4,5,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
-    ctx.restore();
-    // core glow
+    // nose targeting aperture
+    ctx.fillStyle='#0d2820';ctx.strokeStyle=f?col:col+'88';ctx.lineWidth=1.1;
+    ctx.beginPath();ctx.moveTo(-2,-18);ctx.lineTo(0,-21);ctx.lineTo(2,-18);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle=f?'#fff':col;ctx.shadowColor=col;ctx.shadowBlur=f?16:6;
+    ctx.beginPath();ctx.arc(0,-18.5,1.4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    // targeting laser beam
+    if(f){
+      ctx.strokeStyle=col+'cc';ctx.lineWidth=1;ctx.shadowColor=col;ctx.shadowBlur=14;
+      ctx.beginPath();ctx.moveTo(0,-21);ctx.lineTo(0,-28);ctx.stroke();
+      ctx.shadowBlur=0;
+    }
+    // cockpit visor
+    ctx.fillStyle=f?col+'66':col+'22';ctx.strokeStyle=col+(f?'77':'2a');ctx.lineWidth=.8;
+    ctx.beginPath();ctx.rect(-2.2,-12,4.4,7);ctx.fill();ctx.stroke();
+    // core energy glow
     ctx.shadowColor=col;ctx.shadowBlur=f?22:8;
-    const cg=ctx.createRadialGradient(0,4,0,0,4,4.5);
+    const cg=ctx.createRadialGradient(0,2,0,0,2,4.5);
     cg.addColorStop(0,'#fff');cg.addColorStop(.3,col);cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,4,4.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,2,4.5,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;ctx.restore();ctx.restore();
   }
   _dScan(ctx,r,t){
