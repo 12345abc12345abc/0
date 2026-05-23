@@ -331,6 +331,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   cursor:pointer;
 }
 #unlk-btn:active{transform:scale(.96);}
+#unlk-gauge{width:100%;height:3px;background:#1a2a3a;border-radius:2px;margin-top:12px;}
+#unlk-gauge-fill{height:100%;width:100%;background:#00E5FF;border-radius:2px;transition:none;}
 
 /* ══ 오버레이 ══ */
 #sovly,#govly{
