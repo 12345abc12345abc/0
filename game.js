@@ -270,7 +270,7 @@ const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','re
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
   pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:20.0, desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.'},
-  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:100, spd:0.5,  range:3.0, upgMult:7.5,  desc:'포트 코어 에너지를 집중 발사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 발사 주기는 길지만 단발 공정력이 강해 고밀도 원석 처리에 최적화된 설비.'},
+  coreShooter: {name:'코어 슈터',     price:260,  color:'#E53935',type:'single',   dmg:25,  spd:2.0,  range:3.0, upgMult:7.5,  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.'},
   twinHub:     {name:'트윈 컨트롤러', price:380,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  desc:'궤도 제어 구체 2기가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.'},
   scanner:     {name:'비전 스캐너',   price:560,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.'},
   magnetCannon:{name:'포인트 버스터', price:850,  color:'#FF6D00',type:'focus',    dmg:32,  spd:0,    range:5.0, upgMult:2.2,  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.'},
@@ -2015,7 +2015,7 @@ const UI={
     gf.style.background='#ffffff';
     gf.style.width='100%';
     if(this._unlkIv)clearInterval(this._unlkIv);
-    let elapsed=0;const total=30;
+    let elapsed=0;const total=20;
     this._unlkIv=setInterval(()=>{
       elapsed+=0.1;const pct=Math.max(0,(1-elapsed/total)*100);
       gf.style.width=pct+'%';
