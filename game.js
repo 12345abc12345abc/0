@@ -1039,68 +1039,24 @@ class Tower{
   // AOE: 레이저 그리드 — 원형 베이스 + 격자선
   _dAOE(ctx,r,t,f){
     const col=this.color;
-    // square chamfered base (레이저 그리드는 사각형 플랫폼)
-    const sq=r*.86,ch=r*.18;
-    ctx.beginPath();
-    ctx.moveTo(-sq+ch,-sq);ctx.lineTo(sq-ch,-sq);ctx.lineTo(sq,-sq+ch);
-    ctx.lineTo(sq,sq-ch);ctx.lineTo(sq-ch,sq);ctx.lineTo(-sq+ch,sq);
-    ctx.lineTo(-sq,sq-ch);ctx.lineTo(-sq,-sq+ch);ctx.closePath();
-    ctx.fillStyle='#180505';ctx.fill();
-    ctx.strokeStyle=f?col+'99':'#3a1010';ctx.lineWidth=2;ctx.stroke();
-    // inner square ring
-    const sq2=r*.58,ch2=r*.12;
-    ctx.beginPath();
-    ctx.moveTo(-sq2+ch2,-sq2);ctx.lineTo(sq2-ch2,-sq2);ctx.lineTo(sq2,-sq2+ch2);
-    ctx.lineTo(sq2,sq2-ch2);ctx.lineTo(sq2-ch2,sq2);ctx.lineTo(-sq2+ch2,sq2);
-    ctx.lineTo(-sq2,sq2-ch2);ctx.lineTo(-sq2,-sq2+ch2);ctx.closePath();
-    ctx.strokeStyle=f?col+'33':col+'12';ctx.lineWidth=1;ctx.stroke();
-    // 4 corner laser emitter nodes
-    for(const[sx,sy]of[[-1,-1],[1,-1],[1,1],[-1,1]]){
-      const nx=sx*(sq-ch*.8),ny=sy*(sq-ch*.8);
-      ctx.fillStyle='#200808';ctx.strokeStyle=f?col+'88':col+'33';ctx.lineWidth=1.3;
-      ctx.shadowColor=col;ctx.shadowBlur=f?16:3;
-      ctx.beginPath();ctx.arc(nx,ny,r*.115,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-      ctx.fillStyle=f?col:'#3a1010';ctx.shadowColor=col;ctx.shadowBlur=f?20:4;
-      ctx.beginPath();ctx.arc(nx,ny,r*.065,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-    }
-    // dual counter-rotating grid overlays (clipped to inner square)
-    ctx.save();
-    ctx.beginPath();ctx.rect(-sq2,-sq2,sq2*2,sq2*2);ctx.clip();
-    const g=r*.68;
-    // grid 1: slow CW
-    ctx.save();ctx.rotate(t*.35);ctx.globalAlpha=f?.75:.32;ctx.strokeStyle=col;ctx.lineWidth=1.1;
-    for(let i=-2;i<=2;i++){
+    // 원형 베이스
+    ctx.beginPath();ctx.arc(0,0,r*.88,0,Math.PI*2);
+    ctx.fillStyle='#181818cc';ctx.fill();
+    ctx.strokeStyle=f?col+'88':'#444';ctx.lineWidth=1.8;ctx.stroke();
+    // 회전하는 격자선
+    ctx.save();ctx.rotate(t*.4);ctx.globalAlpha=f?.88:.42;ctx.strokeStyle=col;ctx.lineWidth=1.3;
+    const g=r*.72;
+    for(let i=-1;i<=1;i++){
       ctx.beginPath();ctx.moveTo(i*r*.26,-g);ctx.lineTo(i*r*.26,g);ctx.stroke();
       ctx.beginPath();ctx.moveTo(-g,i*r*.26);ctx.lineTo(g,i*r*.26);ctx.stroke();
     }
     ctx.globalAlpha=1;ctx.restore();
-    // grid 2: faster CCW (offset 45°)
-    ctx.save();ctx.rotate(-t*.55+Math.PI/4);ctx.globalAlpha=f?.45:.18;ctx.strokeStyle=col;ctx.lineWidth=.7;
-    for(let i=-2;i<=2;i++){
-      ctx.beginPath();ctx.moveTo(i*r*.26,-g);ctx.lineTo(i*r*.26,g);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(-g,i*r*.26);ctx.lineTo(g,i*r*.26);ctx.stroke();
-    }
-    ctx.globalAlpha=1;ctx.restore();
-    ctx.restore();
-    // cross laser beams between corner emitters (when firing)
-    if(f){
-      ctx.shadowColor=col;ctx.shadowBlur=22;ctx.globalAlpha=.55;ctx.strokeStyle=col;ctx.lineWidth=1.5;
-      const en=sq-ch*.8;
-      ctx.beginPath();ctx.moveTo(-en,-en);ctx.lineTo(en,en);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(en,-en);ctx.lineTo(-en,en);ctx.stroke();
-      ctx.globalAlpha=1;ctx.shadowBlur=0;
-    }
-    // outer pulse ring
+    // 외곽 링 펄스
     const pulse=.5+Math.sin(t*3)*.5;
-    ctx.globalAlpha=f?pulse*.65:.15;ctx.strokeStyle=col;ctx.lineWidth=1.8;
-    ctx.beginPath();ctx.arc(0,0,r*.74,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;
-    // central emitter core
-    ctx.shadowColor=col;ctx.shadowBlur=f?30:10;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.24);
-    cg.addColorStop(0,'#fff');cg.addColorStop(.35,col);cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.24,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(0,0,r*.32,0,Math.PI*2);ctx.stroke();
-    ctx.shadowBlur=0;
+    ctx.globalAlpha=f?pulse*.7:.2;ctx.strokeStyle=col;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(0,0,r*.68,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=1;
+    this._core(ctx,r,col);
   }
   // 포인트 버스터: 중입자 가속 저격포
   _dSlow(ctx,r,t,f){
@@ -1298,77 +1254,25 @@ class Tower{
   // 체인 볼트: 코일 전극탑, 기본방향 위(↑)
   _dChain(ctx,r,t,f){
     const col=this.color;
-    // hexagonal armored base
-    ctx.beginPath();
-    for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;if(i===0)ctx.moveTo(Math.cos(a)*r*.9,Math.sin(a)*r*.9);else ctx.lineTo(Math.cos(a)*r*.9,Math.sin(a)*r*.9);}
-    ctx.closePath();ctx.fillStyle='#000d1a';ctx.fill();
-    ctx.strokeStyle=f?col+'88':'#1a3040';ctx.lineWidth=2.2;ctx.stroke();
-    // alternating hex panel inlays
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3-Math.PI/6,a2=a+Math.PI/3;
-      ctx.fillStyle=f&&i%2===0?col+'08':'#060e18';
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r*.88,Math.sin(a)*r*.88);ctx.lineTo(Math.cos(a2)*r*.88,Math.sin(a2)*r*.88);ctx.closePath();ctx.fill();
-    }
-    // inner hex ring (rotated 30°)
-    ctx.save();ctx.rotate(Math.PI/6);ctx.strokeStyle=f?col+'33':col+'14';ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let i=0;i<6;i++){const a=i*Math.PI/3+Math.PI/6;if(i===0)ctx.moveTo(Math.cos(a)*r*.58,Math.sin(a)*r*.58);else ctx.lineTo(Math.cos(a)*r*.58,Math.sin(a)*r*.58);}
-    ctx.closePath();ctx.stroke();ctx.restore();
-    // outer rotating dashed ring
-    ctx.save();ctx.rotate(t*.7);
-    ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.2;ctx.setLineDash([r*.2,r*.1]);
-    ctx.beginPath();ctx.arc(0,0,r*.8,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // 3 electrode arms (120° apart, top-facing)
+    this._base(ctx,r,col,'hex');
+    ctx.strokeStyle='#444';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.72,0,Math.PI*2);ctx.stroke();
+    // 3개 전극 — 모두 균등하게 활성화
     const baseAngle=-Math.PI/2;
     for(let i=0;i<3;i++){
-      const a=baseAngle+i*(Math.PI*2/3),er=r*.62;
+      const a=baseAngle+i*(Math.PI*2/3),er=r*.58;
       const ex=Math.cos(a)*er,ey=Math.sin(a)*er;
-      // arm channel housing
-      const aw=r*.075;
-      const px=-Math.sin(a)*aw,py=Math.cos(a)*aw;
-      ctx.fillStyle='#060d18';ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=1.2;
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.22+px,Math.sin(a)*r*.22+py);ctx.lineTo(ex+px,ey+py);ctx.lineTo(ex-px,ey-py);ctx.lineTo(Math.cos(a)*r*.22-px,Math.sin(a)*r*.22-py);ctx.closePath();ctx.fill();ctx.stroke();
-      // coil rings along arm (3)
-      for(let c=0;c<3;c++){
-        const cf=.35+c*.22;
-        const cx2=Math.cos(a)*er*cf,cy2=Math.sin(a)*er*cf;
-        ctx.strokeStyle=f?col+(c===1?'88':'44'):col+(c===1?'33':'18');ctx.lineWidth=f&&c===1?1.8:1.1;
-        ctx.shadowColor=col;ctx.shadowBlur=f&&c===1?12:0;
-        ctx.beginPath();ctx.moveTo(cx2+px*.9,cy2+py*.9);ctx.lineTo(cx2-px*.9,cy2-py*.9);ctx.stroke();
-        ctx.shadowBlur=0;
-      }
-      // electrode tip housing
-      ctx.fillStyle='#080f1e';ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=1.4;
-      ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-      ctx.beginPath();ctx.arc(ex,ey,r*.115,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-      // tip inner glow node
-      ctx.fillStyle=f?col:'#0f1e30';ctx.shadowColor=col;ctx.shadowBlur=f?22:5;
-      ctx.beginPath();ctx.arc(ex,ey,r*.068,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-      if(f){
-        ctx.globalAlpha=.55;ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=28;
-        ctx.beginPath();ctx.arc(ex,ey,r*.16,0,Math.PI*2);ctx.fill();
-        ctx.globalAlpha=1;ctx.shadowBlur=0;
-      }
+      // 전극 암 — 발사 시 모두 컬러
+      ctx.strokeStyle=f?col:'#555';ctx.lineWidth=r*.12;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.22,Math.sin(a)*r*.22);ctx.lineTo(ex,ey);ctx.stroke();
+      // 전극 끝 노드
+      ctx.fillStyle=f?col:'#444';ctx.strokeStyle='#777';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(ex,ey,r*.1,0,Math.PI*2);ctx.fill();ctx.stroke();
+      // 발사 시 모든 전극 빛남
+      if(f){ctx.fillStyle=col+'cc';ctx.beginPath();ctx.arc(ex,ey,r*.14,0,Math.PI*2);ctx.fill();}
     }
-    // arc between tips when firing
-    if(f){
-      for(let i=0;i<3;i++){
-        const a1=baseAngle+i*(Math.PI*2/3),a2=baseAngle+(i+1)*(Math.PI*2/3);
-        const er=r*.62;
-        ctx.strokeStyle=col+'44';ctx.lineWidth=1;ctx.shadowColor=col;ctx.shadowBlur=14;
-        ctx.beginPath();
-        const mx=Math.cos((a1+a2)/2)*er*.55,my=Math.sin((a1+a2)/2)*er*.55;
-        ctx.moveTo(Math.cos(a1)*er,Math.sin(a1)*er);ctx.quadraticCurveTo(mx,my,Math.cos(a2)*er,Math.sin(a2)*er);ctx.stroke();
-        ctx.shadowBlur=0;
-      }
-    }
-    // central core
-    ctx.shadowColor=col;ctx.shadowBlur=f?28:10;
-    const cg2=ctx.createRadialGradient(0,0,0,0,0,r*.24);
-    cg2.addColorStop(0,'#fff');cg2.addColorStop(.32,col);cg2.addColorStop(.7,col+'44');cg2.addColorStop(1,col+'00');
-    ctx.fillStyle=cg2;ctx.beginPath();ctx.arc(0,0,r*.24,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=f?col+'cc':col+'55';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,r*.31,0,Math.PI*2);ctx.stroke();
-    ctx.shadowBlur=0;
+    const cg2=ctx.createRadialGradient(0,0,r*.04,0,0,r*.22);
+    cg2.addColorStop(0,'#fff');cg2.addColorStop(.5,col);cg2.addColorStop(1,col+'44');
+    ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.fillStyle=cg2;ctx.fill();
   }
   _dSlowField(ctx,r,t){
     const col=this.color;
