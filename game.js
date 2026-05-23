@@ -936,32 +936,36 @@ class Tower{
   // 픽셀 로봇암: 단관절 산업용 로봇팔 (탑뷰, 정면 단일암, 그리퍼 타격 시 벌림)
   _dPA(ctx,r,t,f){
     const col=this.color;
-    // ── DIAMOND BASE
-    const db=r*.82;
-    const dPath=()=>{ctx.beginPath();ctx.moveTo(0,-db);ctx.lineTo(db,0);ctx.lineTo(0,db);ctx.lineTo(-db,0);ctx.closePath();};
-    dPath();ctx.fillStyle='#141414';ctx.fill();
-    dPath();ctx.strokeStyle='#2b2b2b';ctx.lineWidth=1.5;ctx.stroke();
-    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    dPath();ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=1.4;ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle='#1d1d1d';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(-db*.58,0);ctx.lineTo(db*.58,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-db*.58);ctx.lineTo(0,db*.58);ctx.stroke();
-    // 4 hydraulic pistons at cardinal directions
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2,px=Math.cos(a)*db*.62,py=Math.sin(a)*db*.62;
-      ctx.save();ctx.translate(px,py);ctx.rotate(a);
-      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=col+(f?'33':'10');ctx.lineWidth=0.9;
-      ctx.beginPath();ctx.rect(-r*.038,-r*.118,r*.076,r*.236);ctx.fill();ctx.stroke();
-      ctx.fillStyle='#0f0f0f';ctx.beginPath();ctx.rect(-r*.018,-r*.088,r*.036,r*.176);ctx.fill();
-      ctx.strokeStyle=col+(f?'55':'1a');ctx.lineWidth=0.7;ctx.shadowColor=col;ctx.shadowBlur=f?5:0;
-      ctx.beginPath();ctx.moveTo(0,-r*.072);ctx.lineTo(0,r*.072);ctx.stroke();ctx.shadowBlur=0;
-      ctx.restore();
+    // ── OCTAGONAL MOUNTING PLATE
+    const bp=r*.86,bv=r*.16;
+    const oP=()=>{ctx.beginPath();ctx.moveTo(-bp+bv,-bp);ctx.lineTo(bp-bv,-bp);ctx.lineTo(bp,-bp+bv);ctx.lineTo(bp,bp-bv);ctx.lineTo(bp-bv,bp);ctx.lineTo(-bp+bv,bp);ctx.lineTo(-bp,bp-bv);ctx.lineTo(-bp,-bp+bv);ctx.closePath();};
+    oP();ctx.fillStyle='#141414';ctx.fill();
+    // alternating quadrant panels
+    for(let qx=-1;qx<=1;qx+=2)for(let qy=-1;qy<=1;qy+=2){
+      ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(qx*bp*1.1,0);ctx.lineTo(qx*bp*1.1,qy*bp*1.1);ctx.lineTo(0,qy*bp*1.1);ctx.closePath();ctx.clip();
+      oP();ctx.fillStyle=(qx*qy>0)?'#181818':'#131313';ctx.fill();ctx.restore();
+    }
+    oP();ctx.strokeStyle='#2c2c2c';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
+    oP();ctx.strokeStyle=col+(f?'55':'16');ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;
+    // panel dividers
+    ctx.strokeStyle='#1f1f1f';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.moveTo(-bp*.72,0);ctx.lineTo(bp*.72,0);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-bp*.72);ctx.lineTo(0,bp*.72);ctx.stroke();
+    // corner bolts (4 corners)
+    for(let cx=-1;cx<=1;cx+=2)for(let cy=-1;cy<=1;cy+=2){
+      const bx=cx*(bp-bv*.7),by=cy*(bp-bv*.7);
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.arc(bx,by,r*.05,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#333';ctx.lineWidth=0.65;
+      ctx.beginPath();ctx.moveTo(bx-r*.026,by);ctx.lineTo(bx+r*.026,by);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(bx,by-r*.026);ctx.lineTo(bx,by+r*.026);ctx.stroke();
     }
     // ── ARM + GRIPPER
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    const j0y=-r*.06,j1y=-r*.52;
-    const aw=r*.12;
-    // ARM BODY (tapered)
+    const j0y=-r*.06,j1y=-r*.50;
+    const aw=r*.135;
+    // ARM BODY
     ctx.fillStyle='#1b1b1b';ctx.strokeStyle=f?col+'3a':col+'16';ctx.lineWidth=1.3;
     ctx.beginPath();ctx.moveTo(-aw,j0y);ctx.lineTo(aw,j0y);ctx.lineTo(aw-r*.02,j1y);ctx.lineTo(-aw+r*.02,j1y);ctx.closePath();ctx.fill();ctx.stroke();
     ctx.strokeStyle=col+(f?'66':'1e');ctx.lineWidth=1.1;ctx.shadowColor=col;ctx.shadowBlur=f?7:0;
@@ -977,7 +981,7 @@ class Tower{
     ctx.shadowColor=col;ctx.shadowBlur=f?22:6;ctx.fillStyle=f?'#fff':col;ctx.beginPath();ctx.arc(0,0,r*.054,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.restore();
     // WRIST PLATE
     ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'55':col+'20';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.rect(-r*.27,j1y-r*.03,r*.54,r*.06);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.rect(-r*.28,j1y-r*.03,r*.56,r*.06);ctx.fill();ctx.stroke();
     // WRIST JOINT
     ctx.save();ctx.translate(0,j1y);
     ctx.strokeStyle=col+(f?'38':'14');ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r*.185,0,Math.PI*2);ctx.stroke();
@@ -985,26 +989,23 @@ class Tower{
     ctx.strokeStyle=col+(f?'66':'22');ctx.lineWidth=1;
     for(let i=0;i<3;i++){const a=t*(-1.1)+i*Math.PI*2/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.058,Math.sin(a)*r*.058);ctx.lineTo(Math.cos(a)*r*.1,Math.sin(a)*r*.1);ctx.stroke();}
     ctx.fillStyle=f?col+'99':col+'33';ctx.beginPath();ctx.arc(0,0,r*.04,0,Math.PI*2);ctx.fill();ctx.restore();
-    // ── GRIPPER JAWS (open=idle, closed=gripping when firing)
-    const gX=f?r*.04:r*.14; // half-gap between inner jaw edges
-    const jfw=r*.09,jfl=r*.30,jfh=r*.085; // finger width, length, hook depth
+    // ── GRIPPER JAWS — wide open when firing, closed when idle
+    const gX=f?r*.20:r*.05;
+    const jfw=r*.10,jfl=r*.32,jfh=r*.09;
     for(const sx of[-1,1]){
       const ix=sx*gX,ox=ix+sx*jfw;
-      ctx.shadowColor=col;ctx.shadowBlur=f?18:3;
-      ctx.fillStyle='#191919';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.4;
-      // finger shaft
+      ctx.shadowColor=col;ctx.shadowBlur=f?20:3;
+      ctx.fillStyle='#191919';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.5;
       ctx.beginPath();ctx.moveTo(ix,j1y);ctx.lineTo(ox,j1y);ctx.lineTo(ox,j1y-jfl);ctx.lineTo(ix,j1y-jfl);ctx.closePath();ctx.fill();ctx.stroke();
-      // inward hook at tip
       ctx.beginPath();ctx.moveTo(ix,j1y-jfl*.5);ctx.lineTo(ix-sx*jfh,j1y-jfl*.5);ctx.lineTo(ix-sx*jfh,j1y-jfl);ctx.lineTo(ix,j1y-jfl);ctx.closePath();ctx.fill();ctx.stroke();
       ctx.shadowBlur=0;
-      // grip serrations on inner face
-      ctx.strokeStyle=col+(f?'88':'28');ctx.lineWidth=0.8;ctx.shadowColor=col;ctx.shadowBlur=f?5:0;
+      ctx.strokeStyle=col+(f?'99':'28');ctx.lineWidth=0.9;ctx.shadowColor=col;ctx.shadowBlur=f?6:0;
       for(let s=0;s<3;s++){const sy=j1y-jfl*.55-s*r*.033;ctx.beginPath();ctx.moveTo(ix,sy);ctx.lineTo(ix-sx*jfh*.7,sy);ctx.stroke();}
       ctx.shadowBlur=0;
-      ctx.fillStyle=f?col+'88':col+'22';ctx.shadowColor=col;ctx.shadowBlur=f?7:0;
-      ctx.beginPath();ctx.arc(ix+sx*jfw*.5,j1y-jfl*.28,r*.022,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+      ctx.fillStyle=f?col+'99':col+'22';ctx.shadowColor=col;ctx.shadowBlur=f?8:0;
+      ctx.beginPath();ctx.arc(ix+sx*jfw*.5,j1y-jfl*.28,r*.024,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
     }
-    if(f){const gy=j1y-jfl*.75;const mg=ctx.createRadialGradient(0,gy,0,0,gy,r*.2);mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');ctx.globalAlpha=.65;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,gy,r*.2,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+    if(f){const gy=j1y-jfl*.75;const mg=ctx.createRadialGradient(0,gy,0,0,gy,r*.26);mg.addColorStop(0,'#fff');mg.addColorStop(.22,col);mg.addColorStop(1,col+'00');ctx.globalAlpha=.7;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,gy,r*.26,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
     ctx.restore();
     // CENTER HUB
     ctx.shadowColor=col;ctx.shadowBlur=f?28:9;
