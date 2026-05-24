@@ -172,7 +172,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   color:#fff;letter-spacing:.3px;
   opacity:0;pointer-events:none;
   transition:opacity .18s,transform .18s;
-  box-shadow:0 4px 18px rgba(0,0,0,.55),0 0 14px var(--bc,#ffffff18);
+  box-shadow:0 4px 18px rgba(0,0,0,.55);
 }
 #banner.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
