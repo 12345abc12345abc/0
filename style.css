@@ -464,17 +464,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 /* ── 클리어 화면 ── */
 #clrovly{background:#000;}
 #clr-badge{
-  font-size:9px;font-weight:900;letter-spacing:6px;color:#FFD700;
-  border:1px solid #FFD70055;border-radius:2px;padding:4px 16px;
+  font-size:9px;font-weight:900;letter-spacing:6px;color:#fff;
+  border:1px solid #ffffff33;border-radius:2px;padding:4px 16px;
   margin-bottom:20px;animation:clrIn .5s both;
 }
 #clr-title{
   font-size:52px;font-weight:900;color:#fff;line-height:1;
   text-align:center;margin-bottom:6px;
   animation:clrIn .5s .1s both;
-  text-shadow:0 0 40px #FFD70066;
+  text-shadow:0 0 40px #ffffff44;
 }
-#clr-title span{color:#FFD700;}
+#clr-title span{color:#fff;}
 #clr-sub{
   font-size:11px;font-weight:700;color:#ffffff55;letter-spacing:5px;
   margin-bottom:24px;animation:clrIn .5s .2s both;
@@ -494,12 +494,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   border:1px solid #ffffff0f;font-size:12px;
 }
 .clr-lbl{color:#aaa;font-weight:600;}
-.clr-val{color:#FFD700;font-weight:900;}
+.clr-val{color:#fff;font-weight:900;}
 #clr-btn{
-  width:200px;height:48px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,#FFD700,#FF8C00);
-  color:#000;font-size:14px;font-weight:900;letter-spacing:1px;
-  border-radius:4px;position:relative;overflow:hidden;
+  width:200px;height:48px;cursor:pointer;
+  background:rgba(255,255,255,.08);border:1.5px solid #ffffff44;
+  color:#fff;font-size:14px;font-weight:900;letter-spacing:1px;
+  border-radius:8px;position:relative;overflow:hidden;
   animation:clrIn .5s .45s both;
 }
 #clr-btn::after{

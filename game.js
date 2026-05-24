@@ -515,13 +515,16 @@ const R={
     // 2. 애니메이션 경로 (컨베이어 벨트)
     this._drawPath(ctx,gt);
     // 3. 호버/선택 오버레이
-    if(GS.hovR!==null&&UI.selCard!==null){
-      const r=GS.hovR,c2=GS.hovC;
+    const _hR=UI._pendAction!=null&&UI._pendRow!=null?UI._pendRow:GS.hovR;
+    const _hC=UI._pendAction!=null&&UI._pendCol!=null?UI._pendCol:GS.hovC;
+    if(_hR!==null&&UI.selCard!==null){
+      const r=_hR,c2=_hC;
       if(r>=0&&r<ROWS2&&c2>=0&&c2<COLS){
         const ok=GRID[r][c2]===0&&!towerAt(r,c2);
         const px=MAP_OX+c2*TS,py=MAP_OY+r*TS;
-        ctx.fillStyle=ok?'rgba(255,255,255,.12)':'rgba(239,83,80,.12)';ctx.fillRect(px,py,TS,TS);
-        ctx.strokeStyle=ok?'#ffffff':'#EF5350';ctx.lineWidth=2;ctx.strokeRect(px+1,py+1,TS-2,TS-2);
+        const isPend=UI._pendAction!=null&&UI._pendRow!=null;
+        ctx.fillStyle=ok?`rgba(255,255,255,${isPend?.22:.12})`:'rgba(239,83,80,.12)';ctx.fillRect(px,py,TS,TS);
+        ctx.strokeStyle=ok?'#ffffff':'#EF5350';ctx.lineWidth=isPend?2.5:2;ctx.strokeRect(px+1,py+1,TS-2,TS-2);
         if(ok&&TWR[UI.selCard]){const _d=TWR[UI.selCard];this.drawRange(ctx,this.tx(c2),this.ty(r),_d.range,_d.color);}
       }
     }
@@ -1867,7 +1870,7 @@ class BoltEff{
   }
 }
 class Particle{constructor(x,y,col,i,n){this.x=x;this.y=y;this.col=col;const a=(i/n)*Math.PI*2+Math.random()*.5,sp=48+Math.random()*88;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.life=this.max=.48+Math.random()*.32;this.r=2+Math.random()*3;}update(dt){this.x+=this.vx*dt;this.y+=this.vy*dt;this.vy+=80*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p;ctx.fillStyle=this.col;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}}
-class Popup{constructor(x,y,text,col){this.x=x;this.y=y;this.text=text;this.col=col;this.life=this.max=1.3;this.vy=-40;}update(dt){this.y+=this.vy*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=Math.min(1,this.life/this.max*1.5);ctx.globalAlpha=p;ctx.font='bold 13px sans-serif';ctx.fillStyle=this.col;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(this.text,this.x,this.y);ctx.globalAlpha=1;}}
+class Popup{constructor(x,y,text,col,scale=1){this.x=x;this.y=y;this.text=text;this.col=col;this.life=this.max=1.6;this.vy=-36;this.scale=scale;}update(dt){this.y+=this.vy*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=Math.min(1,this.life/this.max*1.5);ctx.globalAlpha=p;const fs=Math.round(13*this.scale);ctx.font=`900 ${fs}px sans-serif`;ctx.fillStyle=this.col;ctx.textAlign='center';ctx.textBaseline='middle';if(this.scale>1){ctx.shadowColor=this.col;ctx.shadowBlur=8;}ctx.fillText(this.text,this.x,this.y);ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 
 // ═══════════════════════════════════════════════════════
 // 합체 시스템
@@ -2048,6 +2051,7 @@ const UI={
         const cost=TWR[this.selCard].price;
         if(!GS.eggActive&&GS.port<cost){this.showBanner(L('포트가 부족합니다!','Not enough ports!'),'#EF5350');return;}
         const _r=row,_c=col;
+        this._pendRow=_r;this._pendCol=_c;
         this._pendAction=()=>G.place(_r,_c);
         this._showConfirm('place',this.selCard);
       }
@@ -2105,14 +2109,16 @@ const UI={
   sell(){
     const t=this.selTwr;if(!t)return;
     const ref=Math.round((t.basePrice+t.upgCost)*.6);
+    const tcx=t.cx,tcy=t.cy;
     this._pendAction=()=>{
       GS.port+=ref;GS.towers=GS.towers.filter(x=>x!==t);
-      this.desel();this.updHUD();this.showBanner('◈'+ref+' '+L('환급','refunded'),'#FFD700');
+      GS.popups.push(new Popup(tcx,tcy-18,'+◈'+ref.toLocaleString(),'#FFD700',1.4));
+      this.desel();this.updHUD();this.showBanner('◈'+ref.toLocaleString()+' '+L('환급','refunded'),'#FFD700');
     };
     this._showConfirm('sell',t);
   },
 
-  _pendAction:null,
+  _pendAction:null,_pendRow:null,_pendCol:null,
   _showConfirm(type,data){
     document.getElementById('mid-info').classList.remove('show');
     document.getElementById('mid-card').classList.remove('show');
@@ -2136,13 +2142,13 @@ const UI={
   _hideConfirm(){document.getElementById('mid-confirm').classList.remove('show');},
   _confirmAction(){
     if(!this._pendAction)return;
-    this._pendAction();this._pendAction=null;this._hideConfirm();
+    this._pendAction();this._pendAction=null;this._pendRow=null;this._pendCol=null;this._hideConfirm();
     if(this.selCard!==null){this._showCardInfo(this.selCard);}
     else if(this.selTwr){this._showTowerInfo(this.selTwr);}
     else{this._showPromo();}
   },
   _cancelAction(){
-    this._pendAction=null;this._hideConfirm();
+    this._pendAction=null;this._pendRow=null;this._pendCol=null;this._hideConfirm();
     if(this.selCard!==null){this._showCardInfo(this.selCard);}
     else if(this.selTwr){this._showTowerInfo(this.selTwr);}
     else{this._showPromo();}
