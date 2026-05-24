@@ -97,6 +97,11 @@ const SFX={
       this._noise(.04,.28,2400);
       this._osc('sawtooth',880,.02,.14);
       this._osc('square',180,.05,.08);
+    } else if(type==='drone'){
+      // 레이스 드론: 고주파 윙 + 전자 버즈
+      this._osc('sawtooth',1800,.03,.09,300);
+      this._osc('sine',600,.06,.11);
+      this._noise(.04,.10,4500);
     }
   },
 
@@ -740,8 +745,8 @@ class Tower{
           const dir=Math.atan2(bestO.y-drY,bestO.x-drX);
           bestO.takeDmg(this.getDmg(),'single');
           this._eff(new LaserEff(drX,drY,dir,bestD,this.color));
-          this._firingT=.18;
-          this._hitCooldown=1/Math.max(0.1,this.getSpd());
+          this._firingT=.18;this._hitCooldown=1/Math.max(0.1,this.getSpd());
+          SFX.shoot('drone');
         }
       }
       return;
@@ -838,35 +843,33 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 육각형 베이스 + 드럼형 포탑
+  // 코어슈터: 팔각형 베이스 + 드럼형 포탑
   _dCS(ctx,r,t,f){
     const col=this.color;
-    const bR=r*.82,HO=Math.PI/6;
-    // Helper: draw flat-top hexagon path at scale sc
-    const hexPath=(sc)=>{ctx.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3+HO;i===0?ctx.moveTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc):ctx.lineTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc);}ctx.closePath();};
+    const bR=r*.82,HO=Math.PI/8;
+    const octPath=(sc)=>{ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+HO;i===0?ctx.moveTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc):ctx.lineTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc);}ctx.closePath();};
     // BASE outer fill
-    ctx.fillStyle='#161616';hexPath(1);ctx.fill();
-    // 6 face panels (between consecutive vertices and center)
-    for(let i=0;i<6;i++){
-      const a0=i*Math.PI/3+HO,a1=(i+1)*Math.PI/3+HO;
-      const shade=(i===2||i===5)?'#1c1c1c':'#191919';
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a0)*bR*.98,Math.sin(a0)*bR*.98);ctx.lineTo(Math.cos(a1)*bR*.98,Math.sin(a1)*bR*.98);ctx.closePath();
-      ctx.fillStyle=shade;ctx.fill();
+    ctx.fillStyle='#151515';octPath(1);ctx.fill();
+    // 8 face panels
+    for(let i=0;i<8;i++){
+      const a0=i*Math.PI/4+HO,a1=(i+1)*Math.PI/4+HO;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a0)*bR*.97,Math.sin(a0)*bR*.97);ctx.lineTo(Math.cos(a1)*bR*.97,Math.sin(a1)*bR*.97);ctx.closePath();
+      ctx.fillStyle=i%2===0?'#1b1b1b':'#181818';ctx.fill();
       ctx.strokeStyle='#222';ctx.lineWidth=0.7;ctx.stroke();
     }
-    // Middle ring
-    ctx.strokeStyle='#252525';ctx.lineWidth=1.2;hexPath(.62);ctx.stroke();
-    // Inner hex fill
-    ctx.fillStyle='#141414';hexPath(.44);ctx.fill();
-    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=0.8;hexPath(.44);ctx.stroke();
+    // Middle octagon ring
+    ctx.strokeStyle='#252525';ctx.lineWidth=1.2;octPath(.62);ctx.stroke();
+    // Inner octagon
+    ctx.fillStyle='#131313';octPath(.42);ctx.fill();
+    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=0.8;octPath(.42);ctx.stroke();
     // Glow rim
     ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
-    ctx.strokeStyle=col+(f?'55':'1a');ctx.lineWidth=1.6;hexPath(1);ctx.stroke();ctx.shadowBlur=0;
-    // 6 vertex bolts
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3+HO,bx=Math.cos(a)*bR*.90,by=Math.sin(a)*bR*.90;
+    ctx.strokeStyle=col+(f?'55':'1a');ctx.lineWidth=1.6;octPath(1);ctx.stroke();ctx.shadowBlur=0;
+    // 8 vertex bolts
+    for(let i=0;i<8;i++){
+      const a=i*Math.PI/4+HO,bx=Math.cos(a)*bR*.90,by=Math.sin(a)*bR*.90;
       ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'16');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.arc(bx,by,r*.026,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.arc(bx,by,r*.023,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
     // Counter-rotating dashed rings
     ctx.save();ctx.rotate(t*1.6);ctx.strokeStyle=f?col+'60':col+'1e';ctx.lineWidth=1.3;ctx.setLineDash([r*.18,r*.12]);
@@ -1055,14 +1058,14 @@ class Tower{
     }
     ctx.restore();
     // Center hub
-    ctx.shadowColor=col;ctx.shadowBlur=f?28:9;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.21);
+    ctx.shadowColor=col;ctx.shadowBlur=f?18:6;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.13);
     cg.addColorStop(0,'#ffffff');cg.addColorStop(.24,col);cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.21,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'dd':'60');ctx.lineWidth=1.6;ctx.shadowBlur=f?18:5;
-    ctx.beginPath();ctx.arc(0,0,r*.32,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.13,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col+(f?'dd':'60');ctx.lineWidth=1.4;ctx.shadowBlur=f?12:3;
+    ctx.beginPath();ctx.arc(0,0,r*.21,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;ctx.strokeStyle=col+(f?'55':'1e');ctx.lineWidth=1.0;
-    for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.24,Math.sin(a)*r*.24);ctx.lineTo(Math.cos(a)*r*.32,Math.sin(a)*r*.32);ctx.stroke();}
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.15,Math.sin(a)*r*.15);ctx.lineTo(Math.cos(a)*r*.21,Math.sin(a)*r*.21);ctx.stroke();}
     ctx.shadowBlur=0;
   }
   // AOE: 레이저 그리드 — 원형 베이스 + 격자선
@@ -2065,9 +2068,8 @@ const UI={
     const abl=document.getElementById('abtn-lbl');if(abl)abl.innerHTML=ko?'자동<br>웨이브':'Auto<br>Wave';
     const pr=document.getElementById('pbtn-resume');if(pr)pr.innerHTML=ko?'▶ &nbsp;계속하기':'▶ &nbsp;Resume';
     const prs=document.getElementById('pbtn-restart');if(prs)prs.innerHTML=ko?'↩ &nbsp;다시 시작':'↩ &nbsp;Restart';
-    const got=document.querySelector('#govly .ovt');if(got)got.textContent=ko?'가동 중지':'Factory Halt';
-    const gos=document.querySelector('#govly .ovs');if(gos)gos.textContent=ko?'공장 안정성이 0에 도달했습니다':'Factory stability reached 0';
-    const gob=document.querySelector('#govly .ovbtn');if(gob)gob.textContent=ko?'재가동':'Restart';
+    const gos=document.getElementById('go-sub');if(gos)gos.textContent=ko?'가동 중지':'FACTORY HALT';
+    const gob=document.getElementById('go-btn');if(gob)gob.innerHTML=ko?'↩ &nbsp;재가동':'↩ &nbsp;Restart';
     const us=document.getElementById('unlk-sub');if(us)us.textContent=ko?'새로운 장비':'New Equipment';
     const ub=document.getElementById('unlk-btn');if(ub)ub.textContent=ko?'확인':'OK';
     if(this.selTwr)this._showTowerInfo(this.selTwr);
@@ -2217,18 +2219,54 @@ const UI={
   },
 
   showGO(){
-    document.getElementById('govly').style.display='flex';
+    const el=document.getElementById('govly');el.style.display='block';
     const bw=+localStorage.getItem('ieg_bw')||0,bp=+localStorage.getItem('ieg_bp')||0;
     if(GS.wave>bw)localStorage.setItem('ieg_bw',GS.wave);
     if(GS.totalPort>bp)localStorage.setItem('ieg_bp',GS.totalPort);
+    // Wave display
+    document.getElementById('go-wave').textContent=GS.wave;
+    // Score calculation
+    const towerScore=GS.towers.reduce((s,tw)=>s+tw.basePrice+tw.upgCost,0);
+    const stabilityBonus=GS.stability*100;
+    const portBonus=GS.port;
+    const score=towerScore+stabilityBonus+portBonus;
     const t=Math.floor(GS.time);
-    document.getElementById('gostats').innerHTML=`
-      <div class="gost"><span class="gogl">최종 웨이브</span><span class="gogv">${GS.wave}/100</span></div>
-      <div class="gost"><span class="gogl">운영 시간</span><span class="gogv">${Math.floor(t/60)}분 ${t%60}초</span></div>
-      <div class="gost"><span class="gogl">총 생산 포트</span><span class="gogv">◈ ${GS.totalPort.toLocaleString()}</span></div>
-      <div class="gost"><span class="gogl">최고 웨이브</span><span class="gogv">${Math.max(GS.wave,bw)}</span></div>
-      <div class="gost"><span class="gogl">최고 포트</span><span class="gogv">◈ ${Math.max(GS.totalPort,bp).toLocaleString()}</span></div>
+    const ko=LANG==='ko';
+    document.getElementById('go-stats').innerHTML=`
+      <div class="go-score-row"><span class="go-score-lbl">${ko?'최종 점수':'TOTAL SCORE'}</span><span class="go-score-val">${score.toLocaleString()}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'장비 자산':'Tower Assets'}</span><span class="clr-val">◈ ${towerScore.toLocaleString()}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'안정성 보너스':'Stability Bonus'}</span><span class="clr-val">${GS.stability} × 100 = ${stabilityBonus.toLocaleString()}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'보유 포트':'Port Balance'}</span><span class="clr-val">◈ ${portBonus.toLocaleString()}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'최종 웨이브':'Final Wave'}</span><span class="clr-val">${GS.wave}/100</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'운영 시간':'Operation Time'}</span><span class="clr-val">${Math.floor(t/60)}${ko?'분 ':'m '}${t%60}${ko?'초':'s'}</span></div>
     `;
+    // Game over canvas (red falling particles)
+    const cv=document.getElementById('go-canvas');
+    cv.width=480;cv.height=900;
+    const cx=cv.getContext('2d');
+    const bg=cx.createRadialGradient(240,380,20,240,380,420);
+    bg.addColorStop(0,'#120000');bg.addColorStop(.6,'#080000');bg.addColorStop(1,'#000');
+    cx.fillStyle=bg;cx.fillRect(0,0,480,900);
+    cx.strokeStyle='#EF535010';cx.lineWidth=1;
+    for(let x=0;x<480;x+=32){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,900);cx.stroke();}
+    for(let y=0;y<900;y+=32){cx.beginPath();cx.moveTo(0,y);cx.lineTo(480,y);cx.stroke();}
+    const pts=Array.from({length:55},()=>({
+      x:Math.random()*480,y:Math.random()*900,
+      vx:(Math.random()-.5)*.7,vy:Math.random()*.9+.3,
+      r:Math.random()*2+.4,life:.3+Math.random()*.7,
+      col:Math.random()<.6?'#EF5350':Math.random()<.5?'#FF8A80':'#ffffff'
+    }));
+    const tick=()=>{
+      if(document.getElementById('govly').style.display==='none')return;
+      cx.fillStyle='#0000001e';cx.fillRect(0,0,480,900);
+      for(const p of pts){
+        p.x+=p.vx;p.y+=p.vy;p.life-=.004;
+        if(p.life<=0||p.y>910){p.x=Math.random()*480;p.y=-10;p.life=.5+Math.random()*.5;}
+        cx.globalAlpha=p.life*.7;cx.fillStyle=p.col;
+        cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fill();
+      }
+      cx.globalAlpha=1;requestAnimationFrame(tick);
+    };tick();
   },
 };
 
