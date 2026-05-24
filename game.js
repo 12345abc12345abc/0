@@ -930,10 +930,10 @@ class Tower{
     ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
-  // 픽셀 로봇암: 단관절 산업용 로봇팔 (탑뷰, 정면 단일암, 그리퍼 타격 시 벌림)
+  // 픽셀 로봇암: SCARA 산업용 로봇팔 탑뷰 — Z자 암 + T자 그리퍼
   _dPA(ctx,r,t,f){
     const col=this.color;
-    // ── OCTAGONAL MOUNTING PLATE
+    // ── 마운팅 플레이트 (8각형)
     const bp=r*.86,bv=r*.16;
     const oP=()=>{ctx.beginPath();ctx.moveTo(-bp+bv,-bp);ctx.lineTo(bp-bv,-bp);ctx.lineTo(bp,-bp+bv);ctx.lineTo(bp,bp-bv);ctx.lineTo(bp-bv,bp);ctx.lineTo(-bp+bv,bp);ctx.lineTo(-bp,bp-bv);ctx.lineTo(-bp,-bp+bv);ctx.closePath();};
     oP();ctx.fillStyle='#141414';ctx.fill();
@@ -955,95 +955,91 @@ class Tower{
       ctx.beginPath();ctx.moveTo(bx-r*.026,by);ctx.lineTo(bx+r*.026,by);ctx.stroke();
       ctx.beginPath();ctx.moveTo(bx,by-r*.026);ctx.lineTo(bx,by+r*.026);ctx.stroke();
     }
-    // ── Z자형 탑뷰 로봇팔 (어깨→팔꿈치가 옆으로 꺾여 총처럼 안 보임)
+    // ── 로봇팔 본체 (타겟 방향 회전)
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    const j0y=-r*.05;          // 어깨
-    const j1y=-r*.42;          // 팔꿈치 (eX만큼 오른쪽으로 오프셋)
-    const j2y=-r*.64;          // 손목
-    const eX=r*.17;            // 팔꿈치 가로 오프셋 → Z자 굴곡
-    const uw=r*.15,fw=r*.10,ww=r*.07;
-    // ── 상완 링크 (어깨 중앙 → 팔꿈치 오른쪽으로 비스듬히)
-    ctx.fillStyle='#2a2a2a';ctx.strokeStyle=f?col+'44':'#484848';ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.moveTo(-uw,j0y);ctx.lineTo(uw,j0y);ctx.lineTo(eX+fw,j1y);ctx.lineTo(eX-fw,j1y);ctx.closePath();
-    ctx.fill();ctx.stroke();
-    // 상완 베벨·심
-    ctx.strokeStyle=f?col+'22':'#3a3a3a';ctx.lineWidth=0.8;
-    ctx.beginPath();ctx.moveTo(-uw*.82,j0y+r*.02);ctx.lineTo(eX-fw*.82,j1y-r*.02);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(uw*.82,j0y+r*.02);ctx.lineTo(eX+fw*.82,j1y-r*.02);ctx.stroke();
-    // 유압 실린더선 (회색으로 뚜렷하게)
-    ctx.strokeStyle=f?col+'44':'#505050';ctx.lineWidth=2.2;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(-uw*.7,j0y+r*.04);ctx.lineTo(eX-fw*.7,j1y-r*.03);ctx.stroke();
-    ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(-uw*.7,j0y+r*.04);ctx.lineTo(eX-fw*.7,j1y-r*.03);ctx.stroke();
-    ctx.lineCap='butt';
-    // 상완 횡단 심 (중간)
-    ctx.strokeStyle='#383838';ctx.lineWidth=0.85;
-    ctx.beginPath();ctx.moveTo((-uw+eX-fw)*.5,j0y+(j1y-j0y)*.5);ctx.lineTo((uw+eX+fw)*.5,j0y+(j1y-j0y)*.5);ctx.stroke();
-    // ── 전완 링크 (팔꿈치 오른쪽 → 손목 중앙으로 비스듬히 되돌아옴)
-    ctx.fillStyle='#252525';ctx.strokeStyle=f?col+'38':'#424242';ctx.lineWidth=1.3;
-    ctx.beginPath();ctx.moveTo(eX-fw,j1y);ctx.lineTo(eX+fw,j1y);ctx.lineTo(ww,j2y);ctx.lineTo(-ww,j2y);ctx.closePath();
-    ctx.fill();ctx.stroke();
-    // 전완 베벨
-    ctx.strokeStyle=f?col+'1c':'#363636';ctx.lineWidth=0.75;
-    ctx.beginPath();ctx.moveTo(eX-fw*.82,j1y+r*.02);ctx.lineTo(-ww*.82,j2y-r*.02);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(eX+fw*.82,j1y+r*.02);ctx.lineTo(ww*.82,j2y-r*.02);ctx.stroke();
-    // 전완 유압 실린더선
-    ctx.strokeStyle=f?col+'3a':'#4a4a4a';ctx.lineWidth=1.8;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(eX+fw*.7,j1y+r*.03);ctx.lineTo(ww*.7,j2y-r*.02);ctx.stroke();
-    ctx.strokeStyle='#272727';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(eX+fw*.7,j1y+r*.03);ctx.lineTo(ww*.7,j2y-r*.02);ctx.stroke();
-    ctx.lineCap='butt';
-    // ── 어깨 관절 (가장 큰 원형 조인트, 중앙)
+    const j0y=-r*.06,eX=r*.17,j1y=-r*.42,j2y=-r*.60;
+    const uw=r*.15,fw=r*.10,ww=r*.068;
+    // 상완 링크 (어깨→팔꿈치, 오른쪽으로 꺾임)
+    ctx.fillStyle='#2d2d2d';ctx.strokeStyle=f?col+'40':'#484848';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(-uw,j0y);ctx.lineTo(uw,j0y);ctx.lineTo(eX+fw,j1y);ctx.lineTo(eX-fw,j1y);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#3c3c3c';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.moveTo(0,j0y+r*.04);ctx.lineTo(eX,j1y-r*.02);ctx.stroke();
+    ctx.strokeStyle=f?col+'28':'#3e3e3e';ctx.lineWidth=0.85;
+    ctx.beginPath();ctx.arc(eX*.32,j0y+(j1y-j0y)*.35,r*.022,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(eX*.7,j0y+(j1y-j0y)*.72,r*.022,0,Math.PI*2);ctx.stroke();
+    // 전완 링크 (팔꿈치→손목, 중앙으로 복귀)
+    ctx.fillStyle='#272727';ctx.strokeStyle=f?col+'38':'#424242';ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(eX-fw,j1y);ctx.lineTo(eX+fw,j1y);ctx.lineTo(ww,j2y);ctx.lineTo(-ww,j2y);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#373737';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.moveTo(eX,j1y+r*.02);ctx.lineTo(0,j2y-r*.02);ctx.stroke();
+    // 어깨 관절 (대형 디스크)
     ctx.save();ctx.translate(0,j0y);
-    ctx.strokeStyle='#484848';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(0,0,r*.27,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#303030';ctx.strokeStyle=f?col:'#555';ctx.lineWidth=1.9;ctx.shadowColor=col;ctx.shadowBlur=f?16:5;
-    ctx.beginPath();ctx.arc(0,0,r*.165,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle='#3a3a3a';ctx.lineWidth=2.0;ctx.beginPath();ctx.arc(0,0,r*.235,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#303030';ctx.strokeStyle=f?col:'#505050';ctx.lineWidth=1.8;ctx.shadowColor=col;ctx.shadowBlur=f?18:6;
+    ctx.beginPath();ctx.arc(0,0,r*.162,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
     ctx.strokeStyle=f?col+'66':'#505050';ctx.lineWidth=0.9;
-    for(let i=0;i<6;i++){const a=t*.8+i*Math.PI/3;const bx=Math.cos(a)*r*.123,by=Math.sin(a)*r*.123;ctx.beginPath();ctx.arc(bx,by,r*.022,0,Math.PI*2);ctx.stroke();}
-    ctx.shadowColor=col;ctx.shadowBlur=f?24:7;ctx.fillStyle=f?'#fff':col;
-    ctx.beginPath();ctx.arc(0,0,r*.056,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-    ctx.strokeStyle='#505050';ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(0,0,r*.21,0,Math.PI*2);ctx.stroke();
+    for(let i=0;i<6;i++){const a=t*.8+i*Math.PI/3;const bx=Math.cos(a)*r*.12,by=Math.sin(a)*r*.12;ctx.beginPath();ctx.arc(bx,by,r*.022,0,Math.PI*2);ctx.stroke();}
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:8;ctx.fillStyle=f?'#fff':col;
+    ctx.beginPath();ctx.arc(0,0,r*.055,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle='#484848';ctx.lineWidth=2.0;ctx.beginPath();ctx.arc(0,0,r*.2,0,Math.PI*2);ctx.stroke();
     ctx.restore();
-    // ── 팔꿈치 관절 (중간, 오프셋 위치)
+    // 팔꿈치 관절 (중형 디스크)
     ctx.save();ctx.translate(eX,j1y);
-    ctx.strokeStyle='#404040';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r*.185,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#282828';ctx.strokeStyle=f?col+'cc':'#4e4e4e';ctx.lineWidth=1.5;ctx.shadowColor=col;ctx.shadowBlur=f?11:3;
-    ctx.beginPath();ctx.arc(0,0,r*.11,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle='#383838';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,r*.165,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#282828';ctx.strokeStyle=f?col+'cc':'#4a4a4a';ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?12:3;
+    ctx.beginPath();ctx.arc(0,0,r*.105,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
     ctx.strokeStyle=f?col+'55':'#484848';ctx.lineWidth=0.85;
-    for(let i=0;i<3;i++){const a=t*(-1.3)+i*Math.PI*2/3;const bx=Math.cos(a)*r*.074,by=Math.sin(a)*r*.074;ctx.beginPath();ctx.arc(bx,by,r*.018,0,Math.PI*2);ctx.stroke();}
-    ctx.fillStyle=f?col+'aa':'#444';ctx.beginPath();ctx.arc(0,0,r*.037,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<3;i++){const a=t*(-1.3)+i*Math.PI*2/3;const bx=Math.cos(a)*r*.068,by=Math.sin(a)*r*.068;ctx.beginPath();ctx.arc(bx,by,r*.016,0,Math.PI*2);ctx.stroke();}
+    ctx.fillStyle=f?col+'aa':'#444';ctx.beginPath();ctx.arc(0,0,r*.033,0,Math.PI*2);ctx.fill();
     ctx.restore();
-    // ── 손목 관절 (작음, 중앙)
+    // 손목 관절 (소형 디스크)
     ctx.save();ctx.translate(0,j2y);
-    ctx.strokeStyle='#3c3c3c';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.155,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#262626';ctx.strokeStyle=f?col+'aa':'#4a4a4a';ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?9:2;
-    ctx.beginPath();ctx.arc(0,0,r*.086,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.fillStyle=f?'#fff':col;ctx.beginPath();ctx.arc(0,0,r*.03,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#363636';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.14,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#242424';ctx.strokeStyle=f?col+'aa':'#484848';ctx.lineWidth=1.3;ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
+    ctx.beginPath();ctx.arc(0,0,r*.08,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle=f?'#fff':col;ctx.beginPath();ctx.arc(0,0,r*.028,0,Math.PI*2);ctx.fill();
     ctx.restore();
-    // ── 그리퍼 집게발 (탑뷰: L자형 갈고리 — 총 모양 아님)
-    const gX=f?r*.19:r*.045;
-    const jw=r*.09,jl=r*.23,hx=r*.085,hw=r*.09; // 집게 너비·길이·갈고리 폭·높이
+    // ── T자형 그리퍼: 샹크 + 크로스바 + 집게발
+    // 샹크 (손목에서 전방으로)
+    const gShankL=r*.14,gShankW=r*.058,gBarY=j2y-gShankL;
+    ctx.fillStyle='#2a2a2a';ctx.strokeStyle=f?col+'3a':'#3e3e3e';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.rect(-gShankW,gBarY,gShankW*2,gShankL);ctx.fill();ctx.stroke();
+    // 크로스바 (좌우로 넓은 액추에이터 바디)
+    const gBarHW=r*.26,gBarH=r*.09;
+    ctx.fillStyle='#2e2e2e';ctx.strokeStyle=f?col+'50':'#444';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.rect(-gBarHW,gBarY-gBarH*.5,gBarHW*2,gBarH);ctx.fill();ctx.stroke();
+    ctx.strokeStyle=f?col+'44':'#404040';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.arc(0,gBarY,r*.028,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#383838';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(-gBarHW*.82,gBarY);ctx.lineTo(-gShankW,gBarY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(gShankW,gBarY);ctx.lineTo(gBarHW*.82,gBarY);ctx.stroke();
+    // 집게발 (크로스바 끝에서 전방으로, L자 갈고리)
+    const gFingX=f?r*.22:r*.14,gFingL=r*.16,gFingW=r*.075;
+    const gFingTopY=gBarY-gBarH*.5,hookInset=r*.058,hookDepth=r*.062;
     for(const sx of[-1,1]){
-      const inX=sx*gX,outX=sx*(gX+jw);
-      ctx.shadowColor=col;ctx.shadowBlur=f?18:3;
-      ctx.fillStyle='#2a2a2a';ctx.strokeStyle=f?col:'#4a4a4a';ctx.lineWidth=1.4;
-      // 집게 몸체
-      ctx.beginPath();ctx.moveTo(inX,j2y);ctx.lineTo(outX,j2y);ctx.lineTo(outX,j2y-jl);ctx.lineTo(inX,j2y-jl);ctx.closePath();
-      ctx.fill();ctx.stroke();
-      // 안쪽 갈고리 (L자 팁 — 집게발처럼 안쪽으로 꺾임)
-      ctx.beginPath();ctx.moveTo(inX,j2y-jl+hw);ctx.lineTo(inX-sx*hx,j2y-jl+hw);ctx.lineTo(inX-sx*hx,j2y-jl);ctx.lineTo(inX,j2y-jl);ctx.closePath();
-      ctx.fill();ctx.stroke();
+      const fx=sx*gFingX;
+      ctx.shadowColor=col;ctx.shadowBlur=f?16:3;
+      ctx.fillStyle='#2c2c2c';ctx.strokeStyle=f?col:'#484848';ctx.lineWidth=1.35;
+      ctx.beginPath();
+      ctx.moveTo(fx+sx*gFingW*.5,gFingTopY);
+      ctx.lineTo(fx-sx*gFingW*.5,gFingTopY);
+      ctx.lineTo(fx-sx*gFingW*.5,gFingTopY-gFingL+hookDepth);
+      ctx.lineTo(fx-sx*(gFingW*.5+hookInset),gFingTopY-gFingL+hookDepth);
+      ctx.lineTo(fx-sx*(gFingW*.5+hookInset),gFingTopY-gFingL);
+      ctx.lineTo(fx+sx*gFingW*.5,gFingTopY-gFingL);
+      ctx.closePath();ctx.fill();ctx.stroke();
       ctx.shadowBlur=0;
-      // 내측 그립면 서레이션
-      ctx.strokeStyle=f?col+'66':'#555';ctx.lineWidth=0.85;
-      for(let s=0;s<3;s++){const sy=j2y-jl*.18-s*jl*.27;ctx.beginPath();ctx.moveTo(inX,sy);ctx.lineTo(inX-sx*r*.026,sy);ctx.stroke();}
+      ctx.strokeStyle=f?col+'55':'#525252';ctx.lineWidth=0.72;
+      for(let g=0;g<3;g++){
+        const gy=gFingTopY-gFingL*.22-g*gFingL*.26;
+        ctx.beginPath();ctx.moveTo(fx-sx*gFingW*.5,gy);ctx.lineTo(fx-sx*(gFingW*.5+r*.028),gy);ctx.stroke();
+      }
     }
-    // 발사 시 집게 사이 에너지 글로우
     if(f){
-      const gy=j2y-jl*.52;
-      const mg=ctx.createRadialGradient(0,gy,0,0,gy,r*.22);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');
-      ctx.globalAlpha=.7;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,gy,r*.22,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+      const glowY=gFingTopY-gFingL*.5;
+      const mg=ctx.createRadialGradient(0,glowY,0,0,glowY,gFingX*.9);
+      mg.addColorStop(0,'#fff');mg.addColorStop(.3,col);mg.addColorStop(1,col+'00');
+      ctx.globalAlpha=.65;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,glowY,gFingX*.9,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
     }
     ctx.restore();
     // CENTER HUB
