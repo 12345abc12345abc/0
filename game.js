@@ -269,16 +269,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:18.0, lvM:[0.80,1.20,1.70,2.35], desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.'},
-  coreShooter: {name:'코어 슈터',     price:240,  color:'#FF3040',type:'single',   dmg:25,  spd:2.0,  range:3.0, upgMult:7.4,  lvM:[0.95,1.32,1.68,2.15], desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.'},
-  twinHub:     {name:'트윈 컨트롤러', price:345,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  lvM:[0.90,1.25,1.62,2.10], desc:'궤도 타격 임팩터가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.'},
-  scanner:     {name:'비전 스캐너',   price:510,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  lvM:[1.00,1.35,1.68,2.05], desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.'},
-  magnetCannon:{name:'포인트 버스터', price:765,  color:'#FF6D00',type:'focus',    dmg:55,  spd:1.0,  range:5.0, upgMult:2.2,  lvM:[1.35,1.57,1.78,2.00], desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.'},
-  refinery:    {name:'포트 허브',     price:1050, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, lvM:[1.25,1.53,1.80,2.07], desc:'전자기 펄스로 원석을 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.'},
-  laserGrid:   {name:'레이저 그리드', price:1540, color:'#F44336',type:'aoe',      dmg:15,  spd:1.0,  range:3.0, upgMult:1.0,  lvM:[1.63,1.84,2.05,2.26], desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.'},
-  chainBolt:   {name:'체인 볼트',     price:2270, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, lvM:[1.58,1.72,1.86,2.00], desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.'},
-  drone:       {name:'레이스 드론',   price:3120, color:'#7DDFFF',type:'drone',    dmg:45,  spd:2.0,  range:3.0, upgMult:0.40, lvM:[1.35,1.52,1.68,1.85], desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4120, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, lvM:[1.30,1.43,1.57,1.70], desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.'},
+  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:18.0, lvM:[0.80,1.20,1.70,2.35], upgCosts:[1620,3240,5040],  desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.'},
+  coreShooter: {name:'코어 슈터',     price:240,  color:'#FF3040',type:'single',   dmg:25,  spd:2.0,  range:3.0, upgMult:7.4,  lvM:[0.95,1.32,1.68,2.15], upgCosts:[1597,3194,4969],  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.'},
+  twinHub:     {name:'트윈 컨트롤러', price:345,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  lvM:[0.90,1.25,1.62,2.10], upgCosts:[1579,3159,4917],  desc:'궤도 타격 임팩터가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.'},
+  scanner:     {name:'비전 스캐너',   price:510,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  lvM:[1.00,1.35,1.68,2.05], upgCosts:[1552,3105,4833],  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.'},
+  magnetCannon:{name:'포인트 버스터', price:765,  color:'#FF6D00',type:'focus',    dmg:55,  spd:1.0,  range:5.0, upgMult:2.2,  lvM:[1.35,1.57,1.78,2.00], upgCosts:[1511,3022,4702],  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.'},
+  refinery:    {name:'포트 허브',     price:1050, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, lvM:[1.25,1.53,1.80,2.07], upgCosts:[1464,2929,4557],  desc:'전자기 펄스로 원석을 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.'},
+  laserGrid:   {name:'레이저 그리드', price:1540, color:'#F44336',type:'aoe',      dmg:15,  spd:1.0,  range:3.0, upgMult:1.0,  lvM:[1.63,1.84,2.05,2.26], upgCosts:[1384,2768,4308],  desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.'},
+  chainBolt:   {name:'체인 볼트',     price:2270, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, lvM:[1.58,1.72,1.86,2.00], upgCosts:[1264,2529,3937],  desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.'},
+  drone:       {name:'레이스 드론',   price:3120, color:'#7DDFFF',type:'drone',    dmg:45,  spd:2.0,  range:3.0, upgMult:0.40, lvM:[1.35,1.52,1.68,1.85], upgCosts:[1125,2251,3504],  desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.'},
+  plasmaCutter:{name:'플라즈마 커터', price:4120, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, lvM:[1.30,1.43,1.57,1.70], upgCosts:[962,1924,2994],   desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -838,216 +838,216 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 십자 포가 + 단열 중포, 기본방향 위(↑)
+  // 코어슈터: 4-포크 크로스 포가 + 초단열 코어 방사포
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // ── OCTAGONAL BASE (X-pattern inner dividers)
-    const bp=r*.86,bv=r*.16;
-    const oP=()=>{ctx.beginPath();ctx.moveTo(-bp+bv,-bp);ctx.lineTo(bp-bv,-bp);ctx.lineTo(bp,-bp+bv);ctx.lineTo(bp,bp-bv);ctx.lineTo(bp-bv,bp);ctx.lineTo(-bp+bv,bp);ctx.lineTo(-bp,bp-bv);ctx.lineTo(-bp,-bp+bv);ctx.closePath();};
-    oP();ctx.fillStyle='#141414';ctx.fill();
-    // diagonal quadrant shading (X-pattern)
+    // ── BASE: 4-spoke cross platform (unique shape)
+    const spkLen=r*.76,spkW=r*.20,nR=r*.115;
     for(let i=0;i<4;i++){
-      const a0=i*Math.PI/2-Math.PI/4,a1=a0+Math.PI/2;
-      ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,bp*1.4,a0,a1);ctx.closePath();ctx.clip();
-      oP();ctx.fillStyle=i%2===0?'#1e1e1e':'#181818';ctx.fill();ctx.restore();
+      const a=i*Math.PI/2;
+      ctx.save();ctx.rotate(a);
+      ctx.fillStyle='#181818';ctx.strokeStyle='#272727';ctx.lineWidth=1.4;
+      ctx.beginPath();ctx.rect(-spkW*.5,-spkLen,spkW,spkLen);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#111';ctx.lineWidth=0.85;
+      ctx.beginPath();ctx.rect(-spkW*.22,-spkLen*.90,spkW*.44,spkLen*.82);ctx.stroke();
+      ctx.strokeStyle='#1f1f1f';ctx.lineWidth=0.7;
+      for(let ri=1;ri<=3;ri++){const ry=-spkLen*.22-ri*spkLen*.18;ctx.beginPath();ctx.moveTo(-spkW*.42,ry);ctx.lineTo(spkW*.42,ry);ctx.stroke();}
+      ctx.restore();
+      const nx=Math.sin(a)*spkLen,ny=-Math.cos(a)*spkLen;
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle='#2c2c2c';ctx.lineWidth=1.4;
+      ctx.beginPath();ctx.arc(nx,ny,nR,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.shadowColor=col;ctx.shadowBlur=f?8:0;
+      ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.0;
+      ctx.beginPath();ctx.arc(nx,ny,nR*.62,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle=f?col+'44':col+'14';ctx.beginPath();ctx.arc(nx,ny,nR*.30,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
     }
-    oP();ctx.strokeStyle='#444';ctx.lineWidth=1.5;ctx.stroke();
-    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    oP();ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;
-    // diagonal dividers
-    ctx.strokeStyle='#2e2828';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(-bp*.65,-bp*.65);ctx.lineTo(bp*.65,bp*.65);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(bp*.65,-bp*.65);ctx.lineTo(-bp*.65,bp*.65);ctx.stroke();
-    // cardinal glow nodes
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2,px=Math.cos(a)*bp*.72,py=Math.sin(a)*bp*.72;
-      ctx.fillStyle='#222';ctx.strokeStyle=col+(f?'55':'1e');ctx.lineWidth=0.9;ctx.shadowColor=col;ctx.shadowBlur=f?6:0;
-      ctx.beginPath();ctx.arc(px,py,r*.052,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-      ctx.fillStyle=f?col+'77':col+'28';ctx.beginPath();ctx.arc(px,py,r*.026,0,Math.PI*2);ctx.fill();
-    }
-    // diagonal corner accents
-    for(const a of[Math.PI/4,Math.PI*3/4,Math.PI*5/4,Math.PI*7/4]){
-      const bx=Math.cos(a)*(bp-bv*.8),by=Math.sin(a)*(bp-bv*.8);
-      ctx.fillStyle='#1c0808';ctx.strokeStyle=col+(f?'33':'10');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.arc(bx,by,r*.04,0,Math.PI*2);ctx.fill();ctx.stroke();
-    }
-    // counter-rotating rings
-    ctx.save();ctx.rotate(t*2.2);ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=1.4;ctx.setLineDash([r*.22,r*.08]);
-    ctx.beginPath();ctx.arc(0,0,r*.48,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    ctx.save();ctx.rotate(-t*1.5);ctx.strokeStyle=f?col+'40':col+'14';ctx.lineWidth=1;ctx.setLineDash([r*.11,r*.13]);
-    ctx.beginPath();ctx.arc(0,0,r*.64,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    const chub=spkW*.58;
+    ctx.fillStyle='#1c1c1c';ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.rect(-chub,-chub,chub*2,chub*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle=col+(f?'30':'0e');ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.rect(-chub,-chub,chub*2,chub*2);ctx.stroke();
+    // Counter-rotating energy rings
+    ctx.save();ctx.rotate(t*2.0);ctx.strokeStyle=f?col+'70':col+'24';ctx.lineWidth=1.5;ctx.setLineDash([r*.24,r*.10]);
+    ctx.beginPath();ctx.arc(0,0,r*.46,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.rotate(-t*1.6);ctx.strokeStyle=f?col+'42':col+'16';ctx.lineWidth=1.0;ctx.setLineDash([r*.12,r*.15]);
+    ctx.beginPath();ctx.arc(0,0,r*.62,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     // ── TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // wide trapezoidal body
-    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'77':col+'2c';ctx.lineWidth=1.6;
-    ctx.beginPath();ctx.moveTo(-r*.36,-r*.08);ctx.lineTo(r*.36,-r*.08);ctx.lineTo(r*.26,-r*.42);ctx.lineTo(-r*.26,-r*.42);ctx.closePath();ctx.fill();ctx.stroke();
-    for(const bx of[-r*.22,r*.22]){
-      ctx.fillStyle='#262626';ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=.7;
-      ctx.beginPath();ctx.arc(bx,-r*.25,r*.046,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'66':col+'26';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.moveTo(-r*.36,-r*.08);ctx.lineTo(r*.36,-r*.08);ctx.lineTo(r*.28,-r*.38);ctx.lineTo(-r*.28,-r*.38);ctx.closePath();ctx.fill();ctx.stroke();
+    for(const bx of[-r*.20,r*.20]){
+      ctx.fillStyle='#252525';ctx.strokeStyle=col+(f?'42':'18');ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.arc(bx,-r*.24,r*.044,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // side intake vanes
+    // Side charging pods
     for(const sx of[-1,1]){
       ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'55':col+'1e';ctx.lineWidth=1.1;
-      ctx.beginPath();ctx.moveTo(sx*r*.26,-r*.12);ctx.lineTo(sx*r*.50,-r*.20);ctx.lineTo(sx*r*.50,-r*.38);ctx.lineTo(sx*r*.26,-r*.36);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.strokeStyle=col+(f?'44':'10');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.moveTo(sx*r*.30,-r*.18);ctx.lineTo(sx*r*.48,-r*.24);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(sx*r*.28,-r*.12);ctx.lineTo(sx*r*.52,-r*.18);ctx.lineTo(sx*r*.50,-r*.36);ctx.lineTo(sx*r*.28,-r*.34);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle=col+(f?'55':'14');ctx.lineWidth=0.85;
+      for(let ci=0;ci<3;ci++){const cy=-r*.20-ci*r*.063;ctx.beginPath();ctx.moveTo(sx*r*.32,cy);ctx.lineTo(sx*r*.48,cy);ctx.stroke();}
     }
-    // twin barrels (visual cue for rapid fire)
-    for(const bx of[-r*.095,r*.095]){
-      ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'99':col+'3c';ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?10:1;
-      ctx.beginPath();ctx.rect(bx-r*.058,-r*.96,r*.116,r*.56);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-      for(let v=0;v<4;v++){
-        const vy=-r*.90+v*r*.13;
-        ctx.strokeStyle=col+(f?'66':'22');ctx.lineWidth=1.5;
-        ctx.beginPath();ctx.moveTo(bx-r*.075,vy);ctx.lineTo(bx+r*.075,vy);ctx.stroke();
-      }
-      ctx.fillStyle=f?col+'44':'#050208';ctx.beginPath();ctx.rect(bx-r*.035,-r*.92,r*.07,r*.44);ctx.fill();
+    // Very short twin barrels
+    const brlL=r*.22,brlHW=r*.062;
+    for(const bx of[-r*.088,r*.088]){
+      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'88':col+'38';ctx.lineWidth=1.4;
+      ctx.shadowColor=col;ctx.shadowBlur=f?10:1;
+      ctx.beginPath();ctx.rect(bx-brlHW,-r*.38-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+      ctx.strokeStyle=col+(f?'66':'22');ctx.lineWidth=1.4;
+      ctx.beginPath();ctx.moveTo(bx-brlHW*1.2,-r*.38-brlL*.5);ctx.lineTo(bx+brlHW*1.2,-r*.38-brlL*.5);ctx.stroke();
+      ctx.fillStyle=f?col+'33':'#050208';ctx.beginPath();ctx.rect(bx-brlHW*.6,-r*.36-brlL,brlHW*1.2,brlL*.85);ctx.fill();
     }
-    // center bridge
-    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=1;
-    ctx.beginPath();ctx.rect(-r*.036,-r*.80,r*.072,r*.24);ctx.fill();ctx.stroke();
-    // twin muzzle tips
-    ctx.fillStyle='#1a1a1a';ctx.shadowColor=col;ctx.shadowBlur=f?24:4;ctx.strokeStyle=f?col+'dd':col+'50';ctx.lineWidth=1.8;
-    for(const bx of[-r*.095,r*.095]){
-      ctx.beginPath();ctx.moveTo(bx-r*.082,-r*.98);ctx.lineTo(bx+r*.082,-r*.98);ctx.lineTo(bx+r*.066,-r*1.07);ctx.lineTo(bx-r*.066,-r*1.07);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'44':col+'1a';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.rect(-r*.025,-r*.38-brlL,r*.050,brlL*.7);ctx.fill();ctx.stroke();
+    // Muzzle tips (short, wide)
+    ctx.fillStyle='#181818';ctx.shadowColor=col;ctx.shadowBlur=f?22:4;ctx.strokeStyle=f?col+'cc':col+'50';ctx.lineWidth=1.8;
+    for(const bx of[-r*.088,r*.088]){
+      ctx.beginPath();ctx.moveTo(bx-brlHW*1.28,-r*.38-brlL);ctx.lineTo(bx+brlHW*1.28,-r*.38-brlL);ctx.lineTo(bx+brlHW,-r*.38-brlL-r*.075);ctx.lineTo(bx-brlHW,-r*.38-brlL-r*.075);ctx.closePath();ctx.fill();ctx.stroke();
     }
     ctx.shadowBlur=0;
     if(f){
-      ctx.globalAlpha=.8;
-      for(const bx of[-r*.095,r*.095]){
-        const mg=ctx.createRadialGradient(bx,-r*1.01,0,bx,-r*1.01,r*.17);
+      ctx.globalAlpha=.75;
+      for(const bx of[-r*.088,r*.088]){
+        const mg=ctx.createRadialGradient(bx,-r*.38-brlL-r*.04,0,bx,-r*.38-brlL-r*.04,r*.16);
         mg.addColorStop(0,'#fff');mg.addColorStop(.3,col);mg.addColorStop(1,col+'00');
-        ctx.fillStyle=mg;ctx.beginPath();ctx.arc(bx,-r*1.01,r*.17,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=mg;ctx.beginPath();ctx.arc(bx,-r*.38-brlL-r*.04,r*.16,0,Math.PI*2);ctx.fill();
       }
       ctx.globalAlpha=1;
     }
     ctx.restore();
-    // energy core
-    ctx.shadowColor=col;ctx.shadowBlur=f?30:10;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.22);
-    cg.addColorStop(0,'#fff');cg.addColorStop(.25,col);cg.addColorStop(.6,col+'55');cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
+    // Energy core
+    ctx.shadowColor=col;ctx.shadowBlur=f?32:10;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.23);
+    cg.addColorStop(0,'#ffffff');cg.addColorStop(.25,col);cg.addColorStop(.6,col+'55');cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.23,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(0,0,r*.29,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
-  // 픽셀 로봇암: SCARA 산업용 로봇팔 탑뷰 — Z자 암 + T자 그리퍼
+  // 픽셀 로봇암: 직선 대칭 산업 로봇팔 — 라운드스퀘어 베이스
   _dPA(ctx,r,t,f){
     const col=this.color;
-    // ── 마운팅 플레이트 (8각형)
-    const bp=r*.86,bv=r*.16;
-    const oP=()=>{ctx.beginPath();ctx.moveTo(-bp+bv,-bp);ctx.lineTo(bp-bv,-bp);ctx.lineTo(bp,-bp+bv);ctx.lineTo(bp,bp-bv);ctx.lineTo(bp-bv,bp);ctx.lineTo(-bp+bv,bp);ctx.lineTo(-bp,bp-bv);ctx.lineTo(-bp,-bp+bv);ctx.closePath();};
-    oP();ctx.fillStyle='#141414';ctx.fill();
+    // ── BASE: rounded-square platform (distinct shape)
+    const bs=r*.82,rc=r*.12;
+    const sqrP=()=>{ctx.beginPath();ctx.moveTo(-bs+rc,-bs);ctx.lineTo(bs-rc,-bs);ctx.arcTo(bs,-bs,bs,-bs+rc,rc);ctx.lineTo(bs,bs-rc);ctx.arcTo(bs,bs,bs-rc,bs,rc);ctx.lineTo(-bs+rc,bs);ctx.arcTo(-bs,bs,-bs,bs-rc,rc);ctx.lineTo(-bs,-bs+rc);ctx.arcTo(-bs,-bs,-bs+rc,-bs,rc);ctx.closePath();};
+    sqrP();ctx.fillStyle='#141414';ctx.fill();
     for(let qx=-1;qx<=1;qx+=2)for(let qy=-1;qy<=1;qy+=2){
-      ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(qx*bp*1.1,0);ctx.lineTo(qx*bp*1.1,qy*bp*1.1);ctx.lineTo(0,qy*bp*1.1);ctx.closePath();ctx.clip();
-      oP();ctx.fillStyle=(qx*qy>0)?'#181818':'#131313';ctx.fill();ctx.restore();
+      ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(qx*bs*1.2,0);ctx.lineTo(qx*bs*1.2,qy*bs*1.2);ctx.lineTo(0,qy*bs*1.2);ctx.closePath();ctx.clip();
+      sqrP();ctx.fillStyle=(qx*qy>0)?'#1c1c1c':'#111111';ctx.fill();ctx.restore();
     }
-    oP();ctx.strokeStyle='#2c2c2c';ctx.lineWidth=1.5;ctx.stroke();
-    ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
-    oP();ctx.strokeStyle=col+(f?'55':'16');ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle='#1f1f1f';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(-bp*.72,0);ctx.lineTo(bp*.72,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-bp*.72);ctx.lineTo(0,bp*.72);ctx.stroke();
+    sqrP();ctx.strokeStyle='#2e2e2e';ctx.lineWidth=1.8;ctx.stroke();
+    ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
+    sqrP();ctx.strokeStyle=col+(f?'40':'10');ctx.lineWidth=1.4;ctx.stroke();ctx.shadowBlur=0;
+    // Rail cross lines
+    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=1.0;
+    ctx.beginPath();ctx.moveTo(-bs*.78,0);ctx.lineTo(bs*.78,0);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-bs*.78);ctx.lineTo(0,bs*.78);ctx.stroke();
+    // Corner bolt mounts
     for(let cx=-1;cx<=1;cx+=2)for(let cy=-1;cy<=1;cy+=2){
-      const bx=cx*(bp-bv*.7),by=cy*(bp-bv*.7);
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=0.9;
-      ctx.beginPath();ctx.arc(bx,by,r*.05,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.strokeStyle='#333';ctx.lineWidth=0.65;
-      ctx.beginPath();ctx.moveTo(bx-r*.026,by);ctx.lineTo(bx+r*.026,by);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(bx,by-r*.026);ctx.lineTo(bx,by+r*.026);ctx.stroke();
+      const bx=cx*bs*.66,by=cy*bs*.66;
+      ctx.fillStyle='#202020';ctx.strokeStyle=col+(f?'40':'14');ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.arc(bx,by,r*.050,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#3a3a3a';ctx.lineWidth=0.65;
+      ctx.beginPath();ctx.moveTo(bx-r*.022,by);ctx.lineTo(bx+r*.022,by);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(bx,by-r*.022);ctx.lineTo(bx,by+r*.022);ctx.stroke();
     }
-    // ── 로봇팔 본체 (타겟 방향 회전)
+    // ── ARM: straight & perfectly symmetric (no lateral offset)
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    const j0y=-r*.06,eX=r*.17,j1y=-r*.42,j2y=-r*.60;
-    const uw=r*.15,fw=r*.10,ww=r*.068;
-    // 상완 링크 (어깨→팔꿈치, 오른쪽으로 꺾임)
+    const j0y=-r*.05,j1y=-r*.40,j2y=-r*.60;
+    const uw=r*.14,fw=r*.10,ww=r*.068;
+    // Upper arm (symmetric trapezoid centered at x=0)
     ctx.fillStyle='#2d2d2d';ctx.strokeStyle=f?col+'40':'#484848';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(-uw,j0y);ctx.lineTo(uw,j0y);ctx.lineTo(eX+fw,j1y);ctx.lineTo(eX-fw,j1y);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-uw,j0y);ctx.lineTo(uw,j0y);ctx.lineTo(fw,j1y);ctx.lineTo(-fw,j1y);ctx.closePath();ctx.fill();ctx.stroke();
     ctx.strokeStyle='#3c3c3c';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(0,j0y+r*.04);ctx.lineTo(eX,j1y-r*.02);ctx.stroke();
-    ctx.strokeStyle=f?col+'28':'#3e3e3e';ctx.lineWidth=0.85;
-    ctx.beginPath();ctx.arc(eX*.32,j0y+(j1y-j0y)*.35,r*.022,0,Math.PI*2);ctx.stroke();
-    ctx.beginPath();ctx.arc(eX*.7,j0y+(j1y-j0y)*.72,r*.022,0,Math.PI*2);ctx.stroke();
-    // 전완 링크 (팔꿈치→손목, 중앙으로 복귀)
+    ctx.beginPath();ctx.moveTo(0,j0y+r*.04);ctx.lineTo(0,j1y-r*.02);ctx.stroke();
+    ctx.strokeStyle=f?col+'25':'#3c3c3c';ctx.lineWidth=0.85;
+    const umid=(j0y+j1y)*.5;
+    for(const sx of[-1,1]){ctx.beginPath();ctx.arc(sx*uw*.52,umid,r*.020,0,Math.PI*2);ctx.stroke();}
+    // Edge highlights (symmetric, 3D relief)
+    ctx.strokeStyle='#484848';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(-uw+r*.013,j0y+r*.01);ctx.lineTo(-fw+r*.010,j1y-r*.01);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(uw-r*.013,j0y+r*.01);ctx.lineTo(fw-r*.010,j1y-r*.01);ctx.stroke();
+    // Forearm (symmetric, narrower)
     ctx.fillStyle='#272727';ctx.strokeStyle=f?col+'38':'#424242';ctx.lineWidth=1.3;
-    ctx.beginPath();ctx.moveTo(eX-fw,j1y);ctx.lineTo(eX+fw,j1y);ctx.lineTo(ww,j2y);ctx.lineTo(-ww,j2y);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.strokeStyle='#373737';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(eX,j1y+r*.02);ctx.lineTo(0,j2y-r*.02);ctx.stroke();
-    // 어깨 관절 (대형 디스크)
+    ctx.beginPath();ctx.moveTo(-fw,j1y);ctx.lineTo(fw,j1y);ctx.lineTo(ww,j2y);ctx.lineTo(-ww,j2y);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#363636';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.moveTo(0,j1y+r*.02);ctx.lineTo(0,j2y-r*.02);ctx.stroke();
+    ctx.strokeStyle='#424242';ctx.lineWidth=0.7;
+    ctx.beginPath();ctx.moveTo(-fw+r*.01,j1y+r*.01);ctx.lineTo(-ww+r*.008,j2y-r*.01);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(fw-r*.01,j1y+r*.01);ctx.lineTo(ww-r*.008,j2y-r*.01);ctx.stroke();
+    // Shoulder joint (large servo disk)
     ctx.save();ctx.translate(0,j0y);
-    ctx.strokeStyle='#3a3a3a';ctx.lineWidth=2.0;ctx.beginPath();ctx.arc(0,0,r*.235,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#303030';ctx.strokeStyle=f?col:'#505050';ctx.lineWidth=1.8;ctx.shadowColor=col;ctx.shadowBlur=f?18:6;
-    ctx.beginPath();ctx.arc(0,0,r*.162,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle=f?col+'66':'#505050';ctx.lineWidth=0.9;
-    for(let i=0;i<6;i++){const a=t*.8+i*Math.PI/3;const bx=Math.cos(a)*r*.12,by=Math.sin(a)*r*.12;ctx.beginPath();ctx.arc(bx,by,r*.022,0,Math.PI*2);ctx.stroke();}
-    ctx.shadowColor=col;ctx.shadowBlur=f?22:8;ctx.fillStyle=f?'#fff':col;
-    ctx.beginPath();ctx.arc(0,0,r*.055,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-    ctx.strokeStyle='#484848';ctx.lineWidth=2.0;ctx.beginPath();ctx.arc(0,0,r*.2,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#383838';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,0,r*.240,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#2e2e2e';ctx.strokeStyle=f?col:'#545454';ctx.lineWidth=1.8;
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:7;
+    ctx.beginPath();ctx.arc(0,0,r*.165,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=f?col+'66':'#515151';ctx.lineWidth=0.9;
+    for(let i=0;i<6;i++){const a=t*.8+i*Math.PI/3;ctx.beginPath();ctx.arc(Math.cos(a)*r*.120,Math.sin(a)*r*.120,r*.022,0,Math.PI*2);ctx.stroke();}
+    ctx.strokeStyle='#494949';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(0,0,r*.200,0,Math.PI*2);ctx.stroke();
+    ctx.shadowColor=col;ctx.shadowBlur=f?26:9;
+    ctx.fillStyle=f?'#ffffff':col;ctx.beginPath();ctx.arc(0,0,r*.056,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
     ctx.restore();
-    // 팔꿈치 관절 (중형 디스크)
-    ctx.save();ctx.translate(eX,j1y);
-    ctx.strokeStyle='#383838';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,r*.165,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#282828';ctx.strokeStyle=f?col+'cc':'#4a4a4a';ctx.lineWidth=1.4;ctx.shadowColor=col;ctx.shadowBlur=f?12:3;
-    ctx.beginPath();ctx.arc(0,0,r*.105,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle=f?col+'55':'#484848';ctx.lineWidth=0.85;
-    for(let i=0;i<3;i++){const a=t*(-1.3)+i*Math.PI*2/3;const bx=Math.cos(a)*r*.068,by=Math.sin(a)*r*.068;ctx.beginPath();ctx.arc(bx,by,r*.016,0,Math.PI*2);ctx.stroke();}
-    ctx.fillStyle=f?col+'aa':'#444';ctx.beginPath();ctx.arc(0,0,r*.033,0,Math.PI*2);ctx.fill();
+    // Elbow joint (medium disk)
+    ctx.save();ctx.translate(0,j1y);
+    ctx.strokeStyle='#3a3a3a';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,r*.165,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#282828';ctx.strokeStyle=f?col+'cc':'#4c4c4c';ctx.lineWidth=1.4;
+    ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
+    ctx.beginPath();ctx.arc(0,0,r*.108,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=f?col+'55':'#4a4a4a';ctx.lineWidth=0.85;
+    for(let i=0;i<3;i++){const a=t*(-1.3)+i*Math.PI*2/3;ctx.beginPath();ctx.arc(Math.cos(a)*r*.068,Math.sin(a)*r*.068,r*.017,0,Math.PI*2);ctx.stroke();}
+    ctx.fillStyle=f?col+'aa':'#444444';ctx.beginPath();ctx.arc(0,0,r*.034,0,Math.PI*2);ctx.fill();
     ctx.restore();
-    // 손목 관절 (소형 디스크)
+    // Wrist joint (small disk)
     ctx.save();ctx.translate(0,j2y);
-    ctx.strokeStyle='#363636';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.14,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#242424';ctx.strokeStyle=f?col+'aa':'#484848';ctx.lineWidth=1.3;ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    ctx.beginPath();ctx.arc(0,0,r*.08,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.fillStyle=f?'#fff':col;ctx.beginPath();ctx.arc(0,0,r*.028,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#383838';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.140,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#242424';ctx.strokeStyle=f?col+'aa':'#4a4a4a';ctx.lineWidth=1.3;
+    ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
+    ctx.beginPath();ctx.arc(0,0,r*.082,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle=f?'#ffffff':col;ctx.beginPath();ctx.arc(0,0,r*.028,0,Math.PI*2);ctx.fill();
     ctx.restore();
-    // ── T자형 그리퍼: 샹크 + 크로스바 + 집게발
-    // 샹크 (손목에서 전방으로)
-    const gShankL=r*.14,gShankW=r*.058,gBarY=j2y-gShankL;
-    ctx.fillStyle='#2a2a2a';ctx.strokeStyle=f?col+'3a':'#3e3e3e';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.rect(-gShankW,gBarY,gShankW*2,gShankL);ctx.fill();ctx.stroke();
-    // 크로스바 (좌우로 넓은 액추에이터 바디)
-    const gBarHW=r*.26,gBarH=r*.09;
-    ctx.fillStyle='#2e2e2e';ctx.strokeStyle=f?col+'50':'#444';ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.rect(-gBarHW,gBarY-gBarH*.5,gBarHW*2,gBarH);ctx.fill();ctx.stroke();
-    ctx.strokeStyle=f?col+'44':'#404040';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.arc(0,gBarY,r*.028,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle='#383838';ctx.lineWidth=0.8;
-    ctx.beginPath();ctx.moveTo(-gBarHW*.82,gBarY);ctx.lineTo(-gShankW,gBarY);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(gShankW,gBarY);ctx.lineTo(gBarHW*.82,gBarY);ctx.stroke();
-    // 집게발 (크로스바 끝에서 전방으로, L자 갈고리)
-    const gFingX=f?r*.22:r*.14,gFingL=r*.16,gFingW=r*.075;
-    const gFingTopY=gBarY-gBarH*.5,hookInset=r*.058,hookDepth=r*.062;
+    // ── GRIPPER: symmetric parallel jaw clamps
+    const shankL=r*.10,gBarY=j2y-shankL;
+    const gBarHH=r*.042,gBarHW=r*.22;
+    const gJawL=r*.17,gJawHW=r*.065;
+    const jOff=f?r*.130:r*.175;
+    // Center shank
+    ctx.fillStyle='#2a2a2a';ctx.strokeStyle=f?col+'32':'#3e3e3e';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.rect(-r*.032,gBarY,r*.064,shankL);ctx.fill();ctx.stroke();
+    // Crossbeam
+    ctx.fillStyle='#2e2e2e';ctx.strokeStyle=f?col+'44':'#464646';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.rect(-gBarHW,gBarY-gBarHH,gBarHW*2,gBarHH*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle=f?col+'38':'#3e3e3e';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.arc(0,gBarY,r*.026,0,Math.PI*2);ctx.stroke();
+    for(const sx of[-1,1]){ctx.fillStyle='#242424';ctx.strokeStyle=col+(f?'35':'12');ctx.lineWidth=0.8;ctx.beginPath();ctx.arc(sx*gBarHW,gBarY,r*.030,0,Math.PI*2);ctx.fill();ctx.stroke();}
+    // Symmetric jaw plates
     for(const sx of[-1,1]){
-      const fx=sx*gFingX;
-      ctx.shadowColor=col;ctx.shadowBlur=f?16:3;
-      ctx.fillStyle='#2c2c2c';ctx.strokeStyle=f?col:'#484848';ctx.lineWidth=1.35;
-      ctx.beginPath();
-      ctx.moveTo(fx+sx*gFingW*.5,gFingTopY);
-      ctx.lineTo(fx-sx*gFingW*.5,gFingTopY);
-      ctx.lineTo(fx-sx*gFingW*.5,gFingTopY-gFingL+hookDepth);
-      ctx.lineTo(fx-sx*(gFingW*.5+hookInset),gFingTopY-gFingL+hookDepth);
-      ctx.lineTo(fx-sx*(gFingW*.5+hookInset),gFingTopY-gFingL);
-      ctx.lineTo(fx+sx*gFingW*.5,gFingTopY-gFingL);
-      ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.shadowBlur=0;
+      const jx=sx*jOff,jtopY=gBarY-gBarHH;
+      ctx.shadowColor=col;ctx.shadowBlur=f?18:3;
+      ctx.fillStyle='#2c2c2c';ctx.strokeStyle=f?col:'#4c4c4c';ctx.lineWidth=1.35;
+      ctx.beginPath();ctx.rect(jx-gJawHW,jtopY-gJawL,gJawHW*2,gJawL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
       ctx.strokeStyle=f?col+'55':'#525252';ctx.lineWidth=0.72;
-      for(let g=0;g<3;g++){
-        const gy=gFingTopY-gFingL*.22-g*gFingL*.26;
-        ctx.beginPath();ctx.moveTo(fx-sx*gFingW*.5,gy);ctx.lineTo(fx-sx*(gFingW*.5+r*.028),gy);ctx.stroke();
-      }
+      for(let g=0;g<3;g++){const gy=jtopY-gJawL*.15-g*gJawL*.27;ctx.beginPath();ctx.moveTo(jx-gJawHW*.8,gy);ctx.lineTo(jx+gJawHW*.8,gy);ctx.stroke();}
+      // Inner edge highlight (3D quality)
+      ctx.strokeStyle='#464646';ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.moveTo(jx-gJawHW+r*.010,jtopY-r*.006);ctx.lineTo(jx-gJawHW+r*.010,jtopY-gJawL+r*.008);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(jx+gJawHW-r*.010,jtopY-r*.006);ctx.lineTo(jx+gJawHW-r*.010,jtopY-gJawL+r*.008);ctx.stroke();
     }
     if(f){
-      const glowY=gFingTopY-gFingL*.5;
-      const mg=ctx.createRadialGradient(0,glowY,0,0,glowY,gFingX*.9);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.3,col);mg.addColorStop(1,col+'00');
-      ctx.globalAlpha=.65;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,glowY,gFingX*.9,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+      const glowCy=gBarY-gBarHH-gJawL*.5;
+      const mg=ctx.createRadialGradient(0,glowCy,0,0,glowCy,jOff+gJawHW);
+      mg.addColorStop(0,'#ffffff');mg.addColorStop(.28,col);mg.addColorStop(1,col+'00');
+      ctx.globalAlpha=.55;ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,glowCy,jOff+gJawHW,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
     }
     ctx.restore();
-    // CENTER HUB
+    // Center hub
     ctx.shadowColor=col;ctx.shadowBlur=f?28:9;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.21);cg.addColorStop(0,'#fff');cg.addColorStop(.24,col);cg.addColorStop(1,col+'00');
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.21);
+    cg.addColorStop(0,'#ffffff');cg.addColorStop(.24,col);cg.addColorStop(1,col+'00');
     ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.21,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'dd':'60');ctx.lineWidth=1.6;ctx.shadowBlur=f?18:5;ctx.beginPath();ctx.arc(0,0,r*.32,0,Math.PI*2);ctx.stroke();
-    ctx.shadowBlur=0;ctx.strokeStyle=col+(f?'55':'1e');ctx.lineWidth=1;for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.24,Math.sin(a)*r*.24);ctx.lineTo(Math.cos(a)*r*.32,Math.sin(a)*r*.32);ctx.stroke();}
+    ctx.strokeStyle=col+(f?'dd':'60');ctx.lineWidth=1.6;ctx.shadowBlur=f?18:5;
+    ctx.beginPath();ctx.arc(0,0,r*.32,0,Math.PI*2);ctx.stroke();
+    ctx.shadowBlur=0;ctx.strokeStyle=col+(f?'55':'1e');ctx.lineWidth=1.0;
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.24,Math.sin(a)*r*.24);ctx.lineTo(Math.cos(a)*r*.32,Math.sin(a)*r*.32);ctx.stroke();}
     ctx.shadowBlur=0;
   }
   // AOE: 레이저 그리드 — 원형 베이스 + 격자선
@@ -1974,7 +1974,7 @@ const UI={
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
     if(tower.isMega||tower.level>=4){bu.disabled=true;bu.textContent='최대';}
-    else{const c=Math.round(tower.basePrice*(TWR[tower.tId].upgMult||1)*LVL[tower.level].cm);bu.disabled=!GS.eggActive&&GS.port<c;bu.textContent=`업그레이드 ◈${c}`;}
+    else{const c=TWR[tower.tId].upgCosts[tower.level-1];bu.disabled=!GS.eggActive&&GS.port<c;bu.textContent=`업그레이드 ◈${c}`;}
     document.getElementById('bsell').textContent=`매각 ◈${Math.round((tower.basePrice+tower.upgCost)*.6)}`;
   },
 
@@ -1986,7 +1986,7 @@ const UI={
 
   upgrade(){
     const t=this.selTwr;if(!t||t.level>=4)return;
-    const c=Math.round(t.basePrice*(TWR[t.tId].upgMult||1)*LVL[t.level].cm);
+    const c=TWR[t.tId].upgCosts[t.level-1];
     if(!GS.eggActive&&GS.port<c){this.showBanner('포트가 부족합니다!','#EF5350');return;}
     if(!GS.eggActive)GS.port-=c;t.upgCost+=c;t.level++;
     SFX.upgrade();
