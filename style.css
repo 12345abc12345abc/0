@@ -288,7 +288,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   height:70px;flex-shrink:0;
   border-radius:9px;
   background:#1a1a1a;border:1.5px solid #ffffff14;
-  cursor:pointer;font-size:11px;color:#555;text-align:center;
+  cursor:pointer;font-size:11px;color:#fff;text-align:center;
   font-weight:800;transition:all .15s;line-height:1.5;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
@@ -303,8 +303,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #bspd{
   height:44px;flex-shrink:0;
   border-radius:9px;
-  background:#1a1a1a;border:1.5px solid #FFD70030;
-  cursor:pointer;font-size:13px;color:#FFD700;
+  background:#1a1a1a;border:1.5px solid #ffffff14;
+  cursor:pointer;font-size:13px;color:#fff;
   font-weight:900;transition:all .15s;
   display:flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;letter-spacing:.5px;
@@ -416,43 +416,45 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   border-radius:3px;padding:5px 10px;
 }
 #title-start{
-  width:220px;height:52px;border:none;cursor:pointer;
+  width:240px;height:52px;border:1.5px solid #FF450055;cursor:pointer;
   background:linear-gradient(135deg,#FF4500,#FF6A00);
   color:#fff;font-size:15px;font-weight:900;letter-spacing:1px;
-  border-radius:4px;position:relative;overflow:hidden;
+  border-radius:10px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
   animation:titleIn .5s .4s both;
   transition:transform .12s,box-shadow .12s;
 }
 #title-start::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,#fff2,transparent 60%);
+  pointer-events:none;
 }
 #title-start::after{
   content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
   background:linear-gradient(90deg,transparent,#ffffff33,transparent);
-  animation:sheen 2.4s 1s ease-in-out infinite;
+  animation:sheen 2.4s 1s ease-in-out infinite;pointer-events:none;
 }
 @keyframes sheen{to{left:160%}}
 #title-start:active{transform:scale(.96);}
 #title-help{
-  margin-top:22px;width:160px;height:36px;border-radius:8px;cursor:pointer;
+  margin-top:10px;width:240px;height:46px;border-radius:10px;cursor:pointer;
   background:#ffffff09;border:1.5px solid #ffffff30;color:#ccc;
-  font-size:12px;font-weight:700;letter-spacing:1.5px;text-align:center;
+  font-size:12px;font-weight:700;letter-spacing:1.5px;
   display:flex;align-items:center;justify-content:center;
   animation:titleIn .5s .6s both;transition:all .15s;
 }
-#title-help:active{background:#FF450022;border-color:#FF450088;color:#FF4500;}
+#title-help:active{background:#FF450018;border-color:#FF450066;color:#FF4500;}
 #title-opts{
-  display:flex;gap:10px;margin-top:16px;
+  display:flex;gap:10px;margin-top:10px;width:240px;
   animation:titleIn .5s .7s both;
 }
 #title-opts button{
-  height:34px;padding:0 18px;border-radius:8px;cursor:pointer;
-  background:#ffffff08;border:1.5px solid #ffffff22;color:#888;
+  flex:1;height:46px;border-radius:10px;cursor:pointer;
+  background:#ffffff09;border:1.5px solid #ffffff30;color:#ccc;
   font-size:11px;font-weight:700;letter-spacing:.8px;
   transition:all .15s;
 }
-#title-opts button:active{background:#FF450018;border-color:#FF450055;color:#FF4500;}
+#title-opts button:active{background:#FF450018;border-color:#FF450066;color:#FF4500;}
 
 /* ── 클리어 화면 ── */
 #clrovly{background:#000;}

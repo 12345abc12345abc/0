@@ -269,16 +269,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:18.0, lvM:[0.80,1.20,1.70,2.35], upgCosts:[1620,3240,5040],  desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.'},
-  coreShooter: {name:'코어 슈터',     price:240,  color:'#FF3040',type:'single',   dmg:25,  spd:2.0,  range:3.0, upgMult:7.4,  lvM:[0.95,1.32,1.68,2.15], upgCosts:[1597,3194,4969],  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.'},
-  twinHub:     {name:'트윈 컨트롤러', price:345,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  lvM:[0.90,1.25,1.62,2.10], upgCosts:[1579,3159,4917],  desc:'궤도 타격 임팩터가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.'},
-  scanner:     {name:'비전 스캐너',   price:510,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  lvM:[1.00,1.35,1.68,2.05], upgCosts:[1552,3105,4833],  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.'},
-  magnetCannon:{name:'포인트 버스터', price:765,  color:'#FF6D00',type:'focus',    dmg:55,  spd:1.0,  range:5.0, upgMult:2.2,  lvM:[1.35,1.57,1.78,2.00], upgCosts:[1511,3022,4702],  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.'},
-  refinery:    {name:'포트 허브',     price:1050, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, lvM:[1.25,1.53,1.80,2.07], upgCosts:[1464,2929,4557],  desc:'전자기 펄스로 원석을 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.'},
-  laserGrid:   {name:'레이저 그리드', price:1540, color:'#F44336',type:'aoe',      dmg:15,  spd:1.0,  range:3.0, upgMult:1.0,  lvM:[1.63,1.84,2.05,2.26], upgCosts:[1384,2768,4308],  desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.'},
-  chainBolt:   {name:'체인 볼트',     price:2270, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, lvM:[1.58,1.72,1.86,2.00], upgCosts:[1264,2529,3937],  desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.'},
-  drone:       {name:'레이스 드론',   price:3120, color:'#7DDFFF',type:'drone',    dmg:45,  spd:2.0,  range:3.0, upgMult:0.40, lvM:[1.35,1.52,1.68,1.85], upgCosts:[1125,2251,3504],  desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.'},
-  plasmaCutter:{name:'플라즈마 커터', price:4120, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, lvM:[1.30,1.43,1.57,1.70], upgCosts:[962,1924,2994],   desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.'},
+  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:18.0, lvM:[0.80,1.20,1.70,2.35], upgCosts:[1620,3240,5040],  desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.', descEn:'An industrial robotic arm grabs the lead ore on the conveyor and performs a high-power disassembly process. The most economical base-line equipment for early control.'},
+  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:240,  color:'#FF3040',type:'single',   dmg:25,  spd:2.0,  range:3.0, upgMult:7.4,  lvM:[0.95,1.32,1.68,2.15], upgCosts:[1597,3194,4969],  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.', descEn:'Fires port core energy in rapid bursts, triggering chain reactions inside ores. A mid-range striker for focused single-target processing.'},
+  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:345,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  lvM:[0.90,1.25,1.62,2.10], upgCosts:[1579,3159,4917],  desc:'궤도 타격 임팩터가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.', descEn:'Orbital strike impactors orbit within range, applying physical force to reduce ore speed by 50%. Extends dwell time to boost downstream efficiency.'},
+  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:510,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  lvM:[1.00,1.35,1.68,2.05], upgCosts:[1552,3105,4833],  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.', descEn:'An omnidirectional optical analyzer scans the entire line and precisely strikes the highest-mass ore. Long-range, high-power equipment specialized for dense ores.'},
+  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:765,  color:'#FF6D00',type:'focus',    dmg:55,  spd:1.0,  range:5.0, upgMult:2.2,  lvM:[1.35,1.57,1.78,2.00], upgCosts:[1511,3022,4702],  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.', descEn:'Continuously fires a particle beam at the rearmost ore on the line. Handles ores before they escape, preventing port loss. Long-range rear-defense equipment.'},
+  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1050, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, lvM:[1.25,1.53,1.80,2.07], upgCosts:[1464,2929,4557],  desc:'전자기 펄스로 원석을 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.', descEn:'Processes ores with electromagnetic pulses and converts byproducts directly into ports. Recovers 20% more ports than standard equipment on each process.'},
+  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:1540, color:'#F44336',type:'aoe',      dmg:15,  spd:1.0,  range:3.0, upgMult:1.0,  lvM:[1.63,1.84,2.05,2.26], upgCosts:[1384,2768,4308],  desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.', descEn:'Periodically deploys a grid laser field to simultaneously process all ores in range. Efficiency scales exponentially as ore density increases.'},
+  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:2270, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, lvM:[1.58,1.72,1.86,2.00], upgCosts:[1264,2529,3937],  desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.', descEn:'Chain discharge module strikes up to 3 ores in sequence, triggering magnetic chain reactions. Total output increases explosively in dense zones.'},
+  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:3120, color:'#7DDFFF',type:'drone',    dmg:45,  spd:2.0,  range:3.0, upgMult:0.40, lvM:[1.35,1.52,1.68,1.85], upgCosts:[1125,2251,3504],  desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.', descEn:'An autonomous patrol drone orbits the perimeter at high speed, instantly processing ores with its laser. Eliminates blind spots that fixed equipment cannot cover.'},
+  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:4120, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, lvM:[1.30,1.43,1.57,1.70], upgCosts:[962,1924,2994],   desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.', descEn:'Fires ultra-high-speed plasma beams in rapid succession, piercing up to 8 ores in a straight line. Efficiency scales exponentially as the line becomes denser.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -841,42 +841,44 @@ class Tower{
   // 코어슈터: 원형 스태빌라이저 베이스 + 레일건 포탑
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // BASE: circular armored platform with 4 cardinal stabilizer fins (4-way symmetric)
+    // BASE: angular octagon + 4 diagonal X-blades (4-way symmetric)
     const bR=r*.80;
-    // Main circular plate with radial gradient
-    const bg=ctx.createRadialGradient(0,0,0,0,0,bR);
-    bg.addColorStop(0,'#1e1e1e');bg.addColorStop(.55,'#161616');bg.addColorStop(1,'#101010');
-    ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.fillStyle=bg;ctx.fill();
-    ctx.strokeStyle='#282828';ctx.lineWidth=1.8;ctx.stroke();
-    // 4 cardinal stabilizer fins
+    const octPath=()=>{ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;i===0?ctx.moveTo(Math.cos(a)*bR,Math.sin(a)*bR):ctx.lineTo(Math.cos(a)*bR,Math.sin(a)*bR);}ctx.closePath();};
+    // Outer octagon base
+    octPath();ctx.fillStyle='#151515';ctx.fill();
+    // Inner recessed panel
+    const ir=bR*.62;
+    ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;i===0?ctx.moveTo(Math.cos(a)*ir,Math.sin(a)*ir):ctx.lineTo(Math.cos(a)*ir,Math.sin(a)*ir);}ctx.closePath();
+    ctx.fillStyle='#111111';ctx.fill();ctx.strokeStyle='#1e1e1e';ctx.lineWidth=1.0;ctx.stroke();
+    octPath();ctx.strokeStyle='#272727';ctx.lineWidth=1.8;ctx.stroke();
+    // 4 diagonal X-blades at 45°/135°/225°/315°
     for(let i=0;i<4;i++){
-      ctx.save();ctx.rotate(i*Math.PI/2);
-      const fw=bR*.38,fh=bR*.40;
-      ctx.fillStyle='#1a1a1a';ctx.strokeStyle='#262626';ctx.lineWidth=1.1;
-      ctx.beginPath();ctx.moveTo(-fw*.48,bR*.42);ctx.lineTo(-fw*.62,bR+fh*.08);ctx.lineTo(0,bR+fh);ctx.lineTo(fw*.62,bR+fh*.08);ctx.lineTo(fw*.48,bR*.42);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.shadowColor=col;ctx.shadowBlur=f?6:1;
-      ctx.strokeStyle=col+(f?'38':'0e');ctx.lineWidth=0.9;ctx.stroke();ctx.shadowBlur=0;
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'40':'12');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.arc(0,bR+fh*.52,r*.032,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.save();ctx.rotate(i*Math.PI/2+Math.PI/4);
+      const bw=bR*.26,b0=bR*.91,b1=bR*1.52;
+      ctx.fillStyle='#1d1d1d';ctx.strokeStyle='#2b2b2b';ctx.lineWidth=1.3;
+      ctx.beginPath();ctx.moveTo(-bw*.58,b0);ctx.lineTo(-bw*.20,b0+(b1-b0)*.54);ctx.lineTo(0,b1);ctx.lineTo(bw*.20,b0+(b1-b0)*.54);ctx.lineTo(bw*.58,b0);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.shadowColor=col;ctx.shadowBlur=f?9:2;
+      ctx.strokeStyle=col+(f?'44':'12');ctx.lineWidth=1.0;ctx.stroke();ctx.shadowBlur=0;
+      ctx.strokeStyle=col+(f?'30':'0a');ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.moveTo(0,b0+r*.06);ctx.lineTo(0,b1-r*.07);ctx.stroke();
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.arc(0,b0+(b1-b0)*.44,r*.028,0,Math.PI*2);ctx.fill();ctx.stroke();
       ctx.restore();
     }
-    // Concentric detail rings
-    ctx.strokeStyle='#242424';ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(0,0,bR*.72,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=1.0;ctx.beginPath();ctx.arc(0,0,bR*.46,0,Math.PI*2);ctx.stroke();
-    // 8 tech bolts on inner ring
+    // 8 bolts on octagon ring
     for(let i=0;i<8;i++){
-      const a=i*Math.PI/4,bx=Math.cos(a)*bR*.59,by=Math.sin(a)*bR*.59;
+      const a=i*Math.PI/4+Math.PI/8,bx=Math.cos(a)*bR*.78,by=Math.sin(a)*bR*.78;
       ctx.fillStyle='#1c1c1c';ctx.strokeStyle=col+(f?'34':'0e');ctx.lineWidth=0.7;
-      ctx.beginPath();ctx.arc(bx,by,r*.026,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.arc(bx,by,r*.024,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // Glow rim
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
-    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    // Glow octagon rim
+    octPath();ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
+    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;
     // Counter-rotating rings
     ctx.save();ctx.rotate(t*1.8);ctx.strokeStyle=f?col+'70':col+'22';ctx.lineWidth=1.4;ctx.setLineDash([r*.18,r*.10]);
-    ctx.beginPath();ctx.arc(0,0,bR*.54,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.beginPath();ctx.arc(0,0,bR*.52,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.9;ctx.setLineDash([r*.11,r*.13]);
-    ctx.beginPath();ctx.arc(0,0,bR*.74,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.beginPath();ctx.arc(0,0,bR*.72,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     // TURRET: heavy railgun body
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     // Main body — wide armored housing
@@ -1937,19 +1939,19 @@ const UI={
     document.getElementById('mid-promo').style.display='none';
     document.getElementById('mid-info').classList.remove('show');
     document.getElementById('mid-card').classList.add('show');
-    document.getElementById('mc-name').textContent=d.name;
+    document.getElementById('mc-name').textContent=L(d.name,d.nameEn||d.name);
     document.getElementById('mc-name').style.color=d.color;
-    document.getElementById('mc-desc').textContent=d.desc;
+    document.getElementById('mc-desc').textContent=L(d.desc,d.descEn||d.desc);
     let tags=`<span class="mc-tag">◈ <b>${d.price}</b></span>`;
-    if(d.dmg>0)tags+=`<span class="mc-tag">공정력 <b>${d.dmg}</b></span>`;
-    if(d.spd>0)tags+=`<span class="mc-tag">속도 <b>${d.spd}/초</b></span>`;
-    tags+=`<span class="mc-tag">범위 <b>${d.range}</b></span>`;
-    if(d.type==='focus')tags+=`<span class="mc-tag">집중 레이저</span>`;
-    if(d.type==='scan')tags+=`<span class="mc-tag">광역</span>`;
-    if(d.type==='refinery')tags+=`<span class="mc-tag">전격·포트 획득</span>`;
-    if(d.type==='chain')tags+=`<span class="mc-tag">연쇄 <b>3개</b></span>`;
-    if(d.type==='pierce')tags+=`<span class="mc-tag">관통 <b>8개</b></span>`;
-    if(d.type==='twinhub')tags+=`<span class="mc-tag">궤도 감속</span>`;
+    if(d.dmg>0)tags+=`<span class="mc-tag">${L('공정력','Power')} <b>${d.dmg}</b></span>`;
+    if(d.spd>0)tags+=`<span class="mc-tag">${L('속도','Rate')} <b>${d.spd}/${L('초','s')}</b></span>`;
+    tags+=`<span class="mc-tag">${L('범위','Range')} <b>${d.range}</b></span>`;
+    if(d.type==='focus')tags+=`<span class="mc-tag">${L('집중 레이저','Focus Laser')}</span>`;
+    if(d.type==='scan')tags+=`<span class="mc-tag">${L('광역','AoE')}</span>`;
+    if(d.type==='refinery')tags+=`<span class="mc-tag">${L('전격·포트 획득','Shock & Port Gain')}</span>`;
+    if(d.type==='chain')tags+=`<span class="mc-tag">${L('연쇄','Chain')} <b>3${L('개','×')}</b></span>`;
+    if(d.type==='pierce')tags+=`<span class="mc-tag">${L('관통','Pierce')} <b>8${L('개','×')}</b></span>`;
+    if(d.type==='twinhub')tags+=`<span class="mc-tag">${L('궤도 감속','Orbital Slow')}</span>`;
     if(d.type==='drone')tags+=`<span class="mc-tag">선회공격</span>`;
     document.getElementById('mc-tags').innerHTML=tags;
   },
@@ -1990,7 +1992,7 @@ const UI={
     document.getElementById('mid-card').classList.remove('show');
     document.getElementById('mid-info').classList.add('show');
     const d=TWR[tower.tId];
-    document.getElementById('mi-name').textContent=tower.name;
+    document.getElementById('mi-name').textContent=L(d.name,d.nameEn||d.name);
     document.getElementById('mi-name').style.color=tower.color;
     const upgDone=tower.level-1;
     const gradeLabel=L(`업그레이드 ${upgDone} / 3`,`Upgrade ${upgDone} / 3`);
@@ -2078,6 +2080,8 @@ const UI={
     const sih=document.getElementById('si-help-text');if(sih)sih.textContent=ko?'게임 방법':'How To Play';
     const sil=document.getElementById('si-lang-text');if(sil)sil.textContent=ko?'언어 변경':'Change Language';
     const sili=document.getElementById('si-lang-icon');if(sili)sili.textContent=ko?'KO':'EN';
+    const hp=document.getElementById('hlb-port');if(hp)hp.textContent=ko?'포트':'Port';
+    const hs=document.getElementById('hlb-stab');if(hs)hs.textContent=ko?'안정성':'Stability';
     const wbl=document.getElementById('wbtn-lbl');if(wbl)wbl.textContent=ko?'웨이브':'Wave';
     const abl=document.getElementById('abtn-lbl');if(abl)abl.innerHTML=ko?'자동<br>웨이브':'Auto<br>Wave';
     const pr=document.getElementById('pbtn-resume');if(pr)pr.innerHTML=ko?'▶ &nbsp;계속하기':'▶ &nbsp;Resume';
