@@ -725,7 +725,7 @@ class Tower{
     if(tp==='drone'){
       this._droneAngle+=dt*(0.55+this._lm()*.08);
       const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;
-      const orbitR=rng*0.5;
+      const orbitR=this.isMega?TS*2.5:TS*1.75;
       const drX=cx0+Math.cos(this._droneAngle)*orbitR,drY=cy0+Math.sin(this._droneAngle)*orbitR;
       if(this._hitCooldown>0){this._hitCooldown-=dt;}
       else{
@@ -838,118 +838,153 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 4-포크 크로스 포가 + 초단열 코어 방사포
+  // 코어슈터: 원형 스태빌라이저 베이스 + 레일건 포탑
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // BASE: octagonal armor platform (4-way symmetric)
-    const bR=r*.82;
-    const octPath=(sc)=>{ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;const x=Math.cos(a)*bR*sc,y=Math.sin(a)*bR*sc;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.closePath();};
-    octPath(1);ctx.fillStyle='#141414';ctx.fill();
-    for(let i=0;i<8;i++){
-      const a0=i*Math.PI/4+Math.PI/8,a1=(i+1)*Math.PI/4+Math.PI/8;
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a0)*bR,Math.sin(a0)*bR);ctx.lineTo(Math.cos(a1)*bR,Math.sin(a1)*bR);ctx.closePath();
-      ctx.fillStyle=i%2===0?'#1c1c1c':'#111';ctx.fill();
+    // BASE: circular armored platform with 4 cardinal stabilizer fins (4-way symmetric)
+    const bR=r*.80;
+    // Main circular plate with radial gradient
+    const bg=ctx.createRadialGradient(0,0,0,0,0,bR);
+    bg.addColorStop(0,'#1e1e1e');bg.addColorStop(.55,'#161616');bg.addColorStop(1,'#101010');
+    ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.fillStyle=bg;ctx.fill();
+    ctx.strokeStyle='#282828';ctx.lineWidth=1.8;ctx.stroke();
+    // 4 cardinal stabilizer fins
+    for(let i=0;i<4;i++){
+      ctx.save();ctx.rotate(i*Math.PI/2);
+      const fw=bR*.38,fh=bR*.40;
+      ctx.fillStyle='#1a1a1a';ctx.strokeStyle='#262626';ctx.lineWidth=1.1;
+      ctx.beginPath();ctx.moveTo(-fw*.48,bR*.42);ctx.lineTo(-fw*.62,bR+fh*.08);ctx.lineTo(0,bR+fh);ctx.lineTo(fw*.62,bR+fh*.08);ctx.lineTo(fw*.48,bR*.42);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.shadowColor=col;ctx.shadowBlur=f?6:1;
+      ctx.strokeStyle=col+(f?'38':'0e');ctx.lineWidth=0.9;ctx.stroke();ctx.shadowBlur=0;
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'40':'12');ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.arc(0,bR+fh*.52,r*.032,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.restore();
     }
-    octPath(1);ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1.8;ctx.stroke();
-    octPath(.58);ctx.strokeStyle='#222';ctx.lineWidth=1.1;ctx.stroke();
-    ctx.shadowColor=col;ctx.shadowBlur=f?12:3;
-    octPath(1);ctx.strokeStyle=col+(f?'50':'16');ctx.lineWidth=1.3;ctx.stroke();ctx.shadowBlur=0;
+    // Concentric detail rings
+    ctx.strokeStyle='#242424';ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(0,0,bR*.72,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=1.0;ctx.beginPath();ctx.arc(0,0,bR*.46,0,Math.PI*2);ctx.stroke();
+    // 8 tech bolts on inner ring
     for(let i=0;i<8;i++){
-      const a=i*Math.PI/4+Math.PI/8;
-      const bx=Math.cos(a)*bR*.86,by=Math.sin(a)*bR*.86;
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'38':'10');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.arc(bx,by,r*.036,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.strokeStyle='#353535';ctx.lineWidth=0.6;
-      ctx.beginPath();ctx.moveTo(bx-r*.015,by);ctx.lineTo(bx+r*.015,by);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(bx,by-r*.015);ctx.lineTo(bx,by+r*.015);ctx.stroke();
+      const a=i*Math.PI/4,bx=Math.cos(a)*bR*.59,by=Math.sin(a)*bR*.59;
+      ctx.fillStyle='#1c1c1c';ctx.strokeStyle=col+(f?'34':'0e');ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.arc(bx,by,r*.026,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    ctx.save();ctx.rotate(t*1.8);ctx.strokeStyle=f?col+'70':col+'24';ctx.lineWidth=1.4;ctx.setLineDash([r*.20,r*.09]);
-    ctx.beginPath();ctx.arc(0,0,bR*.52,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    ctx.save();ctx.rotate(-t*1.2);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.9;ctx.setLineDash([r*.11,r*.14]);
-    ctx.beginPath();ctx.arc(0,0,bR*.72,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // TURRET
+    // Glow rim
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
+    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    // Counter-rotating rings
+    ctx.save();ctx.rotate(t*1.8);ctx.strokeStyle=f?col+'70':col+'22';ctx.lineWidth=1.4;ctx.setLineDash([r*.18,r*.10]);
+    ctx.beginPath();ctx.arc(0,0,bR*.54,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.9;ctx.setLineDash([r*.11,r*.13]);
+    ctx.beginPath();ctx.arc(0,0,bR*.74,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // TURRET: heavy railgun body
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'66':col+'26';ctx.lineWidth=1.8;
+    // Main body — wide armored housing
+    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'70':col+'28';ctx.lineWidth=2.0;
     ctx.beginPath();
-    ctx.moveTo(-r*.40,r*.06);ctx.lineTo(r*.40,r*.06);
-    ctx.lineTo(r*.32,-r*.10);ctx.lineTo(r*.22,-r*.36);
-    ctx.lineTo(-r*.22,-r*.36);ctx.lineTo(-r*.32,-r*.10);
+    ctx.moveTo(-r*.44,r*.10);ctx.lineTo(r*.44,r*.10);
+    ctx.lineTo(r*.38,-r*.05);ctx.lineTo(r*.26,-r*.40);
+    ctx.lineTo(-r*.26,-r*.40);ctx.lineTo(-r*.38,-r*.05);
     ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.strokeStyle=col+(f?'28':'0c');ctx.lineWidth=0.85;
-    ctx.beginPath();ctx.moveTo(-r*.30,-r*.04);ctx.lineTo(-r*.18,-r*.32);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(r*.30,-r*.04);ctx.lineTo(r*.18,-r*.32);ctx.stroke();
-    for(const bx of[-r*.22,0,r*.22]){
-      ctx.fillStyle='#252525';ctx.strokeStyle=col+(f?'44':'16');ctx.lineWidth=0.75;
-      ctx.beginPath();ctx.arc(bx,-r*.20,r*.038,0,Math.PI*2);ctx.fill();ctx.stroke();
-    }
+    // Side cooling fins (2 per side, symmetric)
     for(const sx of[-1,1]){
-      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=col+(f?'4a':'1c');ctx.lineWidth=1.1;
-      ctx.beginPath();ctx.moveTo(sx*r*.32,-r*.08);ctx.lineTo(sx*r*.56,-r*.12);ctx.lineTo(sx*r*.54,-r*.32);ctx.lineTo(sx*r*.32,-r*.30);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.strokeStyle=col+(f?'38':'0e');ctx.lineWidth=0.75;
-      for(let fi=0;fi<3;fi++){const fy=-r*.12-fi*r*.063;ctx.beginPath();ctx.moveTo(sx*r*.36,fy);ctx.lineTo(sx*r*.52,fy);ctx.stroke();}
+      for(let fi=0;fi<2;fi++){
+        const fy=-r*.05-fi*r*.16;
+        ctx.fillStyle='#191919';ctx.strokeStyle=col+(f?'4a':'1c');ctx.lineWidth=1.0;
+        ctx.beginPath();ctx.moveTo(sx*r*.38,fy);ctx.lineTo(sx*r*.60,fy-r*.04);ctx.lineTo(sx*r*.60,fy+r*.10);ctx.lineTo(sx*r*.38,fy+r*.12);ctx.closePath();ctx.fill();ctx.stroke();
+        ctx.strokeStyle=col+(f?'36':'10');ctx.lineWidth=0.65;
+        for(let v=0;v<3;v++){const vy=fy+r*.01+v*r*.030;ctx.beginPath();ctx.moveTo(sx*r*.41,vy);ctx.lineTo(sx*r*.57,vy);ctx.stroke();}
+      }
     }
-    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=col+(f?'50':'20');ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.rect(-r*.20,-r*.36,r*.40,r*.10);ctx.fill();ctx.stroke();
-    const brlL=r*.16,brlHW=r*.14;
-    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'99':col+'42';ctx.lineWidth=1.6;
-    ctx.shadowColor=col;ctx.shadowBlur=f?14:2;
-    ctx.beginPath();ctx.rect(-brlHW,-r*.36-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.6;
-    ctx.beginPath();ctx.arc(0,-r*.38,brlHW*1.1,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#0a0a0a';ctx.beginPath();ctx.rect(-brlHW*.68,-r*.34-brlL,brlHW*1.36,brlL*.88);ctx.fill();
-    ctx.fillStyle='#161616';ctx.shadowColor=col;ctx.shadowBlur=f?28:5;ctx.strokeStyle=f?col+'cc':col+'55';ctx.lineWidth=2.0;
-    ctx.beginPath();ctx.moveTo(-brlHW*1.3,-r*.36-brlL);ctx.lineTo(brlHW*1.3,-r*.36-brlL);ctx.lineTo(brlHW,-r*.36-brlL-r*.058);ctx.lineTo(-brlHW,-r*.36-brlL-r*.058);ctx.closePath();ctx.fill();ctx.stroke();
+    // Body center seam (symmetric vertical)
+    ctx.strokeStyle=col+(f?'24':'0a');ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(0,r*.08);ctx.lineTo(0,-r*.38);ctx.stroke();
+    // 2 symmetric charging nodes
+    for(const sx of[-1,1]){
+      ctx.fillStyle='#242424';ctx.strokeStyle=col+(f?'60':'22');ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.arc(sx*r*.17,-r*.20,r*.038,0,Math.PI*2);ctx.fill();ctx.stroke();
+      if(f){ctx.fillStyle=col+'99';ctx.shadowColor=col;ctx.shadowBlur=10;ctx.beginPath();ctx.arc(sx*r*.17,-r*.20,r*.020,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+    }
+    // Barrel mount housing
+    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.rect(-r*.22,-r*.40,r*.44,r*.13);ctx.fill();ctx.stroke();
+    // Main barrel — thick single tube
+    const brlL=r*.36,brlHW=r*.095;
+    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=1.8;
+    ctx.shadowColor=col;ctx.shadowBlur=f?18:3;
+    ctx.beginPath();ctx.rect(-brlHW,-r*.40-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    // 3 barrel ring flanges
+    for(let ri=0;ri<3;ri++){
+      const ry=-r*.40-brlL*(ri+1)*.25;
+      ctx.fillStyle='#212121';ctx.strokeStyle=col+(f?'66':'28');ctx.lineWidth=1.4;
+      ctx.beginPath();ctx.rect(-brlHW*1.55,ry-r*.022,brlHW*3.1,r*.044);ctx.fill();ctx.stroke();
+    }
+    // Muzzle brake
+    ctx.fillStyle='#161616';ctx.shadowColor=col;ctx.shadowBlur=f?28:6;ctx.strokeStyle=f?col+'cc':col+'55';ctx.lineWidth=2.0;
+    ctx.beginPath();ctx.moveTo(-brlHW*1.4,-r*.40-brlL);ctx.lineTo(brlHW*1.4,-r*.40-brlL);ctx.lineTo(brlHW,-r*.40-brlL-r*.05);ctx.lineTo(-brlHW,-r*.40-brlL-r*.05);ctx.closePath();ctx.fill();ctx.stroke();
     ctx.shadowBlur=0;
     if(f){
-      ctx.globalAlpha=.8;
-      const mg=ctx.createRadialGradient(0,-r*.36-brlL-r*.02,0,0,-r*.36-brlL-r*.02,r*.22);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.3,col);mg.addColorStop(1,col+'00');
-      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-r*.36-brlL-r*.02,r*.22,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.85;
+      const mg=ctx.createRadialGradient(0,-r*.40-brlL,0,0,-r*.40-brlL,r*.26);
+      mg.addColorStop(0,'#fff');mg.addColorStop(.28,col);mg.addColorStop(1,col+'00');
+      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-r*.40-brlL,r*.26,0,Math.PI*2);ctx.fill();
       ctx.globalAlpha=1;
     }
     ctx.restore();
-    ctx.shadowColor=col;ctx.shadowBlur=f?36:12;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.24);
-    cg.addColorStop(0,'#ffffff');cg.addColorStop(.25,col);cg.addColorStop(.6,col+'55');cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.24,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.arc(0,0,r*.30,0,Math.PI*2);ctx.stroke();
+    // Center core
+    ctx.shadowColor=col;ctx.shadowBlur=f?40:14;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.26);
+    cg.addColorStop(0,'#ffffff');cg.addColorStop(.22,col);cg.addColorStop(.65,col+'55');cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.arc(0,0,r*.32,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
   // 픽셀 로봇암: 직선 대칭 산업 로봇팔 — 헥사곤 베이스
   _dPA(ctx,r,t,f){
     const col=this.color;
-    // BASE: square industrial platform (4-way symmetric)
+    // BASE: cross-anchor industrial mounting platform (4-way symmetric)
     const bs=r*.80;
-    ctx.fillStyle='#141414';ctx.beginPath();ctx.rect(-bs,-bs,bs*2,bs*2);ctx.fill();
-    for(let qx=-1;qx<=1;qx+=2)for(let qy=-1;qy<=1;qy+=2){
-      ctx.fillStyle=(qx<0&&qy<0)||(qx>0&&qy>0)?'#1c1c1c':'#111111';
-      ctx.fillRect(qx<0?-bs:0,qy<0?-bs:0,bs,bs);
-    }
+    // Background plate
+    ctx.fillStyle='#111111';ctx.beginPath();ctx.rect(-bs,-bs,bs*2,bs*2);ctx.fill();
+    // Cross arms (H + V bars)
+    const aw=bs*.56;
+    ctx.fillStyle='#1a1a1a';
+    ctx.beginPath();ctx.rect(-bs,-aw*.5,bs*2,aw);ctx.fill();
+    ctx.beginPath();ctx.rect(-aw*.5,-bs,aw,bs*2);ctx.fill();
+    // Outer border
     ctx.strokeStyle='#2c2c2c';ctx.lineWidth=1.8;ctx.beginPath();ctx.rect(-bs,-bs,bs*2,bs*2);ctx.stroke();
-    const ibs=bs*.62;
-    ctx.strokeStyle='#222';ctx.lineWidth=1.0;ctx.beginPath();ctx.rect(-ibs,-ibs,ibs*2,ibs*2);ctx.stroke();
-    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=1.0;
-    ctx.beginPath();ctx.moveTo(-bs,0);ctx.lineTo(bs,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-bs);ctx.lineTo(0,bs);ctx.stroke();
-    for(const cx of[-1,1])for(const cy of[-1,1]){
-      const bx=cx*bs*.72,by=cy*bs*.72;
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'40':'14');ctx.lineWidth=0.9;
-      ctx.beginPath();ctx.arc(bx,by,r*.042,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.strokeStyle='#3a3a3a';ctx.lineWidth=0.6;
-      ctx.beginPath();ctx.moveTo(bx-r*.018,by);ctx.lineTo(bx+r*.018,by);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(bx,by-r*.018);ctx.lineTo(bx,by+r*.018);ctx.stroke();
+    // Center octagon hub
+    const ch=bs*.42;
+    ctx.fillStyle='#202020';ctx.strokeStyle='#2e2e2e';ctx.lineWidth=1.5;
+    ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;i===0?ctx.moveTo(Math.cos(a)*ch,Math.sin(a)*ch):ctx.lineTo(Math.cos(a)*ch,Math.sin(a)*ch);}ctx.closePath();ctx.fill();ctx.stroke();
+    // 4 corner square pads
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2+Math.PI/4,px=Math.cos(a)*bs*.70,py=Math.sin(a)*bs*.70,ps=bs*.24;
+      ctx.fillStyle='#1c1c1c';ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1.0;
+      ctx.beginPath();ctx.rect(px-ps*.5,py-ps*.5,ps,ps);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#212121';ctx.strokeStyle=col+(f?'40':'14');ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.arc(px,py,r*.040,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#383838';ctx.lineWidth=0.6;
+      ctx.beginPath();ctx.moveTo(px-r*.016,py);ctx.lineTo(px+r*.016,py);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(px,py-r*.016);ctx.lineTo(px,py+r*.016);ctx.stroke();
     }
-    const diagLen=bs*.13;
-    for(const cx of[-1,1])for(const cy of[-1,1]){
-      ctx.strokeStyle='#272727';ctx.lineWidth=0.85;
-      ctx.beginPath();ctx.moveTo(cx*ibs,cy*ibs);ctx.lineTo(cx*(ibs+diagLen),cy*ibs);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(cx*ibs,cy*ibs);ctx.lineTo(cx*ibs,cy*(ibs+diagLen));ctx.stroke();
+    // 4 cardinal arm bolts
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2,bx=Math.cos(a)*bs*.62,by=Math.sin(a)*bs*.62;
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'36':'10');ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.arc(bx,by,r*.030,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#333';ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(bx-r*.012,by);ctx.lineTo(bx+r*.012,by);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(bx,by-r*.012);ctx.lineTo(bx,by+r*.012);ctx.stroke();
     }
+    // Glow accents
     ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    ctx.strokeStyle=col+(f?'44':'12');ctx.lineWidth=1.2;ctx.beginPath();ctx.rect(-bs,-bs,bs*2,bs*2);ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=col+(f?'44':'12');ctx.lineWidth=1.3;ctx.beginPath();ctx.rect(-bs,-bs,bs*2,bs*2);ctx.stroke();
+    for(let i=0;i<4;i++){const a=i*Math.PI/2;ctx.strokeStyle=col+(f?'28':'0a');ctx.lineWidth=0.9;ctx.beginPath();ctx.moveTo(Math.cos(a)*ch,Math.sin(a)*ch);ctx.lineTo(Math.cos(a)*(bs-r*.05),Math.sin(a)*(bs-r*.05));ctx.stroke();}
+    ctx.shadowBlur=0;
     ctx.save();ctx.rotate(t*.45);ctx.strokeStyle=col+(f?'50':'18');ctx.lineWidth=1.1;ctx.setLineDash([r*.14,r*.09]);
-    ctx.beginPath();ctx.arc(0,0,bs*.76,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.beginPath();ctx.arc(0,0,ch*.85,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     // ── ARM: straight & perfectly symmetric (no lateral offset)
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     const j0y=-r*.05,j1y=-r*.40,j2y=-r*.60;
@@ -1363,7 +1398,7 @@ class Tower{
   }
   _drawDroneOrbit(ctx){
     const rng=this.getRange()*TS,da=this._droneAngle,col=this.color,f=this._firingT>0;
-    const orbitR=rng*0.5;
+    const orbitR=this.isMega?TS*2.5:TS*1.75;
     const sc=this.isMega?1:0.5;
     ctx.save();
     ctx.strokeStyle=col+'14';ctx.lineWidth=.8;ctx.setLineDash([3,9]);
@@ -1966,7 +2001,7 @@ const UI={
     let s='';
     if(d.dmg>0)s+=`<div class="tis">${L('공정력','Power')}<span>${tower.getDmg().toFixed(1)}</span></div>`;
     if(d.spd>0)s+=`<div class="tis">${L('속도','Rate')}<span>${tower.getSpd().toFixed(1)}/${L('초','s')}</span></div>`;
-    s+=`<div class="tis">${L('범위','Range')}<span>${d.range+(tower.isMega?'+1':'')}</span></div>`;
+    s+=`<div class="tis">${L('범위','Range')}<span>${tower.getRange()}</span></div>`;
     if(tower.type==='focus')s+=`<div class="tis">${L('집중 레이저','Focus Laser')}<span>${L('지속','Active')}</span></div>`;
     if(tower.type==='refinery'){const pg=Math.max(1,Math.round(tower.getDmg()*1.5));s+=`<div class="tis">${L('포트/발사','Port/Shot')}<span>+◈${pg}</span></div>`;}
     if(tower.type==='chain'){const sd=Math.round(tower.getDmg()*0.5);s+=`<div class="tis">${L('연쇄','Chain')}<span>${L('3개','×3')}</span></div>`;s+=`<div class="tis">${L('감전','Shock')}<span>DPS ${sd} / ${L('3초','3s')}</span></div>`;}
