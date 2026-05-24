@@ -676,7 +676,7 @@ class Tower{
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
-  getRange(){return TWR[this.tId].range;}
+  getRange(){return TWR[this.tId].range+(this.isMega?1:0);}
   update(dt,ores){
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
     const tp=this.type;
