@@ -2358,47 +2358,38 @@ const UI={
     const bw=+localStorage.getItem('ieg_bw')||0,bp=+localStorage.getItem('ieg_bp')||0;
     if(GS.wave>bw)localStorage.setItem('ieg_bw',GS.wave);
     if(GS.totalPort>bp)localStorage.setItem('ieg_bp',GS.totalPort);
-    // Populate clrovly with game-over content
     const badge=document.getElementById('clr-badge');
-    badge.textContent='GAME OVER';badge.style.color='#EF5350';badge.style.borderColor='#EF535055';
+    badge.textContent='GAME OVER';badge.style.color='';badge.style.borderColor='';
     const titleEl=document.getElementById('clr-title');
     titleEl.innerHTML=`W<span>${GS.wave}</span>`;
-    titleEl.style.textShadow='0 0 40px #EF535066';
-    titleEl.querySelector('span').style.color='#EF5350';
+    titleEl.style.textShadow='';titleEl.querySelector('span').style.color='';
     document.getElementById('clr-sub').textContent=LANG==='ko'?'가동 중지':'FACTORY HALT';
-    document.getElementById('clr-divider').style.background='linear-gradient(90deg,transparent,#EF5350,transparent)';
+    document.getElementById('clr-divider').style.background='';
     const btn=document.getElementById('clr-btn');
-    btn.style.background='linear-gradient(135deg,#EF5350,#b71c1c)';btn.style.color='#fff';
+    btn.style.background='';btn.style.color='';
     btn.innerHTML=LANG==='ko'?'↩ &nbsp;재가동':'↩ &nbsp;Restart';
-    // Score calculation
     const towerScore=GS.towers.reduce((s,tw)=>s+tw.basePrice+tw.upgCost,0);
-    const stabilityBonus=GS.stability*100;
-    const portBonus=GS.port;
-    const score=towerScore+stabilityBonus+portBonus;
     const t=Math.floor(GS.time);const ko=LANG==='ko';
     document.getElementById('clr-stats').innerHTML=`
-      <div class="clr-row" style="background:#EF535014;border-color:#EF535033"><span class="clr-lbl" style="color:#EF5350;font-size:13px">${ko?'최종 점수':'TOTAL SCORE'}</span><span class="clr-val" style="font-size:20px">${score.toLocaleString()}</span></div>
-      <div class="clr-row"><span class="clr-lbl">${ko?'장비 자산':'Tower Assets'}</span><span class="clr-val">◈ ${towerScore.toLocaleString()}</span></div>
-      <div class="clr-row"><span class="clr-lbl">${ko?'안정성 보너스':'Stability Bonus'}</span><span class="clr-val">${GS.stability}×100 = ${stabilityBonus.toLocaleString()}</span></div>
-      <div class="clr-row"><span class="clr-lbl">${ko?'보유 포트':'Port Balance'}</span><span class="clr-val">◈ ${portBonus.toLocaleString()}</span></div>
       <div class="clr-row"><span class="clr-lbl">${ko?'최종 웨이브':'Final Wave'}</span><span class="clr-val">${GS.wave}/100</span></div>
       <div class="clr-row"><span class="clr-lbl">${ko?'운영 시간':'Operation Time'}</span><span class="clr-val">${Math.floor(t/60)}${ko?'분 ':'m '}${t%60}${ko?'초':'s'}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'총 생산 포트':'Total Port'}</span><span class="clr-val">◈ ${GS.totalPort.toLocaleString()}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'장비 자산':'Tower Assets'}</span><span class="clr-val">◈ ${towerScore.toLocaleString()}</span></div>
     `;
-    // Red particle canvas
     const cv=document.getElementById('clr-canvas');
     cv.width=480;cv.height=900;
     const cx=cv.getContext('2d');
     const bg=cx.createRadialGradient(240,380,20,240,380,420);
-    bg.addColorStop(0,'#120000');bg.addColorStop(.6,'#080000');bg.addColorStop(1,'#000');
+    bg.addColorStop(0,'#1a1a1a');bg.addColorStop(.6,'#0a0a0a');bg.addColorStop(1,'#000');
     cx.fillStyle=bg;cx.fillRect(0,0,480,900);
-    cx.strokeStyle='#EF535010';cx.lineWidth=1;
+    cx.strokeStyle='#ffffff08';cx.lineWidth=1;
     for(let x=0;x<480;x+=32){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,900);cx.stroke();}
     for(let y=0;y<900;y+=32){cx.beginPath();cx.moveTo(0,y);cx.lineTo(480,y);cx.stroke();}
     const pts=Array.from({length:55},()=>({
       x:Math.random()*480,y:Math.random()*900,
       vx:(Math.random()-.5)*.7,vy:Math.random()*.9+.3,
       r:Math.random()*2+.4,life:.3+Math.random()*.7,
-      col:Math.random()<.6?'#EF5350':Math.random()<.5?'#FF8A80':'#ffffff'
+      col:Math.random()<.5?'#ffffff':Math.random()<.5?'#aaaaaa':'#555555'
     }));
     const tick=()=>{
       if(document.getElementById('clrovly').style.display==='none')return;
