@@ -281,16 +281,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'그리퍼로 선두 원석을 잡아 분해한다. 가장 저렴한 초기 단일 타격 설비.', descEn:'Grips the lead ore and disassembles it. The cheapest single-target unit.'},
-  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#FF3040',type:'single',   dmg:100,  spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'3암 리액터에서 에너지 탄을 빠르게 연사한다. 단일 원석 집중 처리에 특화.', descEn:'Rapid-fires energy rounds from a 3-arm reactor. Specialized for single-target focus fire.'},
-  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:250,  spd:0.5,  range:2.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'2초마다 근거리 원석 전체를 타격하고 둔화시킨다. 단거리 광역 억제 설비.', descEn:'Hits and slows all nearby ores every 2 seconds. Short-range AoE control unit.'},
-  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'가장 무거운 원석을 자동 선별해 정밀 타격한다. 단발 파괴력 최강.', descEn:'Auto-targets the heaviest ore with a precision shot. Highest single-hit damage.'},
-  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'탈출구에 가장 가까운 원석에 입자빔을 쉬지 않고 발사한다. 공격 속도 최강.', descEn:'Relentlessly beams the ore nearest the exit. Fastest attack speed of any unit.'},
-  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석을 타격할 때마다 포트를 즉시 수확한다. 처치 없이도 수익이 발생한다.', descEn:'Harvests port income on every hit, even without a kill.'},
-  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:430,  spd:1.0,  range:3.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'범위 내 원석 전체를 주기적으로 동시 처리한다. 원석이 밀집할수록 효율 증가.', descEn:'Periodically hits all ores in range at once. More efficient as ores cluster.'},
-  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:120,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'원석에 방전을 시작해 인접 원석 최대 2개까지 연쇄 타격한다.', descEn:'Discharges through one ore and chains to up to 2 adjacent targets.'},
-  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'고속 선회 드론이 궤도 안 원석을 레이저로 즉시 처리한다.', descEn:'A high-speed orbiting drone lasers ores within its path on sight.'},
-  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'플라즈마 빔이 일직선으로 최대 8개 원석을 관통 처리한다.', descEn:'Plasma beam pierces a straight line, hitting up to 8 ores at once.'},
+  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'라인 선두의 원석을 잡아 분해한다.', descEn:'Grabs and disassembles the ore at the front of the line.'},
+  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#FF3040',type:'single',   dmg:100,  spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'단일 원석에 집중 사격해 빠르게 처리한다.', descEn:'Focuses fire on a single ore for rapid elimination.'},
+  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:250,  spd:0.5,  range:2.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'근거리 원석 전체를 동시에 타격하고 이동을 늦춘다.', descEn:'Hits all nearby ores at once and slows their advance.'},
+  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'가장 위험한 원석을 선별해 강력하게 처리한다.', descEn:'Identifies and powerfully eliminates the most threatening ore.'},
+  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'탈출 직전의 원석을 끊임없이 처리한다.', descEn:'Relentlessly processes ores that are about to escape.'},
+  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석 처리 시마다 포트 자원을 수확한다.', descEn:'Harvests port resources with every ore processed.'},
+  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:430,  spd:1.0,  range:3.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'범위 내 원석 전체를 한 번에 처리한다. 밀집할수록 효율이 높아진다.', descEn:'Processes all ores in range at once. More effective as ores cluster.'},
+  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:120,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'한 원석을 처리하면 주변 원석까지 연쇄 타격된다.', descEn:'Processing one ore triggers a chain reaction on surrounding ores.'},
+  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'자율 드론이 궤도 안 원석을 자동으로 탐지해 처리한다.', descEn:'An autonomous drone automatically tracks and processes ores in its orbit.'},
+  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'한 줄로 늘어선 원석을 한 번에 관통 처리한다.', descEn:'Pierces and processes ores lined up in a row with a single pass.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -1596,83 +1596,106 @@ class Tower{
     // CIRCULAR ARMOR BASE
     ctx.beginPath();ctx.arc(0,0,r*.90,0,Math.PI*2);
     ctx.fillStyle='#111';ctx.fill();
-    ctx.strokeStyle=f?col+'aa':'#2a2030';ctx.lineWidth=2.0;ctx.stroke();
-    // 8 border dots on rim (4 cardinal large + 4 diagonal small)
-    for(let i=0;i<8;i++){
-      const a=i*Math.PI/4,bx=Math.cos(a)*r*.82,by=Math.sin(a)*r*.82;
-      ctx.fillStyle=f?col:'#2d2d2d';ctx.strokeStyle=f?col+'88':col+'22';ctx.lineWidth=0.8;
-      ctx.shadowColor=col;ctx.shadowBlur=f?8:0;
-      ctx.beginPath();ctx.arc(bx,by,r*(i%2===0?.055:.036),0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=f?col+'bb':'#2a2030';ctx.lineWidth=2.2;ctx.stroke();
+    // 4 diagonal armor wedge panels (between arms)
+    for(let i=0;i<4;i++){
+      const a0=i*Math.PI/2-Math.PI/2+Math.PI/14,a1=i*Math.PI/2-Math.PI/2+Math.PI/2-Math.PI/14;
+      ctx.fillStyle=f?col+'0c':'#191919';
+      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.84,a0,a1);ctx.closePath();ctx.fill();
     }
-    // Pulsing outer energy ring
+    // Pulsing outer ring
     const pulse=.5+Math.sin(t*4)*.5;
-    ctx.globalAlpha=f?pulse*.55:.15;ctx.strokeStyle=col;ctx.lineWidth=2.0;
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
+    ctx.globalAlpha=f?pulse*.6:.18;ctx.strokeStyle=col;ctx.lineWidth=2.2;
+    ctx.shadowColor=col;ctx.shadowBlur=f?18:0;
     ctx.beginPath();ctx.arc(0,0,r*.86,0,Math.PI*2);ctx.stroke();
     ctx.globalAlpha=1;ctx.shadowBlur=0;
-    // 4 tuning-fork arms (top/right/bottom/left — 상하좌우 대칭)
-    const prongL=r*.62,prongW=r*.065,forkGap=r*.13,forkL=r*.20;
+    // 4 heavy pylon arms (N/E/S/W) with T-head emitters
+    const armW=r*.22,armStart=r*.10,armEnd=r*.70;
+    const headW=r*.46,headH=r*.15,hch=r*.04;
     for(let i=0;i<4;i++){
       const a=i*Math.PI/2-Math.PI/2;
       ctx.save();ctx.rotate(a);
-      // arm shaft
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'55':'#333';ctx.lineWidth=1.0;
-      ctx.beginPath();ctx.rect(-prongW*.5,r*.12,prongW,prongL-forkL-r*.12);ctx.fill();ctx.stroke();
-      // cross-bar at fork point
-      const forkY=-(prongL-forkL);
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'66':'#3a3a3a';ctx.lineWidth=1.1;
-      ctx.beginPath();ctx.rect(-forkGap-prongW*.4,forkY-prongW*.5,forkGap*2+prongW*.8,prongW);ctx.fill();ctx.stroke();
-      // 2 prongs (left and right)
+      // shoulder plate
+      ctx.fillStyle='#222';ctx.strokeStyle=f?col+'33':'#2c2c2c';ctx.lineWidth=1.0;
+      ctx.beginPath();ctx.moveTo(-armW*.72,armStart+r*.05);ctx.lineTo(armW*.72,armStart+r*.05);ctx.lineTo(armW*.5,armStart-r*.04);ctx.lineTo(-armW*.5,armStart-r*.04);ctx.closePath();ctx.fill();ctx.stroke();
+      // pylon body
+      const bodyTop=-armEnd+headH,bodyBot=armStart;
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'44':'#2e2e2e';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.rect(-armW*.5,bodyTop,armW,bodyBot-bodyTop);ctx.fill();ctx.stroke();
+      // groove lines on pylon
+      ctx.strokeStyle=f?col+'22':'#272727';ctx.lineWidth=0.8;
+      for(let g=1;g<4;g++){const gy=bodyTop+(bodyBot-bodyTop)*g/4;ctx.beginPath();ctx.moveTo(-armW*.35,gy);ctx.lineTo(armW*.35,gy);ctx.stroke();}
+      // side edge highlights
+      ctx.strokeStyle='#262626';ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.moveTo(-armW*.5+r*.018,bodyTop+r*.02);ctx.lineTo(-armW*.5+r*.018,bodyBot-r*.02);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(armW*.5-r*.018,bodyTop+r*.02);ctx.lineTo(armW*.5-r*.018,bodyBot-r*.02);ctx.stroke();
+      // T-head (chamfered rect)
+      const hy=-armEnd,hb=hy+headH;
+      ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'88':'#363636';ctx.lineWidth=1.5;
+      ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
+      ctx.beginPath();
+      ctx.moveTo(-headW*.5+hch,hy);ctx.lineTo(headW*.5-hch,hy);ctx.lineTo(headW*.5,hy+hch);
+      ctx.lineTo(headW*.5,hb-hch);ctx.lineTo(headW*.5-hch,hb);ctx.lineTo(-headW*.5+hch,hb);
+      ctx.lineTo(-headW*.5,hb-hch);ctx.lineTo(-headW*.5,hy+hch);ctx.closePath();
+      ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+      // inner divider on head
+      ctx.strokeStyle=f?col+'33':'#282828';ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.moveTo(-armW*.38,hy+headH*.35);ctx.lineTo(armW*.38,hy+headH*.35);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-armW*.38,hy+headH*.72);ctx.lineTo(armW*.38,hy+headH*.72);ctx.stroke();
+      // 2 emitter orbs in T-head
+      const orbX=headW*.32,orbY=hy+headH*.5;
       for(const sx of[-1,1]){
-        const px=sx*forkGap;
-        ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'66':'#363636';ctx.lineWidth=0.9;
-        ctx.beginPath();ctx.rect(px-prongW*.4,forkY-forkL,prongW*.8,forkL);ctx.fill();ctx.stroke();
-        // emitter node at prong tip
-        const ny=forkY-forkL;
-        ctx.fillStyle='#181818';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.3;
-        ctx.shadowColor=col;ctx.shadowBlur=f?20:4;
-        ctx.beginPath();ctx.arc(px,ny,r*.090,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-        const eg=ctx.createRadialGradient(px,ny,0,px,ny,r*.090);
-        eg.addColorStop(0,f?'#fff':col+'cc');eg.addColorStop(.5,col+(f?'88':'33'));eg.addColorStop(1,col+'00');
-        ctx.fillStyle=eg;ctx.beginPath();ctx.arc(px,ny,r*.090,0,Math.PI*2);ctx.fill();
+        const ox=sx*orbX;
+        ctx.fillStyle='#181818';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.4;
+        ctx.shadowColor=col;ctx.shadowBlur=f?26:5;
+        ctx.beginPath();ctx.arc(ox,orbY,r*.088,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+        const eg=ctx.createRadialGradient(ox,orbY,0,ox,orbY,r*.088);
+        eg.addColorStop(0,f?'#fff':col+'dd');eg.addColorStop(.4,col+(f?'aa':'44'));eg.addColorStop(1,col+'00');
+        ctx.fillStyle=eg;ctx.beginPath();ctx.arc(ox,orbY,r*.088,0,Math.PI*2);ctx.fill();
+      }
+      // arc between 2 orbs on each head when firing
+      if(f){
+        ctx.strokeStyle=col+'cc';ctx.lineWidth=1.3;ctx.shadowColor=col;ctx.shadowBlur=18;
+        ctx.beginPath();ctx.moveTo(-orbX,orbY);ctx.quadraticCurveTo(0,orbY-r*.08,orbX,orbY);ctx.stroke();
+        ctx.shadowBlur=0;
       }
       ctx.restore();
     }
-    // Field arcs connecting 8 prong tips when firing
+    // Cross-pylon field arcs when firing
     if(f){
       const tips=[];
       for(let i=0;i<4;i++){
-        const armA=i*Math.PI/2-Math.PI/2;
+        const armA=i*Math.PI/2-Math.PI/2,orbX=headW*.32,orbY=-armEnd+headH*.5;
         for(const sx of[-1,1]){
-          const lx=sx*forkGap,ly=-(prongL-forkL)-forkL;
+          const lx=sx*orbX,ly=orbY;
           tips.push({x:lx*Math.cos(armA)-ly*Math.sin(armA),y:lx*Math.sin(armA)+ly*Math.cos(armA)});
         }
       }
       tips.sort((a,b)=>Math.atan2(a.y,a.x)-Math.atan2(b.y,b.x));
-      ctx.strokeStyle=col+'88';ctx.lineWidth=1.2;ctx.shadowColor=col;ctx.shadowBlur=16;
+      ctx.strokeStyle=col+'55';ctx.lineWidth=1.0;ctx.shadowColor=col;ctx.shadowBlur=10;
       for(let i=0;i<tips.length;i++){
         const a=tips[i],b=tips[(i+1)%tips.length];
         ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(0,0,b.x,b.y);ctx.stroke();
       }
       ctx.shadowBlur=0;
     }
-    // Counter-rotating outer square prism (45° = diamond)
+    // Counter-rotating dashed diamond
     ctx.save();ctx.rotate(t*.7+Math.PI/4);ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.2;ctx.setLineDash([r*.15,r*.08]);
     ctx.beginPath();
-    for(let i=0;i<4;i++){const a=i*Math.PI/2;if(i===0)ctx.moveTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);else ctx.lineTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);}
+    for(let i=0;i<4;i++){const a=i*Math.PI/2;if(i===0)ctx.moveTo(Math.cos(a)*r*.50,Math.sin(a)*r*.50);else ctx.lineTo(Math.cos(a)*r*.50,Math.sin(a)*r*.50);}
     ctx.closePath();ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // Rotating inner square (axis-aligned)
+    // Rotating inner square
     ctx.save();ctx.rotate(-t*1.2);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=1.0;
     ctx.beginPath();
-    for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4;if(i===0)ctx.moveTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);else ctx.lineTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);}
+    for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4;if(i===0)ctx.moveTo(Math.cos(a)*r*.30,Math.sin(a)*r*.30);else ctx.lineTo(Math.cos(a)*r*.30,Math.sin(a)*r*.30);}
     ctx.closePath();ctx.stroke();ctx.restore();
     // Central hub
     ctx.shadowColor=col;ctx.shadowBlur=f?28:10;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.22);
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.20);
     cg.addColorStop(0,f?'#fff':col);cg.addColorStop(.4,col+(f?'cc':'88'));cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.20,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle=f?col+'cc':col+'55';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,r*.27,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
 }
