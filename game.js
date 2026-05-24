@@ -36,7 +36,7 @@
 // 🔊 효과음 엔진 (Web Audio API — 파일 없음)
 // ═══════════════════════════════════════════════════════
 const SFX={
-  _ctx:null,_on:true,_master:null,
+  _ctx:null,_on:true,_master:null,_shootCd:{},_hitCd:{},
   _init(){
     if(this._ctx)return;
     this._ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -72,6 +72,10 @@ const SFX={
   // ── 유닛 발사음 ──────────────────────────────────
   shoot(type){
     if(!this._on)return;
+    const _now=performance.now();
+    const _minMs=type==='aoe'||type==='twinhub'?160:type==='chain'?120:90;
+    if(_now-(this._shootCd[type]||0)<_minMs)return;
+    this._shootCd[type]=_now;
     if(type==='single'||type==='pixelArm'){
       // 픽셀 로봇암: 짧은 기계 클릭
       this._osc('square',320,.06,.18);
@@ -108,6 +112,9 @@ const SFX={
   // ── 원석 처치음 ─────────────────────────────────
   hit(isBig=false){
     if(!this._on)return;
+    const _hk=isBig?'b':'s';const _hn=performance.now();
+    if(_hn-(this._hitCd[_hk]||0)<70)return;
+    this._hitCd[_hk]=_hn;
     if(isBig){
       // 큰 원석: 금속 충격 + 잔향
       this._noise(.06,.28,900);
@@ -826,7 +833,7 @@ class Tower{
       ctx.strokeStyle='#fff';ctx.lineWidth=.9;ctx.globalAlpha=.65*p;ctx.shadowBlur=4;ctx.beginPath();ctx.moveTo(this.cx,this.cy);ctx.lineTo(this._focusTgt.x,this._focusTgt.y);ctx.stroke();
       ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
     }
-    if(this.type==='twinhub')this._drawTwinOrbit(ctx);
+    if(this.type==='twinhub'&&this._firingT>0){const rng=this.getRange()*TS;ctx.save();ctx.strokeStyle=this.color+'22';ctx.lineWidth=1.5;ctx.setLineDash([4,8]);ctx.beginPath();ctx.arc(this.cx,this.cy,rng,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();}
   }
   _base(ctx,r,col,sh='circle'){
     if(sh==='circle'){ctx.beginPath();ctx.arc(0,0,r*.88,0,Math.PI*2);}
@@ -842,83 +849,69 @@ class Tower{
   // 코어슈터: 팔각형 베이스 + 드럼형 포탑
   _dCS(ctx,r,t,f){
     const col=this.color;
-    const bR=r*.82,HO=Math.PI/8;
-    const octPath=(sc)=>{ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+HO;i===0?ctx.moveTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc):ctx.lineTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc);}ctx.closePath();};
-    // BASE outer fill
-    ctx.fillStyle='#151515';octPath(1);ctx.fill();
-    // 8 face panels
-    for(let i=0;i<8;i++){
-      const a0=i*Math.PI/4+HO,a1=(i+1)*Math.PI/4+HO;
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a0)*bR*.97,Math.sin(a0)*bR*.97);ctx.lineTo(Math.cos(a1)*bR*.97,Math.sin(a1)*bR*.97);ctx.closePath();
-      ctx.fillStyle=i%2===0?'#1b1b1b':'#181818';ctx.fill();
-      ctx.strokeStyle='#222';ctx.lineWidth=0.7;ctx.stroke();
+    // BASE: circular backing plate
+    ctx.beginPath();ctx.arc(0,0,r*.86,0,Math.PI*2);
+    ctx.fillStyle='#0f0f0f';ctx.fill();
+    ctx.strokeStyle=f?col+'55':'#222';ctx.lineWidth=1.6;ctx.stroke();
+    // 3 arms at 120°, first pointing up (-90°)
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3-Math.PI/2;
+      const armL=r*.62,armW=r*.26;
+      ctx.save();ctx.rotate(a);
+      ctx.fillStyle='#1c1c1c';ctx.strokeStyle='#272727';ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.moveTo(-armW*.5,0);ctx.lineTo(armW*.5,0);ctx.lineTo(armW*.3,-armL);ctx.lineTo(-armW*.3,-armL);ctx.closePath();
+      ctx.fill();ctx.stroke();
+      // power collector at tip
+      ctx.shadowColor=col;ctx.shadowBlur=f?18:5;
+      ctx.fillStyle='#191919';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.4;
+      ctx.beginPath();ctx.arc(0,-armL,r*.13,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.shadowBlur=0;
+      const pg=ctx.createRadialGradient(0,-armL,0,0,-armL,r*.13);
+      pg.addColorStop(0,f?'#ffffff':col+'cc');pg.addColorStop(.5,col+'55');pg.addColorStop(1,col+'00');
+      ctx.fillStyle=pg;ctx.beginPath();ctx.arc(0,-armL,r*.13,0,Math.PI*2);ctx.fill();
+      ctx.restore();
     }
-    // Middle octagon ring
-    ctx.strokeStyle='#252525';ctx.lineWidth=1.2;octPath(.62);ctx.stroke();
-    // Inner octagon
-    ctx.fillStyle='#131313';octPath(.42);ctx.fill();
-    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=0.8;octPath(.42);ctx.stroke();
-    // Glow rim
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
-    ctx.strokeStyle=col+(f?'55':'1a');ctx.lineWidth=1.6;octPath(1);ctx.stroke();ctx.shadowBlur=0;
-    // 8 vertex bolts
-    for(let i=0;i<8;i++){
-      const a=i*Math.PI/4+HO,bx=Math.cos(a)*bR*.90,by=Math.sin(a)*bR*.90;
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'16');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.arc(bx,by,r*.023,0,Math.PI*2);ctx.fill();ctx.stroke();
-    }
-    // Counter-rotating dashed rings
-    ctx.save();ctx.rotate(t*1.6);ctx.strokeStyle=f?col+'60':col+'1e';ctx.lineWidth=1.3;ctx.setLineDash([r*.18,r*.12]);
-    ctx.beginPath();ctx.arc(0,0,bR*.74,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    ctx.save();ctx.rotate(-t*1.0);ctx.strokeStyle=f?col+'38':col+'12';ctx.lineWidth=0.9;ctx.setLineDash([r*.10,r*.14]);
-    ctx.beginPath();ctx.arc(0,0,bR*1.04,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // TURRET: drum-shaped cannon
-    ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    const drumR=r*.36,drumY=r*.06;
-    // Mounting ring base
-    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=col+(f?'40':'18');ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.arc(0,drumY,drumR*1.28,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // Drum body
-    ctx.fillStyle='#202020';ctx.strokeStyle=f?col+'70':col+'2e';ctx.lineWidth=2.0;
-    ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
-    ctx.beginPath();ctx.arc(0,drumY,drumR,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    // Inner detail rings
-    ctx.strokeStyle=col+(f?'40':'14');ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.arc(0,drumY,drumR*.70,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle=col+(f?'28':'0c');ctx.lineWidth=0.6;
-    ctx.beginPath();ctx.arc(0,drumY,drumR*.44,0,Math.PI*2);ctx.stroke();
-    // 6 bolt holes on drum
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3,bx=Math.cos(a)*drumR*.80,by=drumY+Math.sin(a)*drumR*.80;
-      ctx.fillStyle='#181818';ctx.strokeStyle=col+(f?'38':'12');ctx.lineWidth=0.7;
-      ctx.beginPath();ctx.arc(bx,by,r*.022,0,Math.PI*2);ctx.fill();ctx.stroke();
-    }
-    // Spinning dashed indicator ring
-    ctx.save();ctx.rotate(t*2.4);ctx.strokeStyle=f?col+'88':col+'28';ctx.lineWidth=1.1;ctx.setLineDash([r*.09,r*.08]);
-    ctx.beginPath();ctx.arc(0,drumY,drumR*.58,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // Drum center glow node
-    ctx.shadowColor=col;ctx.shadowBlur=f?22:6;
-    const dg=ctx.createRadialGradient(0,drumY,0,0,drumY,drumR*.32);
-    dg.addColorStop(0,f?'#ffffff':col+'cc');dg.addColorStop(.4,col+(f?'dd':'88'));dg.addColorStop(1,col+'00');
-    ctx.fillStyle=dg;ctx.beginPath();ctx.arc(0,drumY,drumR*.32,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-    // Short barrel
-    const brlL=r*.18,brlHW=r*.09,brlY=drumY-drumR;
-    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'88':col+'38';ctx.lineWidth=1.6;
-    ctx.shadowColor=col;ctx.shadowBlur=f?14:2;
-    ctx.beginPath();ctx.rect(-brlHW,brlY-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    // Barrel band ring
-    ctx.fillStyle='#252525';ctx.strokeStyle=col+(f?'60':'24');ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.rect(-brlHW*1.6,brlY-brlL*.52,brlHW*3.2,r*.036);ctx.fill();ctx.stroke();
-    // Muzzle aperture
-    ctx.shadowColor=col;ctx.shadowBlur=f?28:6;
-    ctx.strokeStyle=col+(f?'cc':'55');ctx.lineWidth=2.2;
-    ctx.beginPath();ctx.arc(0,brlY-brlL,brlHW*1.4,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
-    ctx.fillStyle='#0d0d0d';ctx.beginPath();ctx.arc(0,brlY-brlL,brlHW*.68,0,Math.PI*2);ctx.fill();
+    // rotating connector ring
+    ctx.save();ctx.rotate(t*1.5);ctx.strokeStyle=f?col+'77':col+'26';ctx.lineWidth=1.2;ctx.setLineDash([r*.18,r*.14]);
+    ctx.beginPath();ctx.arc(0,0,r*.46,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // counter outer ring
+    ctx.save();ctx.rotate(-t*.9);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.9;ctx.setLineDash([r*.22,r*.18]);
+    ctx.beginPath();ctx.arc(0,0,r*.78,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // energy arcs between cells when firing
     if(f){
-      ctx.globalAlpha=.80;
-      const mg=ctx.createRadialGradient(0,brlY-brlL,0,0,brlY-brlL,r*.26);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.22,col);mg.addColorStop(1,col+'00');
-      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,brlY-brlL,r*.26,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.45;ctx.strokeStyle=col+'bb';ctx.lineWidth=0.9;
+      for(let i=0;i<3;i++){
+        const a0=i*Math.PI*2/3-Math.PI/2,a1=((i+1)%3)*Math.PI*2/3-Math.PI/2;
+        ctx.beginPath();ctx.moveTo(Math.cos(a0)*r*.62,Math.sin(a0)*r*.62);ctx.lineTo(0,0);ctx.lineTo(Math.cos(a1)*r*.62,Math.sin(a1)*r*.62);ctx.stroke();
+      }
+      ctx.globalAlpha=1;
+    }
+    // TURRET
+    ctx.save();ctx.rotate(this.angle+Math.PI/2);
+    // mounting ring
+    ctx.fillStyle='#1d1d1d';ctx.strokeStyle=f?col+'66':col+'28';ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // core orb
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:6;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.16);
+    cg.addColorStop(0,f?'#ffffff':col+'dd');cg.addColorStop(.5,col+(f?'aa':'66'));cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    // slim tapered barrel spike
+    const brlL=r*.56;
+    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'99':col+'3a';ctx.lineWidth=1.5;
+    ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
+    ctx.beginPath();ctx.moveTo(-r*.10,0);ctx.lineTo(r*.10,0);ctx.lineTo(r*.02,-brlL);ctx.lineTo(-r*.02,-brlL);ctx.closePath();
+    ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    // energy line along barrel
+    ctx.strokeStyle=f?col+'dd':col+'33';ctx.lineWidth=1.0;
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
+    ctx.beginPath();ctx.moveTo(0,-r*.04);ctx.lineTo(0,-brlL);ctx.stroke();ctx.shadowBlur=0;
+    // muzzle glow when firing
+    if(f){
+      ctx.globalAlpha=.85;
+      const mg=ctx.createRadialGradient(0,-brlL,0,0,-brlL,r*.30);
+      mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');
+      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-brlL,r*.30,0,Math.PI*2);ctx.fill();
       ctx.globalAlpha=1;
     }
     ctx.restore();
@@ -1571,43 +1564,52 @@ class Tower{
   }
   _dTwinHub(ctx,r,t){
     const col=this.color,f=this._firingT>0;
-    // Circular base
-    ctx.beginPath();ctx.arc(0,0,r*.88,0,Math.PI*2);
-    ctx.fillStyle='#141414';ctx.fill();
-    ctx.strokeStyle=f?col+'88':'#38304a';ctx.lineWidth=1.8;ctx.stroke();
-    // 6 arc segments
-    for(let i=0;i<6;i++){
-      const a0=i*Math.PI/3,a1=a0+Math.PI/3;
-      ctx.fillStyle=f&&i%2===0?col+'07':'#181818';
-      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.86,a0,a1);ctx.closePath();ctx.fill();
-      ctx.strokeStyle='#222';ctx.lineWidth=0.6;ctx.stroke();
-    }
-    // 3 concentric pulse rings
-    const ringR=[r*.26,r*.46,r*.66];const ringA=f?['50','36','22']:['1a','12','0a'];
-    for(let i=0;i<3;i++){ctx.strokeStyle=col+ringA[i];ctx.lineWidth=f?1.4:0.9;ctx.beginPath();ctx.arc(0,0,ringR[i],0,Math.PI*2);ctx.stroke();}
-    // 4 cardinal emitter nodes
+    const sq=r*.84,ch=r*.18;
+    // Square chamfered base
+    ctx.beginPath();
+    ctx.moveTo(-sq+ch,-sq);ctx.lineTo(sq-ch,-sq);ctx.lineTo(sq,-sq+ch);
+    ctx.lineTo(sq,sq-ch);ctx.lineTo(sq-ch,sq);ctx.lineTo(-sq+ch,sq);
+    ctx.lineTo(-sq,sq-ch);ctx.lineTo(-sq,-sq+ch);ctx.closePath();
+    ctx.fillStyle='#151515';ctx.fill();
+    ctx.strokeStyle=f?col+'99':'#2a2030';ctx.lineWidth=2.0;ctx.stroke();
+    // Grid lines H + V
+    const gl=sq*.82;
+    ctx.strokeStyle=f?col+'88':col+'28';ctx.lineWidth=1.2;
+    ctx.shadowColor=col;ctx.shadowBlur=f?12:0;
+    ctx.beginPath();ctx.moveTo(-gl,0);ctx.lineTo(gl,0);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-gl);ctx.lineTo(0,gl);ctx.stroke();
+    ctx.shadowBlur=0;
+    // Diagonal cross lines (dim)
+    ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(-gl*.70,-gl*.70);ctx.lineTo(gl*.70,gl*.70);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(gl*.70,-gl*.70);ctx.lineTo(-gl*.70,gl*.70);ctx.stroke();
+    // Inner square ring
+    const sq2=r*.52;
+    ctx.strokeStyle=f?col+'55':col+'1e';ctx.lineWidth=1.0;
+    ctx.beginPath();ctx.rect(-sq2,-sq2,sq2*2,sq2*2);ctx.stroke();
+    // 4 corner emitter nodes
     for(let i=0;i<4;i++){
-      const a=i*Math.PI/2,nx=Math.cos(a)*r*.60,ny=Math.sin(a)*r*.60;
-      ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.5;
-      ctx.shadowColor=col;ctx.shadowBlur=f?14:4;
-      ctx.beginPath();ctx.arc(nx,ny,r*.12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-      const eg=ctx.createRadialGradient(nx,ny,0,nx,ny,r*.12);
-      eg.addColorStop(0,f?'#fff':col+'99');eg.addColorStop(.5,col+'44');eg.addColorStop(1,col+'00');
-      ctx.fillStyle=eg;ctx.beginPath();ctx.arc(nx,ny,r*.12,0,Math.PI*2);ctx.fill();
+      const a=i*Math.PI/2+Math.PI/4;
+      const nx=Math.cos(a)*sq*.78,ny=Math.sin(a)*sq*.78;
+      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.4;
+      ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
+      ctx.beginPath();ctx.arc(nx,ny,r*.11,0,Math.PI*2);ctx.fill();ctx.stroke();
+      const eg=ctx.createRadialGradient(nx,ny,0,nx,ny,r*.11);
+      eg.addColorStop(0,f?'#fff':col+'aa');eg.addColorStop(1,col+'00');
+      ctx.fillStyle=eg;ctx.beginPath();ctx.arc(nx,ny,r*.11,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
     }
-    // Rotating field ring
-    ctx.save();ctx.rotate(-t*1.2);ctx.strokeStyle=f?col+'55':col+'1c';ctx.lineWidth=1.2;ctx.setLineDash([r*.20,r*.10]);
+    // Rotating outer dashed ring
+    ctx.save();ctx.rotate(-t*.9);ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.2;ctx.setLineDash([r*.20,r*.12]);
     ctx.beginPath();ctx.arc(0,0,r*.76,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // Counter-rotating cross lines
-    ctx.save();ctx.rotate(t*.7);ctx.strokeStyle=f?col+'40':col+'12';ctx.lineWidth=1.2;ctx.globalAlpha=f?.7:.35;
-    const gl=r*.64;
-    for(let i=0;i<2;i++){ctx.beginPath();ctx.moveTo(i===0?-gl:0,i===0?0:-gl);ctx.lineTo(i===0?gl:0,i===0?0:gl);ctx.stroke();}
-    ctx.globalAlpha=1;ctx.restore();
-    // Core node
-    ctx.shadowColor=col;ctx.shadowBlur=f?26:8;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.20);
-    cg.addColorStop(0,f?'#fff':col);cg.addColorStop(.4,col+(f?'cc':'77'));cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.20,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    // Central control hub
+    ctx.shadowColor=col;ctx.shadowBlur=f?28:10;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.22);
+    cg.addColorStop(0,f?'#fff':col);cg.addColorStop(.4,col+(f?'cc':'88'));cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.22,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=f?col+'cc':col+'55';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
+    ctx.shadowBlur=0;
   }
   _drawTwinOrbit(ctx){
     const dr=this.getRange()*TS,col=this.color;
