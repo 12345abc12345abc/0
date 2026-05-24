@@ -281,16 +281,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.', descEn:'An industrial robotic arm grabs the lead ore on the conveyor and performs a high-power disassembly process. Most economical early-control equipment.'},
-  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#FF3040',type:'single',   dmg:100,  spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.', descEn:'Fires port core energy in rapid bursts, triggering chain reactions inside ores. Mid-range focused single-target striker.'},
-  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:90,   spd:1.0,  range:3.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'범위 내 모든 원석을 동시에 타격하며 이동 속도를 둔화시킨다. 레이저 그리드와 유사한 광역 공격에 둔화 효과가 추가된 제어형 광역 설비.', descEn:'Simultaneously strikes all ores in range while slowing their movement. AoE control unit similar to Laser Grid but with added slow effect.'},
-  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.', descEn:'Omnidirectional optical analyzer scans the line and precisely strikes the highest-mass ore. Long-range high-power equipment specialized for dense ores.'},
-  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.', descEn:'Continuously fires a particle beam at the rearmost ore. Handles ores before they escape, preventing port loss. Long-range rear-defense equipment.'},
-  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'타격할 때마다 해당 원석의 처치 포트 일부를 즉시 수확한다. 원석을 처치하지 않아도 포트를 벌 수 있는 경제형 보조 딜러.', descEn:'Harvests a portion of kill reward from each hit. Earns ports on every strike, even without killing the ore. Economic support dealer.'},
-  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:430,  spd:1.0,  range:3.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.', descEn:'Periodically deploys a grid laser field to simultaneously process all ores in range. Efficiency scales exponentially as ore density increases.'},
-  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:120,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.', descEn:'Chain discharge module strikes up to 3 ores in sequence, triggering magnetic reactions. Total output increases explosively in dense zones.'},
-  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.', descEn:'Autonomous patrol drone orbits at high speed, instantly processing ores with its laser. Eliminates blind spots that fixed equipment cannot cover.'},
-  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.', descEn:'Fires ultra-high-speed plasma beams, piercing up to 8 ores in a straight line. Efficiency scales exponentially as the line becomes denser.'},
+  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'컨베이어 선두의 원석을 그리퍼로 포착해 고압 분해 공정을 수행한다. 설치비가 가장 저렴한 초기 라인 구축용 단일 타격 기초 설비.', descEn:'Grips the lead ore on the conveyor and performs high-pressure disassembly. The cheapest single-target unit for building the early production line.'},
+  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#FF3040',type:'single',   dmg:100,  spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'3암 리액터에서 포트 에너지를 연속 발사해 전방 단일 원석을 집중 처리한다. 빠른 연사 속도와 넓은 사거리로 중거리 소형 원석 제거에 특화된 연사형 설비.', descEn:'Fires port energy from a three-arm reactor in rapid succession to intensively process a single ore ahead. Fast-firing mid-range unit specialized in eliminating small ores.'},
+  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:250,  spd:0.5,  range:2.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'2초 간격으로 격자 필드를 방출해 근거리 원석을 전부 타격하고 이동을 억제한다. 공격 빈도는 낮지만 둔화 효과로 라인 흐름을 제어하는 단거리 광역 억제 설비.', descEn:'Emits a grid field every 2 seconds, striking all nearby ores and suppressing their movement. Low attack frequency offset by slow effect — short-range AoE control unit.'},
+  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'라인 전체를 광학 분석해 질량이 가장 높은 원석을 자동 선별 후 정밀 타격한다. 재충전이 느리지만 1회 타격 파괴력이 전 설비 중 가장 강력한 고밀도 원석 전용 처리 설비.', descEn:'Optically scans the entire line to auto-select and precisely strike the highest-mass ore. Slow recharge, but the single most powerful hit of any unit — specialized for dense ores.'},
+  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'탈출 지점에 가장 가까운 원석에 입자 빔을 끊임없이 발사한다. 전 설비 중 공격 속도가 가장 빠르며, 포트 손실을 막는 후방 방어 전담 설비다.', descEn:'Relentlessly fires particle beams at the ore closest to the exit. The fastest attack speed of any unit — dedicated rear-guard equipment that prevents port loss.'},
+  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석 타격 시마다 해당 원석의 처치 보상 포트 일부를 즉시 수확한다. 처치 여부와 무관하게 타격마다 수익이 발생해 포트 수급을 안정시키는 수익형 지원 설비.', descEn:'Harvests a share of kill-reward ports on each hit. Generates income per strike regardless of kill — economic support unit that stabilizes port supply.'},
+  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:430,  spd:1.0,  range:3.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'격자형 레이저망을 주기적으로 전개해 범위 내 원석을 전부 동시 처리한다. 원석이 밀집할수록 처리 효율이 기하급수적으로 증가하는 광역 공정의 핵심 설비.', descEn:'Periodically deploys a grid laser net to simultaneously process all ores in range. Core AoE processing unit whose efficiency scales exponentially with ore density.'},
+  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:120,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'최초 원석에 방전을 시작해 인접 원석 최대 2개까지 연쇄 도약하며 타격한다. 모든 피격 원석에 쇼크 반응이 부과되며, 라인이 밀집할수록 총 처리량이 급증한다.', descEn:'Initiates a discharge on one ore, chaining to up to 2 adjacent ores. Applies a shock effect to every target — total throughput surges as ores cluster together.'},
+  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'설비 외곽을 고속 선회하는 자율 드론이 궤도 내 가장 가까운 원석을 레이저로 즉시 처리한다. 이동 공격 방식으로 고정 설비가 커버하지 못하는 사각지대를 실시간 제거한다.', descEn:'An autonomous drone orbiting at high speed instantly laser-targets the nearest ore in its path. Mobile strike pattern eliminates blind spots that stationary equipment cannot cover.'},
+  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'플라즈마 빔을 고속 연사해 일직선상 원석을 최대 8개까지 동시 관통 처리한다. 라인이 직선으로 밀집할수록 처리 효율이 폭발적으로 증가하는 장거리 관통 설비.', descEn:'Fires rapid plasma beams that pierce and process up to 8 ores in a straight line. Long-range pierce unit whose efficiency explodes as ores pack along the same path.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -681,7 +681,6 @@ class Tower{
     this.cx=R.tx(col);this.cy=R.ty(row);
     this.angle=-Math.PI/2;this.cooldown=0;this._aoeT=0;this._animT=0;this._firingT=0;
     this._tDmg=0;this._tSpd=0;this._armAngle=-Math.PI/2;this._focusTgt=null;this._soundT=0;this._droneAngle=0;this._hitCooldown=0;
-    this._twinAngles=[0,Math.PI,Math.PI*2/5,Math.PI*4/5,Math.PI*6/5];this._twin_hcd=[0,0,0,0,0];this._lastNOrbs=0;
     this.isMega=false;this.megaCells=[];
   }
   _lm(){const m=TWR[this.tId]?.lvM;return m?m[this.level-1]:LVL[this.level-1].mult;}
@@ -1611,43 +1610,8 @@ class Tower{
     ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
   }
-  _drawTwinOrbit(ctx){
-    const dr=this.getRange()*TS,col=this.color;
-    const orbR=this.isMega?5.5:3.5;
-    ctx.save();ctx.strokeStyle=col+'18';ctx.lineWidth=.8;ctx.setLineDash([3,8]);
-    ctx.beginPath();ctx.arc(this.cx,this.cy,dr,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    for(let i=0;i<2;i++){
-      const da=this._twinAngles[i],active=this._twin_hcd[i]>0;
-      // trail — behind orb (both go CCW so trail at smaller angle)
-      for(let t=1;t<=10;t++){
-        const ta=da-t*0.11;
-        const tx=this.cx+Math.cos(ta)*dr,ty=this.cy+Math.sin(ta)*dr;
-        ctx.globalAlpha=(1-t/10)*.28;ctx.fillStyle=col;
-        ctx.beginPath();ctx.arc(tx,ty,orbR*(1-t/10)*.7,0,Math.PI*2);ctx.fill();
-      }
-      ctx.globalAlpha=1;
-      const ox=this.cx+Math.cos(da)*dr,oy=this.cy+Math.sin(da)*dr;
-      ctx.save();ctx.translate(ox,oy);ctx.rotate(da*4); // spin the orb
-      // outer ring
-      ctx.strokeStyle=active?col:col+'88';ctx.lineWidth=1.5;ctx.shadowColor=col;ctx.shadowBlur=active?14:5;
-      ctx.beginPath();ctx.arc(0,0,orbR,0,Math.PI*2);ctx.stroke();
-      // inner diamond
-      ctx.strokeStyle=active?'#fff':col+'cc';ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(0,-orbR*.62);ctx.lineTo(orbR*.62,0);ctx.lineTo(0,orbR*.62);ctx.lineTo(-orbR*.62,0);ctx.closePath();ctx.stroke();
-      // center dot
-      ctx.fillStyle=active?'#fff':col;
-      ctx.beginPath();ctx.arc(0,0,orbR*.28,0,Math.PI*2);ctx.fill();
-      ctx.shadowBlur=0;
-      if(active){
-        const p=this._twin_hcd[i]/0.35;
-        ctx.globalAlpha=p*.45;ctx.strokeStyle='#CE93D8';ctx.lineWidth=1.2;
-        ctx.beginPath();ctx.arc(0,0,orbR+p*4,0,Math.PI*2);ctx.stroke();
-        ctx.globalAlpha=1;
-      }
-      ctx.restore();
-    }
-  }
 }
+
 
 // ═══════════════════════════════════════════════════════
 // 이펙트
@@ -1909,7 +1873,7 @@ const UI={
     if(d.type==='chain')tags+=`<span class="mc-tag">${L('연쇄','Chain')} <b>3${L('개','×')}</b></span>`;
     if(d.type==='pierce')tags+=`<span class="mc-tag">${L('관통','Pierce')} <b>8${L('개','×')}</b></span>`;
     if(d.type==='twinhub')tags+=`<span class="mc-tag">${L('광역+둔화','AoE+Slow')}</span>`;
-    if(d.type==='drone')tags+=`<span class="mc-tag">선회공격</span>`;
+    if(d.type==='drone')tags+=`<span class="mc-tag">${L('선회 공격','Orbit Strike')}</span>`;
     document.getElementById('mc-tags').innerHTML=tags;
   },
 
@@ -2043,8 +2007,6 @@ const UI={
     const abl=document.getElementById('abtn-lbl');if(abl)abl.innerHTML=ko?'자동<br>웨이브':'Auto<br>Wave';
     const pr=document.getElementById('pbtn-resume');if(pr)pr.innerHTML=ko?'▶ &nbsp;계속하기':'▶ &nbsp;Resume';
     const prs=document.getElementById('pbtn-restart');if(prs)prs.innerHTML=ko?'↩ &nbsp;다시 시작':'↩ &nbsp;Restart';
-    const gos=document.getElementById('go-sub');if(gos)gos.textContent=ko?'가동 중지':'FACTORY HALT';
-    const gob=document.getElementById('go-btn');if(gob)gob.innerHTML=ko?'↩ &nbsp;재가동':'↩ &nbsp;Restart';
     const us=document.getElementById('unlk-sub');if(us)us.textContent=ko?'새로운 장비':'New Equipment';
     const ub=document.getElementById('unlk-btn');if(ub)ub.textContent=ko?'확인':'OK';
     if(this.selTwr)this._showTowerInfo(this.selTwr);
