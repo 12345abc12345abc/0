@@ -1597,12 +1597,12 @@ class Tower{
     ctx.beginPath();ctx.arc(0,0,r*.90,0,Math.PI*2);
     ctx.fillStyle='#111';ctx.fill();
     ctx.strokeStyle=f?col+'aa':'#2a2030';ctx.lineWidth=2.0;ctx.stroke();
-    // 6 border dots on rim
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3,bx=Math.cos(a)*r*.82,by=Math.sin(a)*r*.82;
+    // 8 border dots on rim (4 cardinal large + 4 diagonal small)
+    for(let i=0;i<8;i++){
+      const a=i*Math.PI/4,bx=Math.cos(a)*r*.82,by=Math.sin(a)*r*.82;
       ctx.fillStyle=f?col:'#2d2d2d';ctx.strokeStyle=f?col+'88':col+'22';ctx.lineWidth=0.8;
       ctx.shadowColor=col;ctx.shadowBlur=f?8:0;
-      ctx.beginPath();ctx.arc(bx,by,r*.055,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+      ctx.beginPath();ctx.arc(bx,by,r*(i%2===0?.055:.036),0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
     }
     // Pulsing outer energy ring
     const pulse=.5+Math.sin(t*4)*.5;
@@ -1610,10 +1610,10 @@ class Tower{
     ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
     ctx.beginPath();ctx.arc(0,0,r*.86,0,Math.PI*2);ctx.stroke();
     ctx.globalAlpha=1;ctx.shadowBlur=0;
-    // 3 tuning-fork arms at 120°
-    const prongL=r*.68,prongW=r*.065,forkGap=r*.14,forkL=r*.22;
-    for(let i=0;i<3;i++){
-      const a=i*Math.PI*2/3-Math.PI/2;
+    // 4 tuning-fork arms (top/right/bottom/left — 상하좌우 대칭)
+    const prongL=r*.62,prongW=r*.065,forkGap=r*.13,forkL=r*.20;
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2-Math.PI/2;
       ctx.save();ctx.rotate(a);
       // arm shaft
       ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'55':'#333';ctx.lineWidth=1.0;
@@ -1631,18 +1631,18 @@ class Tower{
         const ny=forkY-forkL;
         ctx.fillStyle='#181818';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.3;
         ctx.shadowColor=col;ctx.shadowBlur=f?20:4;
-        ctx.beginPath();ctx.arc(px,ny,r*.095,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-        const eg=ctx.createRadialGradient(px,ny,0,px,ny,r*.095);
+        ctx.beginPath();ctx.arc(px,ny,r*.090,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+        const eg=ctx.createRadialGradient(px,ny,0,px,ny,r*.090);
         eg.addColorStop(0,f?'#fff':col+'cc');eg.addColorStop(.5,col+(f?'88':'33'));eg.addColorStop(1,col+'00');
-        ctx.fillStyle=eg;ctx.beginPath();ctx.arc(px,ny,r*.095,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=eg;ctx.beginPath();ctx.arc(px,ny,r*.090,0,Math.PI*2);ctx.fill();
       }
       ctx.restore();
     }
-    // Field arcs connecting 6 prong tips when firing
+    // Field arcs connecting 8 prong tips when firing
     if(f){
       const tips=[];
-      for(let i=0;i<3;i++){
-        const armA=i*Math.PI*2/3-Math.PI/2;
+      for(let i=0;i<4;i++){
+        const armA=i*Math.PI/2-Math.PI/2;
         for(const sx of[-1,1]){
           const lx=sx*forkGap,ly=-(prongL-forkL)-forkL;
           tips.push({x:lx*Math.cos(armA)-ly*Math.sin(armA),y:lx*Math.sin(armA)+ly*Math.cos(armA)});
@@ -1656,15 +1656,15 @@ class Tower{
       }
       ctx.shadowBlur=0;
     }
-    // Counter-rotating outer triangle prism
-    ctx.save();ctx.rotate(t*.7);ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.2;ctx.setLineDash([r*.15,r*.08]);
+    // Counter-rotating outer square prism (45° = diamond)
+    ctx.save();ctx.rotate(t*.7+Math.PI/4);ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.2;ctx.setLineDash([r*.15,r*.08]);
     ctx.beginPath();
-    for(let i=0;i<3;i++){const a=i*Math.PI*2/3;if(i===0)ctx.moveTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);else ctx.lineTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);}
+    for(let i=0;i<4;i++){const a=i*Math.PI/2;if(i===0)ctx.moveTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);else ctx.lineTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);}
     ctx.closePath();ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // Rotating inner triangle
+    // Rotating inner square (axis-aligned)
     ctx.save();ctx.rotate(-t*1.2);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=1.0;
     ctx.beginPath();
-    for(let i=0;i<3;i++){const a=i*Math.PI*2/3+Math.PI/3;if(i===0)ctx.moveTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);else ctx.lineTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);}
+    for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4;if(i===0)ctx.moveTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);else ctx.lineTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);}
     ctx.closePath();ctx.stroke();ctx.restore();
     // Central hub
     ctx.shadowColor=col;ctx.shadowBlur=f?28:10;
@@ -1708,13 +1708,13 @@ class TwinFieldEff{
     // inner expanding ring
     ctx.globalAlpha=p*.5;ctx.lineWidth=1.5;ctx.shadowBlur=10;
     ctx.beginPath();ctx.arc(this.x,this.y,this.r*(.5+(1-p)*.35),0,Math.PI*2);ctx.stroke();
-    // 6 radial beams
+    // 8 radial beams (4 cardinal + 4 diagonal)
     ctx.globalAlpha=p*.55;ctx.lineWidth=1.5;ctx.shadowBlur=14;
-    for(let i=0;i<6;i++){const a=i*Math.PI/3,rl=this.r*(1-p*.6);ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(a)*rl,this.y+Math.sin(a)*rl);ctx.stroke();}
-    // expanding triangle outline
+    for(let i=0;i<8;i++){const a=i*Math.PI/4,rl=this.r*(1-p*.6)*(i%2===0?1:.72);ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(a)*rl,this.y+Math.sin(a)*rl);ctx.stroke();}
+    // expanding diamond (square rotated 45°) outline
     ctx.globalAlpha=p*.45;ctx.lineWidth=1.2;ctx.shadowBlur=8;
     ctx.beginPath();
-    for(let i=0;i<3;i++){const a=i*Math.PI*2/3-Math.PI/2,tl=this.r*(.85-p*.4);if(i===0)ctx.moveTo(this.x+Math.cos(a)*tl,this.y+Math.sin(a)*tl);else ctx.lineTo(this.x+Math.cos(a)*tl,this.y+Math.sin(a)*tl);}
+    for(let i=0;i<4;i++){const a=i*Math.PI/2-Math.PI/4,tl=this.r*(.85-p*.4);if(i===0)ctx.moveTo(this.x+Math.cos(a)*tl,this.y+Math.sin(a)*tl);else ctx.lineTo(this.x+Math.cos(a)*tl,this.y+Math.sin(a)*tl);}
     ctx.closePath();ctx.stroke();
     // outward particle sparks
     ctx.shadowBlur=12;
