@@ -85,7 +85,7 @@
   <div id="midbar">
     <div id="mid-promo">
       <div class="mp1"><span style="color:#FF4500">아이지</span> 포트라인</div>
-      <div class="mp2">IEG · Smart Factory Defense</div>
+      <div class="mp2">Smart Factory Defense</div>
     </div>
     <div id="mid-info">
       <div class="mi-top">
@@ -105,6 +105,19 @@
       <div id="mc-name">-</div>
       <div id="mc-desc"></div>
       <div id="mc-tags"></div>
+    </div>
+    <div id="mid-confirm">
+      <div class="mi-top">
+        <div class="mi-hdr">
+          <div class="mi-name" id="mconf-name">-</div>
+          <div class="mi-lvl" id="mconf-cost"></div>
+        </div>
+      </div>
+      <div id="mconf-msg"></div>
+      <div class="mi-btns">
+        <button class="mi-btn" id="bconf-ok" onclick="UI._confirmAction()">확인</button>
+        <button class="mi-btn" id="bconf-no" onclick="UI._cancelAction()">취소</button>
+      </div>
     </div>
   </div>
 
@@ -179,7 +192,7 @@
   </div>
 
   <!-- ── 게임오버 ── -->
-  <div id="govly">
+  <div id="govly" style="display:none">
     <canvas id="go-canvas" style="position:absolute;inset:0;"></canvas>
     <div id="go-content">
       <div id="go-badge">GAME OVER</div>

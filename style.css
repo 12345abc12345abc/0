@@ -161,18 +161,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #banner{
   position:absolute;top:64px;left:50%;
   transform:translateX(-50%) translateY(-6px);
-  background:#0e1620;
-  border:1.5px solid var(--bc,#ffffff22);
-  border-bottom:2.5px solid var(--bc,#00E5FF);
+  background:rgba(0,0,0,.72);
+  border:1.5px solid #ffffff33;
+  border-bottom:2.5px solid #ffffff55;
   border-radius:8px;
   padding:8px 22px;
   font-size:12px;font-weight:800;
   text-align:center;
   white-space:nowrap;z-index:35;
-  color:#eee;letter-spacing:.3px;
+  color:#fff;letter-spacing:.3px;
   opacity:0;pointer-events:none;
   transition:opacity .18s,transform .18s;
-  box-shadow:0 4px 18px rgba(0,0,0,.55);
+  box-shadow:0 4px 18px rgba(0,0,0,.55),0 0 14px var(--bc,#ffffff18);
 }
 #banner.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -212,6 +212,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #bsell{background:#200f0f;color:#cc7777;border:1px solid #aa334430;}
 #mid-card{display:none;width:100%;height:100%;padding:10px 16px;flex-direction:column;gap:4px;}
 #mid-card.show{display:flex;}
+#mid-confirm{display:none;width:100%;height:100%;padding:5px 13px 6px;flex-direction:column;gap:0;}
+#mid-confirm.show{display:flex;}
+#mconf-msg{font-size:10px;color:#888;padding:5px 0 3px;letter-spacing:.3px;}
+#bconf-ok{background:#1a2a1a;color:#88cc88;border:1px solid #44aa4430;}
+#bconf-no{background:#252525;color:#888;border:1px solid #44444430;}
 #mc-name{font-size:13px;font-weight:900;line-height:1.2;}
 #mc-desc{font-size:10px;color:#aaa;line-height:1.5;font-weight:500;}
 #mc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px;}
@@ -323,15 +328,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #unlkovly.show{display:flex;}
 #unlk-box{
   width:300px;padding:28px 24px 22px;
-  background:linear-gradient(160deg,#0d1a2a,#0a1018);
-  border:1.5px solid #00E5FF44;border-radius:14px;
-  box-shadow:0 0 40px #00E5FF22;
+  background:linear-gradient(160deg,#141414,#0e0e0e);
+  border:1.5px solid #ffffff22;border-radius:14px;
+  box-shadow:0 0 40px #ffffff10;
   display:flex;flex-direction:column;align-items:center;gap:6px;
   text-align:center;
 }
 #unlk-sub{
   font-size:20px;font-weight:900;letter-spacing:1px;color:#fff;
-  text-shadow:0 0 18px #00E5FF66;margin-bottom:2px;
+  text-shadow:0 0 14px #ffffff44;margin-bottom:2px;
 }
 #unlk-icon{border-radius:10px;background:#1a1a1a;margin:8px 0 4px;}
 #unlk-name{font-size:22px;font-weight:900;color:#fff;}
@@ -339,8 +344,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #unlk-desc{font-size:11.5px;color:#888;line-height:1.55;word-break:keep-all;margin-top:2px;}
 #unlk-btn{
   margin-top:18px;padding:13px 42px;
-  background:#00E5FF18;border:1.5px solid #00E5FF88;border-radius:8px;
-  color:#00E5FF;font-size:14px;font-weight:900;letter-spacing:1px;
+  background:rgba(255,255,255,.06);border:1.5px solid #ffffff44;border-radius:8px;
+  color:#fff;font-size:14px;font-weight:900;letter-spacing:1px;
   cursor:pointer;
 }
 #unlk-btn:active{transform:scale(.96);}
