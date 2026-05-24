@@ -838,98 +838,100 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 원형 스태빌라이저 베이스 + 레일건 포탑
+  // 코어슈터: 원형 디스크 + X 페탈 핀 베이스 + 블록헤드 단포
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // BASE: angular octagon + 4 diagonal X-blades (4-way symmetric)
+    // BASE: circular disc + 4 diamond petal fins at X positions (4-way symmetric)
     const bR=r*.80;
-    const octPath=()=>{ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;i===0?ctx.moveTo(Math.cos(a)*bR,Math.sin(a)*bR):ctx.lineTo(Math.cos(a)*bR,Math.sin(a)*bR);}ctx.closePath();};
-    // Outer octagon base
-    octPath();ctx.fillStyle='#151515';ctx.fill();
-    // Inner recessed panel
-    const ir=bR*.62;
-    ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;i===0?ctx.moveTo(Math.cos(a)*ir,Math.sin(a)*ir):ctx.lineTo(Math.cos(a)*ir,Math.sin(a)*ir);}ctx.closePath();
-    ctx.fillStyle='#111111';ctx.fill();ctx.strokeStyle='#1e1e1e';ctx.lineWidth=1.0;ctx.stroke();
-    octPath();ctx.strokeStyle='#272727';ctx.lineWidth=1.8;ctx.stroke();
-    // 4 diagonal X-blades at 45°/135°/225°/315°
+    // Main disc
+    const dg=ctx.createRadialGradient(0,0,0,0,0,bR);
+    dg.addColorStop(0,'#1d1d1d');dg.addColorStop(.6,'#151515');dg.addColorStop(1,'#0f0f0f');
+    ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.fillStyle=dg;ctx.fill();
+    ctx.strokeStyle='#252525';ctx.lineWidth=1.6;ctx.stroke();
+    // 4 diamond petal fins at 45°/135°/225°/315°
     for(let i=0;i<4;i++){
       ctx.save();ctx.rotate(i*Math.PI/2+Math.PI/4);
-      const bw=bR*.26,b0=bR*.91,b1=bR*1.52;
-      ctx.fillStyle='#1d1d1d';ctx.strokeStyle='#2b2b2b';ctx.lineWidth=1.3;
-      ctx.beginPath();ctx.moveTo(-bw*.58,b0);ctx.lineTo(-bw*.20,b0+(b1-b0)*.54);ctx.lineTo(0,b1);ctx.lineTo(bw*.20,b0+(b1-b0)*.54);ctx.lineTo(bw*.58,b0);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.shadowColor=col;ctx.shadowBlur=f?9:2;
+      const fw=bR*.34,innerY=bR*.62,outerY=bR*1.50;
+      ctx.fillStyle='#1c1c1c';ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1.2;
+      ctx.beginPath();
+      ctx.moveTo(0,innerY*.45);
+      ctx.lineTo(-fw*.52,innerY);ctx.lineTo(-fw*.26,(innerY+outerY)*.5);
+      ctx.lineTo(0,outerY);
+      ctx.lineTo(fw*.26,(innerY+outerY)*.5);ctx.lineTo(fw*.52,innerY);
+      ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
       ctx.strokeStyle=col+(f?'44':'12');ctx.lineWidth=1.0;ctx.stroke();ctx.shadowBlur=0;
-      ctx.strokeStyle=col+(f?'30':'0a');ctx.lineWidth=0.7;
-      ctx.beginPath();ctx.moveTo(0,b0+r*.06);ctx.lineTo(0,b1-r*.07);ctx.stroke();
+      ctx.strokeStyle=col+(f?'2a':'08');ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.moveTo(0,innerY+r*.05);ctx.lineTo(0,outerY-r*.08);ctx.stroke();
       ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.arc(0,b0+(b1-b0)*.44,r*.028,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.arc(0,(innerY+outerY)*.5,r*.026,0,Math.PI*2);ctx.fill();ctx.stroke();
       ctx.restore();
     }
-    // 8 bolts on octagon ring
+    // Detail rings
+    ctx.strokeStyle='#222';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,bR*.68,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#1c1c1c';ctx.lineWidth=0.9;ctx.beginPath();ctx.arc(0,0,bR*.40,0,Math.PI*2);ctx.stroke();
+    // 8 bolts
     for(let i=0;i<8;i++){
-      const a=i*Math.PI/4+Math.PI/8,bx=Math.cos(a)*bR*.78,by=Math.sin(a)*bR*.78;
+      const a=i*Math.PI/4,bx=Math.cos(a)*bR*.54,by=Math.sin(a)*bR*.54;
       ctx.fillStyle='#1c1c1c';ctx.strokeStyle=col+(f?'34':'0e');ctx.lineWidth=0.7;
-      ctx.beginPath();ctx.arc(bx,by,r*.024,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.arc(bx,by,r*.022,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // Glow octagon rim
-    octPath();ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
-    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;
-    // Counter-rotating rings
+    // Glow rim
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
+    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
     ctx.save();ctx.rotate(t*1.8);ctx.strokeStyle=f?col+'70':col+'22';ctx.lineWidth=1.4;ctx.setLineDash([r*.18,r*.10]);
-    ctx.beginPath();ctx.arc(0,0,bR*.52,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.beginPath();ctx.arc(0,0,bR*.50,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.9;ctx.setLineDash([r*.11,r*.13]);
     ctx.beginPath();ctx.arc(0,0,bR*.72,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // TURRET: heavy railgun body
+    // TURRET: compact wide-body blockhead cannon
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // Main body — wide armored housing
-    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'70':col+'28';ctx.lineWidth=2.0;
+    // Main body — wide flat 8-sided housing
+    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'70':col+'2a';ctx.lineWidth=1.9;
     ctx.beginPath();
-    ctx.moveTo(-r*.44,r*.10);ctx.lineTo(r*.44,r*.10);
-    ctx.lineTo(r*.38,-r*.05);ctx.lineTo(r*.26,-r*.40);
-    ctx.lineTo(-r*.26,-r*.40);ctx.lineTo(-r*.38,-r*.05);
+    ctx.moveTo(-r*.50,r*.12);ctx.lineTo(r*.50,r*.12);
+    ctx.lineTo(r*.46,r*.01);ctx.lineTo(r*.38,-r*.24);
+    ctx.lineTo(r*.22,-r*.38);ctx.lineTo(-r*.22,-r*.38);
+    ctx.lineTo(-r*.38,-r*.24);ctx.lineTo(-r*.46,r*.01);
     ctx.closePath();ctx.fill();ctx.stroke();
-    // Side cooling fins (2 per side, symmetric)
+    // Side armor chevrons
     for(const sx of[-1,1]){
-      for(let fi=0;fi<2;fi++){
-        const fy=-r*.05-fi*r*.16;
-        ctx.fillStyle='#191919';ctx.strokeStyle=col+(f?'4a':'1c');ctx.lineWidth=1.0;
-        ctx.beginPath();ctx.moveTo(sx*r*.38,fy);ctx.lineTo(sx*r*.60,fy-r*.04);ctx.lineTo(sx*r*.60,fy+r*.10);ctx.lineTo(sx*r*.38,fy+r*.12);ctx.closePath();ctx.fill();ctx.stroke();
-        ctx.strokeStyle=col+(f?'36':'10');ctx.lineWidth=0.65;
-        for(let v=0;v<3;v++){const vy=fy+r*.01+v*r*.030;ctx.beginPath();ctx.moveTo(sx*r*.41,vy);ctx.lineTo(sx*r*.57,vy);ctx.stroke();}
-      }
+      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=col+(f?'4a':'1c');ctx.lineWidth=0.9;
+      ctx.beginPath();
+      ctx.moveTo(sx*r*.46,r*.01);ctx.lineTo(sx*r*.64,-r*.06);
+      ctx.lineTo(sx*r*.60,-r*.20);ctx.lineTo(sx*r*.38,-r*.18);
+      ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle=col+(f?'36':'10');ctx.lineWidth=0.6;
+      for(let v=0;v<2;v++){const vy=-r*.09-v*r*.058;ctx.beginPath();ctx.moveTo(sx*r*.48,vy);ctx.lineTo(sx*r*.60,vy);ctx.stroke();}
     }
-    // Body center seam (symmetric vertical)
-    ctx.strokeStyle=col+(f?'24':'0a');ctx.lineWidth=0.8;
-    ctx.beginPath();ctx.moveTo(0,r*.08);ctx.lineTo(0,-r*.38);ctx.stroke();
-    // 2 symmetric charging nodes
+    // Body detail: horizontal panel line + 2 indicator nodes
+    ctx.strokeStyle=col+(f?'22':'09');ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(-r*.36,-r*.14);ctx.lineTo(r*.36,-r*.14);ctx.stroke();
     for(const sx of[-1,1]){
-      ctx.fillStyle='#242424';ctx.strokeStyle=col+(f?'60':'22');ctx.lineWidth=0.9;
-      ctx.beginPath();ctx.arc(sx*r*.17,-r*.20,r*.038,0,Math.PI*2);ctx.fill();ctx.stroke();
-      if(f){ctx.fillStyle=col+'99';ctx.shadowColor=col;ctx.shadowBlur=10;ctx.beginPath();ctx.arc(sx*r*.17,-r*.20,r*.020,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+      ctx.fillStyle='#232323';ctx.strokeStyle=col+(f?'66':'22');ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.arc(sx*r*.18,-r*.24,r*.034,0,Math.PI*2);ctx.fill();ctx.stroke();
+      if(f){ctx.fillStyle=col+'aa';ctx.shadowColor=col;ctx.shadowBlur=9;ctx.beginPath();ctx.arc(sx*r*.18,-r*.24,r*.018,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
     }
-    // Barrel mount housing
-    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=1.6;
-    ctx.beginPath();ctx.rect(-r*.22,-r*.40,r*.44,r*.13);ctx.fill();ctx.stroke();
-    // Main barrel — thick single tube
-    const brlL=r*.36,brlHW=r*.095;
-    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=1.8;
-    ctx.shadowColor=col;ctx.shadowBlur=f?18:3;
-    ctx.beginPath();ctx.rect(-brlHW,-r*.40-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    // 3 barrel ring flanges
-    for(let ri=0;ri<3;ri++){
-      const ry=-r*.40-brlL*(ri+1)*.25;
-      ctx.fillStyle='#212121';ctx.strokeStyle=col+(f?'66':'28');ctx.lineWidth=1.4;
-      ctx.beginPath();ctx.rect(-brlHW*1.55,ry-r*.022,brlHW*3.1,r*.044);ctx.fill();ctx.stroke();
-    }
-    // Muzzle brake
-    ctx.fillStyle='#161616';ctx.shadowColor=col;ctx.shadowBlur=f?28:6;ctx.strokeStyle=f?col+'cc':col+'55';ctx.lineWidth=2.0;
-    ctx.beginPath();ctx.moveTo(-brlHW*1.4,-r*.40-brlL);ctx.lineTo(brlHW*1.4,-r*.40-brlL);ctx.lineTo(brlHW,-r*.40-brlL-r*.05);ctx.lineTo(-brlHW,-r*.40-brlL-r*.05);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.shadowBlur=0;
+    // Barrel mount
+    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'50':col+'20';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.rect(-r*.24,-r*.38,r*.48,r*.11);ctx.fill();ctx.stroke();
+    // SHORT wide barrel
+    const brlL=r*.16,brlHW=r*.11;
+    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=1.7;
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:3;
+    ctx.beginPath();ctx.rect(-brlHW,-r*.38-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    // 1 barrel ring
+    ctx.fillStyle='#212121';ctx.strokeStyle=col+(f?'66':'28');ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.rect(-brlHW*1.55,-r*.38-brlL*.55,brlHW*3.1,r*.038);ctx.fill();ctx.stroke();
+    // Wide muzzle aperture
+    ctx.shadowColor=col;ctx.shadowBlur=f?30:7;
+    ctx.strokeStyle=col+(f?'cc':'55');ctx.lineWidth=2.4;
+    ctx.beginPath();ctx.arc(0,-r*.38-brlL,brlHW*1.35,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='#0e0e0e';ctx.beginPath();ctx.arc(0,-r*.38-brlL,brlHW*.70,0,Math.PI*2);ctx.fill();
     if(f){
       ctx.globalAlpha=.85;
-      const mg=ctx.createRadialGradient(0,-r*.40-brlL,0,0,-r*.40-brlL,r*.26);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.28,col);mg.addColorStop(1,col+'00');
-      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-r*.40-brlL,r*.26,0,Math.PI*2);ctx.fill();
+      const mg=ctx.createRadialGradient(0,-r*.38-brlL,0,0,-r*.38-brlL,r*.28);
+      mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');
+      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-r*.38-brlL,r*.28,0,Math.PI*2);ctx.fill();
       ctx.globalAlpha=1;
     }
     ctx.restore();
@@ -990,56 +992,53 @@ class Tower{
     // ── ARM: straight & perfectly symmetric (no lateral offset)
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     const j0y=-r*.05,j1y=-r*.40,j2y=-r*.60;
-    const uw=r*.14,fw=r*.10,ww=r*.068;
+    const uw=r*.076,fw=r*.052,ww=r*.034;
     // Upper arm (symmetric trapezoid centered at x=0)
-    ctx.fillStyle='#2d2d2d';ctx.strokeStyle=f?col+'40':'#484848';ctx.lineWidth=1.5;
+    ctx.fillStyle='#2d2d2d';ctx.strokeStyle=f?col+'40':'#484848';ctx.lineWidth=1.1;
     ctx.beginPath();ctx.moveTo(-uw,j0y);ctx.lineTo(uw,j0y);ctx.lineTo(fw,j1y);ctx.lineTo(-fw,j1y);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.strokeStyle='#3c3c3c';ctx.lineWidth=0.9;
+    ctx.strokeStyle='#3c3c3c';ctx.lineWidth=0.7;
     ctx.beginPath();ctx.moveTo(0,j0y+r*.04);ctx.lineTo(0,j1y-r*.02);ctx.stroke();
-    ctx.strokeStyle=f?col+'25':'#3c3c3c';ctx.lineWidth=0.85;
-    const umid=(j0y+j1y)*.5;
-    for(const sx of[-1,1]){ctx.beginPath();ctx.arc(sx*uw*.52,umid,r*.020,0,Math.PI*2);ctx.stroke();}
     // Edge highlights (symmetric, 3D relief)
-    ctx.strokeStyle='#484848';ctx.lineWidth=0.8;
-    ctx.beginPath();ctx.moveTo(-uw+r*.013,j0y+r*.01);ctx.lineTo(-fw+r*.010,j1y-r*.01);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(uw-r*.013,j0y+r*.01);ctx.lineTo(fw-r*.010,j1y-r*.01);ctx.stroke();
+    ctx.strokeStyle='#484848';ctx.lineWidth=0.65;
+    ctx.beginPath();ctx.moveTo(-uw+r*.008,j0y+r*.01);ctx.lineTo(-fw+r*.007,j1y-r*.01);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(uw-r*.008,j0y+r*.01);ctx.lineTo(fw-r*.007,j1y-r*.01);ctx.stroke();
     // Forearm (symmetric, narrower)
-    ctx.fillStyle='#272727';ctx.strokeStyle=f?col+'38':'#424242';ctx.lineWidth=1.3;
+    ctx.fillStyle='#272727';ctx.strokeStyle=f?col+'38':'#424242';ctx.lineWidth=1.0;
     ctx.beginPath();ctx.moveTo(-fw,j1y);ctx.lineTo(fw,j1y);ctx.lineTo(ww,j2y);ctx.lineTo(-ww,j2y);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.strokeStyle='#363636';ctx.lineWidth=0.9;
+    ctx.strokeStyle='#363636';ctx.lineWidth=0.7;
     ctx.beginPath();ctx.moveTo(0,j1y+r*.02);ctx.lineTo(0,j2y-r*.02);ctx.stroke();
-    ctx.strokeStyle='#424242';ctx.lineWidth=0.7;
-    ctx.beginPath();ctx.moveTo(-fw+r*.01,j1y+r*.01);ctx.lineTo(-ww+r*.008,j2y-r*.01);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(fw-r*.01,j1y+r*.01);ctx.lineTo(ww-r*.008,j2y-r*.01);ctx.stroke();
+    ctx.strokeStyle='#424242';ctx.lineWidth=0.6;
+    ctx.beginPath();ctx.moveTo(-fw+r*.007,j1y+r*.01);ctx.lineTo(-ww+r*.005,j2y-r*.01);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(fw-r*.007,j1y+r*.01);ctx.lineTo(ww-r*.005,j2y-r*.01);ctx.stroke();
     // Shoulder joint (large servo disk)
     ctx.save();ctx.translate(0,j0y);
-    ctx.strokeStyle='#383838';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(0,0,r*.240,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#2e2e2e';ctx.strokeStyle=f?col:'#545454';ctx.lineWidth=1.8;
+    ctx.strokeStyle='#383838';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(0,0,r*.188,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#2e2e2e';ctx.strokeStyle=f?col:'#545454';ctx.lineWidth=1.5;
     ctx.shadowColor=col;ctx.shadowBlur=f?22:7;
-    ctx.beginPath();ctx.arc(0,0,r*.165,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle=f?col+'66':'#515151';ctx.lineWidth=0.9;
-    for(let i=0;i<6;i++){const a=t*.8+i*Math.PI/3;ctx.beginPath();ctx.arc(Math.cos(a)*r*.120,Math.sin(a)*r*.120,r*.022,0,Math.PI*2);ctx.stroke();}
-    ctx.strokeStyle='#494949';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(0,0,r*.200,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,r*.130,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=f?col+'66':'#515151';ctx.lineWidth=0.8;
+    for(let i=0;i<6;i++){const a=t*.8+i*Math.PI/3;ctx.beginPath();ctx.arc(Math.cos(a)*r*.092,Math.sin(a)*r*.092,r*.017,0,Math.PI*2);ctx.stroke();}
+    ctx.strokeStyle='#494949';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,r*.158,0,Math.PI*2);ctx.stroke();
     ctx.shadowColor=col;ctx.shadowBlur=f?26:9;
-    ctx.fillStyle=f?'#ffffff':col;ctx.beginPath();ctx.arc(0,0,r*.056,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.fillStyle=f?'#ffffff':col;ctx.beginPath();ctx.arc(0,0,r*.044,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
     ctx.restore();
     // Elbow joint (medium disk)
     ctx.save();ctx.translate(0,j1y);
-    ctx.strokeStyle='#3a3a3a';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,r*.165,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#282828';ctx.strokeStyle=f?col+'cc':'#4c4c4c';ctx.lineWidth=1.4;
+    ctx.strokeStyle='#3a3a3a';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.128,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#282828';ctx.strokeStyle=f?col+'cc':'#4c4c4c';ctx.lineWidth=1.1;
     ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-    ctx.beginPath();ctx.arc(0,0,r*.108,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.strokeStyle=f?col+'55':'#4a4a4a';ctx.lineWidth=0.85;
-    for(let i=0;i<3;i++){const a=t*(-1.3)+i*Math.PI*2/3;ctx.beginPath();ctx.arc(Math.cos(a)*r*.068,Math.sin(a)*r*.068,r*.017,0,Math.PI*2);ctx.stroke();}
-    ctx.fillStyle=f?col+'aa':'#444444';ctx.beginPath();ctx.arc(0,0,r*.034,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(0,0,r*.082,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=f?col+'55':'#4a4a4a';ctx.lineWidth=0.75;
+    for(let i=0;i<3;i++){const a=t*(-1.3)+i*Math.PI*2/3;ctx.beginPath();ctx.arc(Math.cos(a)*r*.050,Math.sin(a)*r*.050,r*.013,0,Math.PI*2);ctx.stroke();}
+    ctx.fillStyle=f?col+'aa':'#444444';ctx.beginPath();ctx.arc(0,0,r*.026,0,Math.PI*2);ctx.fill();
     ctx.restore();
     // Wrist joint (small disk)
     ctx.save();ctx.translate(0,j2y);
-    ctx.strokeStyle='#383838';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r*.140,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#242424';ctx.strokeStyle=f?col+'aa':'#4a4a4a';ctx.lineWidth=1.3;
+    ctx.strokeStyle='#383838';ctx.lineWidth=1.0;ctx.beginPath();ctx.arc(0,0,r*.108,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#242424';ctx.strokeStyle=f?col+'aa':'#4a4a4a';ctx.lineWidth=1.0;
     ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
-    ctx.beginPath();ctx.arc(0,0,r*.082,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    ctx.fillStyle=f?'#ffffff':col;ctx.beginPath();ctx.arc(0,0,r*.028,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(0,0,r*.062,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle=f?'#ffffff':col;ctx.beginPath();ctx.arc(0,0,r*.022,0,Math.PI*2);ctx.fill();
     ctx.restore();
     // ── GRIPPER: symmetric parallel jaw clamps
     const shankL=r*.10,gBarY=j2y-shankL;
