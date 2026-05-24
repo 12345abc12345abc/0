@@ -38,17 +38,22 @@
   <div id="setpanel">
     <div class="si" id="si-pause" onclick="G.togglePause();UI.closeSettings()">
       <span class="si-icon"><svg viewBox="0 0 12 14" width="12" height="14" fill="currentColor"><rect x="0" y="0" width="4.5" height="14" rx="1.5"/><rect x="7.5" y="0" width="4.5" height="14" rx="1.5"/></svg></span>
-      <span>일시정지</span>
+      <span id="si-pause-text">일시정지</span>
     </div>
     <div class="si-div"></div>
     <div class="si" id="si-sfx" onclick="UI.toggleSFX()">
       <span class="si-icon" id="si-sfx-icon">ON</span>
-      <span>효과음</span>
+      <span id="si-sfx-text">효과음</span>
     </div>
     <div class="si-div"></div>
     <div class="si" onclick="UI.showHelp()">
       <span class="si-icon si-q">?</span>
-      <span>게임 방법</span>
+      <span id="si-help-text">게임 방법</span>
+    </div>
+    <div class="si-div"></div>
+    <div class="si" id="si-lang" onclick="UI.toggleLang()">
+      <span class="si-icon" id="si-lang-icon">KO</span>
+      <span id="si-lang-text">언어 변경</span>
     </div>
   </div>
 
@@ -57,7 +62,6 @@
     <div id="help-bg"></div>
     <div id="help-gridbg"></div>
     <div id="help-content">
-      <div id="help-badge">HOW TO PLAY</div>
       <div id="help-main-title">게임 방법</div>
       <div id="help-items">
         <div class="hi"><div class="hi-num">01</div><div class="hi-body"><div class="hi-name">설비 배치</div><div class="hi-desc">하단에서 설비를 선택한 뒤 빈 칸을 탭해 배치한다. 웨이브를 클리어할수록 새 설비를 사용할 수 있다.</div></div></div>
@@ -110,10 +114,10 @@
     <div id="wpanel">
       <div id="wbtn" onclick="G.nextWave()">
         <div class="wi">▶</div>
-        <div>웨이브</div>
+        <div id="wbtn-lbl">웨이브</div>
         <div id="wnum"></div>
       </div>
-      <div id="abtn" onclick="G.toggleAuto()">자동<br>웨이브<div id="acd"></div></div>
+      <div id="abtn" onclick="G.toggleAuto()"><span id="abtn-lbl">자동<br>웨이브</span><div id="acd"></div></div>
       <button id="bspd" onclick="G.toggleSpeed()">×1</button>
     </div>
   </div>
@@ -129,6 +133,10 @@
       <div id="title-divider"></div>
       <button id="title-start" onclick="G.start()">▶ &nbsp;공장 가동 시작</button>
       <button id="title-help" onclick="UI.showHelp()">게임 방법</button>
+      <div id="title-opts">
+        <button id="title-sfx-btn" onclick="UI.toggleTitleSFX()">효과음 ON</button>
+        <button id="title-lang-btn" onclick="UI.toggleLang()">English</button>
+      </div>
     </div>
   </div>
 

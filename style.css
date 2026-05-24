@@ -49,7 +49,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 .hb.on{background:#333;border-color:#aaa;color:#fff;}
 #bset{font-size:19px;color:#FF4500;border-color:#FF450033;}
 #bset.on{border-color:#FF4500;background:#1a1a1a;}
-#htime{font-size:8px;color:#555;font-weight:700;text-align:left;margin-top:2px;}
+#htime{font-size:8px;color:#888;font-weight:700;text-align:left;margin-top:2px;}
 #hport-ico{cursor:pointer;user-select:none;transition:color .15s,text-shadow .15s;}
 #hport-ico:hover{color:#FFD700;text-shadow:0 0 8px #FFD70088;}
 
@@ -442,6 +442,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   animation:titleIn .5s .6s both;transition:all .15s;
 }
 #title-help:active{background:#FF450022;border-color:#FF450088;color:#FF4500;}
+#title-opts{
+  display:flex;gap:10px;margin-top:16px;
+  animation:titleIn .5s .7s both;
+}
+#title-opts button{
+  height:34px;padding:0 18px;border-radius:8px;cursor:pointer;
+  background:#ffffff08;border:1.5px solid #ffffff22;color:#888;
+  font-size:11px;font-weight:700;letter-spacing:.8px;
+  transition:all .15s;
+}
+#title-opts button:active{background:#FF450018;border-color:#FF450055;color:#FF4500;}
 
 /* ── 클리어 화면 ── */
 #clrovly{background:#000;}
