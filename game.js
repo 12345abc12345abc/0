@@ -841,33 +841,32 @@ class Tower{
   // 코어슈터: 4-포크 크로스 포가 + 초단열 코어 방사포
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // BASE: circular heavy platform with 6 angular armor panels
-    const bR=r*.84;
-    ctx.fillStyle='#111111';ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.fill();
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3+Math.PI/6;
-      const a0=a-Math.PI*.22,a1=a+Math.PI*.22;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(a0)*bR*.40,Math.sin(a0)*bR*.40);
-      ctx.lineTo(Math.cos(a0)*bR*.92,Math.sin(a0)*bR*.92);
-      ctx.arc(0,0,bR*.92,a0,a1);
-      ctx.lineTo(Math.cos(a1)*bR*.40,Math.sin(a1)*bR*.40);
-      ctx.arc(0,0,bR*.40,a1,a0,true);
-      ctx.closePath();
-      ctx.fillStyle=i%2===0?'#1e1e1e':'#131313';ctx.fill();
-      ctx.strokeStyle='#272727';ctx.lineWidth=1.0;ctx.stroke();
-      ctx.strokeStyle=col+(f?'28':'0a');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*bR*.46,Math.sin(a)*bR*.46);ctx.lineTo(Math.cos(a)*bR*.86,Math.sin(a)*bR*.86);ctx.stroke();
+    // BASE: cross armor platform (4-way symmetric)
+    const armW=r*.32,armL=r*.78;
+    const crossPath=()=>{ctx.beginPath();ctx.moveTo(-armW*.5,-armL);ctx.lineTo(armW*.5,-armL);ctx.lineTo(armW*.5,-armW*.5);ctx.lineTo(armL,-armW*.5);ctx.lineTo(armL,armW*.5);ctx.lineTo(armW*.5,armW*.5);ctx.lineTo(armW*.5,armL);ctx.lineTo(-armW*.5,armL);ctx.lineTo(-armW*.5,armW*.5);ctx.lineTo(-armL,armW*.5);ctx.lineTo(-armL,-armW*.5);ctx.lineTo(-armW*.5,-armW*.5);ctx.closePath();};
+    crossPath();ctx.fillStyle='#181818';ctx.fill();
+    crossPath();ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1.8;ctx.stroke();
+    ctx.shadowColor=col;ctx.shadowBlur=f?12:3;
+    crossPath();ctx.strokeStyle=col+(f?'50':'16');ctx.lineWidth=1.3;ctx.stroke();ctx.shadowBlur=0;
+    for(let i=0;i<4;i++){
+      ctx.save();ctx.rotate(i*Math.PI/2);
+      ctx.strokeStyle='#222';ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.rect(-armW*.30,-armL+r*.06,armW*.60,armL*.70);ctx.stroke();
+      ctx.strokeStyle='#1e1e1e';ctx.lineWidth=0.7;
+      for(let ri=1;ri<=2;ri++){const ry=-armL*.30-ri*armL*.18;ctx.beginPath();ctx.moveTo(-armW*.38,ry);ctx.lineTo(armW*.38,ry);ctx.stroke();}
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.moveTo(-armW*.60,-armL);ctx.lineTo(-armW*.38,-armL-r*.075);ctx.lineTo(armW*.38,-armL-r*.075);ctx.lineTo(armW*.60,-armL);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
+      ctx.fillStyle=f?col+'66':col+'20';ctx.beginPath();ctx.arc(0,-armL-r*.038,r*.026,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+      ctx.restore();
     }
-    ctx.strokeStyle='#282828';ctx.lineWidth=1.8;
-    ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.stroke();
-    ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-    ctx.strokeStyle=col+(f?'50':'18');ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.arc(0,0,bR,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
-    ctx.save();ctx.rotate(t*1.8);ctx.strokeStyle=f?col+'60':col+'1e';ctx.lineWidth=1.4;ctx.setLineDash([r*.22,r*.09]);
-    ctx.beginPath();ctx.arc(0,0,bR*.62,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=f?col+'38':col+'10';ctx.lineWidth=0.9;ctx.setLineDash([r*.10,r*.16]);
-    ctx.beginPath();ctx.arc(0,0,bR*.80,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    const chub=armW*.65;
+    ctx.fillStyle='#1e1e1e';ctx.strokeStyle='#303030';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.rect(-chub,-chub,chub*2,chub*2);ctx.fill();ctx.stroke();
+    ctx.save();ctx.rotate(t*2.0);ctx.strokeStyle=f?col+'70':col+'24';ctx.lineWidth=1.4;ctx.setLineDash([r*.20,r*.09]);
+    ctx.beginPath();ctx.arc(0,0,armW*.56,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.rotate(-t*1.5);ctx.strokeStyle=f?col+'44':col+'12';ctx.lineWidth=0.9;ctx.setLineDash([r*.10,r*.14]);
+    ctx.beginPath();ctx.arc(0,0,armW*.82,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     // TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'66':col+'26';ctx.lineWidth=1.8;
@@ -920,37 +919,33 @@ class Tower{
   // 픽셀 로봇암: 직선 대칭 산업 로봇팔 — 헥사곤 베이스
   _dPA(ctx,r,t,f){
     const col=this.color;
-    // BASE: hexagonal industrial platform
-    const bR=r*.82;
-    const hexPath=(sc)=>{
-      ctx.beginPath();
-      for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;const x=Math.cos(a)*bR*sc,y=Math.sin(a)*bR*sc;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
-      ctx.closePath();
-    };
-    hexPath(1);ctx.fillStyle='#141414';ctx.fill();
-    for(let i=0;i<6;i++){
-      const a0=i*Math.PI/3-Math.PI/6,a1=(i+1)*Math.PI/3-Math.PI/6;
-      ctx.beginPath();ctx.moveTo(0,0);
-      ctx.lineTo(Math.cos(a0)*bR,Math.sin(a0)*bR);
-      ctx.lineTo(Math.cos(a1)*bR,Math.sin(a1)*bR);
-      ctx.closePath();
-      ctx.fillStyle=i%2===0?'#1d1d1d':'#111111';ctx.fill();
+    // BASE: 4-flange servo mount (4-way symmetric)
+    const fInR=r*.54,fOutR=r*.88,fHW=r*.14,fHWo=r*.20;
+    for(let i=0;i<4;i++){
+      ctx.save();ctx.rotate(i*Math.PI/2);
+      ctx.fillStyle='#1c1c1c';ctx.strokeStyle='#2d2d2d';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(-fHW,-fInR);ctx.lineTo(-fHWo,-fOutR);ctx.lineTo(fHWo,-fOutR);ctx.lineTo(fHW,-fInR);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#232323';ctx.lineWidth=0.85;
+      const midR=(fInR+fOutR)*.5;
+      ctx.beginPath();ctx.moveTo(-fHW*.55,-fInR-r*.04);ctx.lineTo(-fHWo*.55,-fOutR+r*.04);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(fHW*.55,-fInR-r*.04);ctx.lineTo(fHWo*.55,-fOutR+r*.04);ctx.stroke();
+      ctx.fillStyle='#111';ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=0.9;
+      ctx.beginPath();ctx.arc(0,-midR,r*.033,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#383838';ctx.lineWidth=0.6;
+      ctx.beginPath();ctx.moveTo(-r*.015,-midR);ctx.lineTo(r*.015,-midR);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,-midR-r*.015);ctx.lineTo(0,-midR+r*.015);ctx.stroke();
+      ctx.restore();
     }
-    hexPath(1);ctx.strokeStyle='#2e2e2e';ctx.lineWidth=1.8;ctx.stroke();
-    hexPath(.58);ctx.strokeStyle='#232323';ctx.lineWidth=1.1;ctx.stroke();
+    ctx.fillStyle='#141414';ctx.beginPath();ctx.arc(0,0,fInR,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#212121';ctx.lineWidth=1.0;ctx.beginPath();ctx.arc(0,0,fInR*.74,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#1d1d1d';ctx.lineWidth=0.8;ctx.beginPath();ctx.arc(0,0,fInR*.50,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#252525';ctx.lineWidth=0.85;
+    for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4;ctx.beginPath();ctx.moveTo(Math.cos(a)*fInR*.38,Math.sin(a)*fInR*.38);ctx.lineTo(Math.cos(a)*fInR*.68,Math.sin(a)*fInR*.68);ctx.stroke();}
+    ctx.strokeStyle='#2c2c2c';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(0,0,fInR,0,Math.PI*2);ctx.stroke();
     ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    hexPath(1);ctx.strokeStyle=col+(f?'40':'12');ctx.lineWidth=1.2;ctx.stroke();ctx.shadowBlur=0;
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3-Math.PI/6;
-      const bx=Math.cos(a)*bR*.84,by=Math.sin(a)*bR*.84;
-      ctx.fillStyle='#202020';ctx.strokeStyle=col+(f?'38':'12');ctx.lineWidth=0.85;
-      ctx.beginPath();ctx.arc(bx,by,r*.040,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.strokeStyle='#3a3a3a';ctx.lineWidth=0.6;
-      ctx.beginPath();ctx.moveTo(bx-r*.018,by);ctx.lineTo(bx+r*.018,by);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(bx,by-r*.018);ctx.lineTo(bx,by+r*.018);ctx.stroke();
-    }
-    ctx.save();ctx.rotate(t*0.45);ctx.strokeStyle=col+(f?'48':'16');ctx.lineWidth=1.1;ctx.setLineDash([r*.18,r*.11]);
-    ctx.beginPath();ctx.arc(0,0,bR*.72,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.strokeStyle=col+(f?'44':'12');ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,fInR,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    ctx.save();ctx.rotate(t*.5);ctx.strokeStyle=col+(f?'50':'18');ctx.lineWidth=1.1;ctx.setLineDash([r*.14,r*.09]);
+    ctx.beginPath();ctx.arc(0,0,fInR*.84,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
     // ── ARM: straight & perfectly symmetric (no lateral offset)
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     const j0y=-r*.05,j1y=-r*.40,j2y=-r*.60;
