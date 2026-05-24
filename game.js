@@ -724,7 +724,7 @@ class Tower{
           if(o._twinImmuneT<=0){o._twinSlowT=1.0;o._twinSlowPct=pct;}
           hit=true;
         }
-        if(hit){this._firingT=.28;this._eff(new GridFlashEff(cx0,cy0,rng,this.color));SFX.shoot('aoe');}
+        if(hit){this._firingT=.28;this._eff(new TwinFieldEff(cx0,cy0,rng,this.color));SFX.shoot('aoe');}
       }
       return;
     }
@@ -788,7 +788,7 @@ class Tower{
       tgt.takeDmg(this.getDmg(),'single');
       this._eff(new LaserEff(this.cx,this.cy,dir,Math.hypot(tgt.x-this.cx,tgt.y-this.cy)+8,this.color));
     }else{
-      GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),{color:this.color,slow:null,size:1}));
+      GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),{color:this.color,slow:null,size:1,type:this.tId}));
     }
   }
   _firePierce(ores){const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;let best=null,bestP=-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);const dx=Math.cos(this.angle),dy=Math.sin(this.angle);let hit=0;for(const o of ores){if(!o.alive||hit>=8)continue;const ex=o.x-this.cx,ey=o.y-this.cy,dot=ex*dx+ey*dy;if(dot<0||dot>rng)continue;if(Math.abs(ex*dy-ey*dx)<TS*.5){o.takeDmg(this.getDmg(),'pierce');hit++;}}this._eff(new LaserEff(this.cx,this.cy,this.angle,rng,this.color));}
@@ -845,75 +845,105 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 팔각형 베이스 + 드럼형 포탑
+  // 코어슈터: 헥사곤 장갑 배틀 캐논
   _dCS(ctx,r,t,f){
-    const col=this.color;
-    // BASE: circular backing plate
-    ctx.beginPath();ctx.arc(0,0,r*.86,0,Math.PI*2);
-    ctx.fillStyle='#0f0f0f';ctx.fill();
-    ctx.strokeStyle=f?col+'55':'#222';ctx.lineWidth=1.6;ctx.stroke();
-    // 3 arms at 120°, first pointing up (-90°)
-    for(let i=0;i<3;i++){
-      const a=i*Math.PI*2/3-Math.PI/2;
-      const armL=r*.62,armW=r*.26;
-      ctx.save();ctx.rotate(a);
-      ctx.fillStyle='#1c1c1c';ctx.strokeStyle='#272727';ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.moveTo(-armW*.5,0);ctx.lineTo(armW*.5,0);ctx.lineTo(armW*.3,-armL);ctx.lineTo(-armW*.3,-armL);ctx.closePath();
-      ctx.fill();ctx.stroke();
-      // power collector at tip
-      ctx.shadowColor=col;ctx.shadowBlur=f?18:5;
-      ctx.fillStyle='#191919';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.4;
-      ctx.beginPath();ctx.arc(0,-armL,r*.13,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.shadowBlur=0;
-      const pg=ctx.createRadialGradient(0,-armL,0,0,-armL,r*.13);
-      pg.addColorStop(0,f?'#ffffff':col+'cc');pg.addColorStop(.5,col+'55');pg.addColorStop(1,col+'00');
-      ctx.fillStyle=pg;ctx.beginPath();ctx.arc(0,-armL,r*.13,0,Math.PI*2);ctx.fill();
-      ctx.restore();
+    const col=this.color,HO=Math.PI/6;
+    // HEX BASE
+    ctx.beginPath();
+    for(let i=0;i<6;i++){const a=i*Math.PI/3+HO;if(i===0)ctx.moveTo(Math.cos(a)*r*.92,Math.sin(a)*r*.92);else ctx.lineTo(Math.cos(a)*r*.92,Math.sin(a)*r*.92);}
+    ctx.closePath();ctx.fillStyle='#131313';ctx.fill();
+    ctx.strokeStyle=f?col+'bb':'#383838';ctx.lineWidth=2.4;ctx.stroke();
+    // 6 alternating armor panels
+    for(let i=0;i<6;i++){
+      const a0=i*Math.PI/3+HO,a1=(i+1)*Math.PI/3+HO;
+      ctx.fillStyle=i%2===0?(f?col+'0e':'#1d1d1d'):'#181818';
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a0)*r*.90,Math.sin(a0)*r*.90);ctx.lineTo(Math.cos(a1)*r*.90,Math.sin(a1)*r*.90);ctx.closePath();ctx.fill();
     }
-    // rotating connector ring
-    ctx.save();ctx.rotate(t*1.5);ctx.strokeStyle=f?col+'77':col+'26';ctx.lineWidth=1.2;ctx.setLineDash([r*.18,r*.14]);
-    ctx.beginPath();ctx.arc(0,0,r*.46,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // counter outer ring
-    ctx.save();ctx.rotate(-t*.9);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.9;ctx.setLineDash([r*.22,r*.18]);
+    // 6 corner bolt nodes
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3+HO,bx=Math.cos(a)*r*.86,by=Math.sin(a)*r*.86;
+      ctx.fillStyle='#212121';ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=1.0;
+      ctx.shadowColor=col;ctx.shadowBlur=f?8:1;
+      ctx.beginPath();ctx.arc(bx,by,r*.07,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+      ctx.fillStyle=f?col+'99':'#3a3a3a';ctx.beginPath();ctx.arc(bx,by,r*.035,0,Math.PI*2);ctx.fill();
+    }
+    // inner hex ring
+    ctx.save();ctx.rotate(Math.PI/6);ctx.strokeStyle=f?col+'44':col+'16';ctx.lineWidth=1.0;
+    ctx.beginPath();
+    for(let i=0;i<6;i++){const a=i*Math.PI/3+HO;if(i===0)ctx.moveTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);else ctx.lineTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);}
+    ctx.closePath();ctx.stroke();ctx.restore();
+    // rotating gear-breach ring (12 teeth)
+    ctx.save();ctx.rotate(t*(f?4.5:2.2));
+    const teeth=12,gR=r*.50,tR=r*.58,tW=Math.PI*2/teeth*.38;
+    ctx.strokeStyle=f?col+'55':col+'1e';ctx.lineWidth=1.2;ctx.shadowColor=col;ctx.shadowBlur=f?10:0;
+    ctx.beginPath();
+    for(let i=0;i<teeth;i++){const a=i*Math.PI*2/teeth,a2=a+tW;
+      ctx.moveTo(Math.cos(a-tW*.5)*gR,Math.sin(a-tW*.5)*gR);
+      ctx.lineTo(Math.cos(a-tW*.5)*tR,Math.sin(a-tW*.5)*tR);
+      ctx.lineTo(Math.cos(a2-tW*.5)*tR,Math.sin(a2-tW*.5)*tR);
+      ctx.lineTo(Math.cos(a2-tW*.5)*gR,Math.sin(a2-tW*.5)*gR);}
+    ctx.stroke();ctx.shadowBlur=0;ctx.restore();
+    // counter-rotating dashed ring
+    ctx.save();ctx.rotate(-t*.8);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=1.0;ctx.setLineDash([r*.19,r*.14]);
     ctx.beginPath();ctx.arc(0,0,r*.78,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // energy arcs between cells when firing
-    if(f){
-      ctx.globalAlpha=.45;ctx.strokeStyle=col+'bb';ctx.lineWidth=0.9;
-      for(let i=0;i<3;i++){
-        const a0=i*Math.PI*2/3-Math.PI/2,a1=((i+1)%3)*Math.PI*2/3-Math.PI/2;
-        ctx.beginPath();ctx.moveTo(Math.cos(a0)*r*.62,Math.sin(a0)*r*.62);ctx.lineTo(0,0);ctx.lineTo(Math.cos(a1)*r*.62,Math.sin(a1)*r*.62);ctx.stroke();
-      }
-      ctx.globalAlpha=1;
-    }
     // TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // mounting ring
-    ctx.fillStyle='#1d1d1d';ctx.strokeStyle=f?col+'66':col+'28';ctx.lineWidth=1.3;
-    ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // core orb
-    ctx.shadowColor=col;ctx.shadowBlur=f?22:6;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.16);
-    cg.addColorStop(0,f?'#ffffff':col+'dd');cg.addColorStop(.5,col+(f?'aa':'66'));cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.16,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-    // slim tapered barrel spike
-    const brlL=r*.56;
-    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'99':col+'3a';ctx.lineWidth=1.5;
-    ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
-    ctx.beginPath();ctx.moveTo(-r*.10,0);ctx.lineTo(r*.10,0);ctx.lineTo(r*.02,-brlL);ctx.lineTo(-r*.02,-brlL);ctx.closePath();
-    ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    // energy line along barrel
-    ctx.strokeStyle=f?col+'dd':col+'33';ctx.lineWidth=1.0;
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
-    ctx.beginPath();ctx.moveTo(0,-r*.04);ctx.lineTo(0,-brlL);ctx.stroke();ctx.shadowBlur=0;
-    // muzzle glow when firing
+    const bW=r*.38,bH=r*.24,brlL=r*.56,brlW=r*.14;
+    // breach block
+    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'88':col+'30';ctx.lineWidth=1.8;
+    ctx.shadowColor=col;ctx.shadowBlur=f?14:2;
+    ctx.beginPath();ctx.rect(-bW,-bH*.5,bW*2,bH);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    ctx.strokeStyle=f?col+'44':'#303030';ctx.lineWidth=1.0;
+    ctx.beginPath();ctx.moveTo(-bW*.5,-bH*.4);ctx.lineTo(-bW*.5,bH*.4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(bW*.5,-bH*.4);ctx.lineTo(bW*.5,bH*.4);ctx.stroke();
+    // barrel
+    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'99':col+'38';ctx.lineWidth=1.6;
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:3;
+    ctx.beginPath();ctx.rect(-brlW,-bH*.5-brlL,brlW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    // 3 band rings along barrel
+    for(let i=0;i<3;i++){
+      const by=-bH*.5-brlL*(i===0?.25:i===1?.53:.81);
+      ctx.fillStyle=f?col+'22':'#252525';ctx.strokeStyle=f?col+(i===1?'99':'55'):col+'20';ctx.lineWidth=f&&i===1?2.0:1.2;
+      ctx.shadowColor=col;ctx.shadowBlur=f&&i===1?18:0;
+      ctx.beginPath();ctx.rect(-brlW*1.4,by-r*.038,brlW*2.8,r*.076);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    }
+    // energy channel along barrel
+    ctx.strokeStyle=f?col+'cc':col+'28';ctx.lineWidth=1.2;ctx.shadowColor=col;ctx.shadowBlur=f?18:0;
+    ctx.beginPath();ctx.moveTo(0,-bH*.4);ctx.lineTo(0,-bH*.5-brlL+r*.06);ctx.stroke();ctx.shadowBlur=0;
+    // muzzle brake disc
+    const mY=-bH*.5-brlL;
+    ctx.fillStyle='#161616';ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=2.0;
+    ctx.shadowColor=col;ctx.shadowBlur=f?28:6;
+    ctx.beginPath();ctx.arc(0,mY,brlW*1.7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    const mg=ctx.createRadialGradient(0,mY,0,0,mY,brlW*1.7);
+    mg.addColorStop(0,f?'#ffffff':col+'aa');mg.addColorStop(.4,f?col:col+'33');mg.addColorStop(1,col+'00');
+    ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,mY,brlW*1.7,0,Math.PI*2);ctx.fill();
+    // muzzle cross flash when firing
     if(f){
-      ctx.globalAlpha=.85;
-      const mg=ctx.createRadialGradient(0,-brlL,0,0,-brlL,r*.30);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');
-      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-brlL,r*.30,0,Math.PI*2);ctx.fill();
+      ctx.shadowColor=col;ctx.shadowBlur=22;ctx.strokeStyle='#ffffff';ctx.lineWidth=1.5;ctx.lineCap='round';
+      const fl=brlW*3.2;
+      ctx.beginPath();ctx.moveTo(0,mY-fl);ctx.lineTo(0,mY+fl);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-fl,mY);ctx.lineTo(fl,mY);ctx.stroke();
+      const fd=fl*.7;
+      ctx.globalAlpha=.6;ctx.lineWidth=1.0;
+      ctx.beginPath();ctx.moveTo(-fd,mY-fd);ctx.lineTo(fd,mY+fd);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(fd,mY-fd);ctx.lineTo(-fd,mY+fd);ctx.stroke();
+      ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.lineCap='butt';
+      ctx.globalAlpha=.75;
+      const og=ctx.createRadialGradient(0,mY,0,0,mY,brlW*3.5);
+      og.addColorStop(0,'#fff');og.addColorStop(.25,col);og.addColorStop(1,col+'00');
+      ctx.fillStyle=og;ctx.beginPath();ctx.arc(0,mY,brlW*3.5,0,Math.PI*2);ctx.fill();
       ctx.globalAlpha=1;
     }
     ctx.restore();
+    // CENTER CORE
+    ctx.shadowColor=col;ctx.shadowBlur=f?20:7;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.18);
+    cg.addColorStop(0,'#fff');cg.addColorStop(.35,col);cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.18,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col+(f?'dd':'55');ctx.lineWidth=1.4;ctx.shadowBlur=f?12:3;
+    ctx.beginPath();ctx.arc(0,0,r*.28,0,Math.PI*2);ctx.stroke();
+    ctx.shadowBlur=0;
   }
   // 픽셀 로봇암: 직선 대칭 산업 로봇팔 — 헥사곤 베이스
   _dPA(ctx,r,t,f){
@@ -1563,45 +1593,80 @@ class Tower{
   }
   _dTwinHub(ctx,r,t){
     const col=this.color,f=this._firingT>0;
-    const sq=r*.84,ch=r*.18;
-    // Square chamfered base
-    ctx.beginPath();
-    ctx.moveTo(-sq+ch,-sq);ctx.lineTo(sq-ch,-sq);ctx.lineTo(sq,-sq+ch);
-    ctx.lineTo(sq,sq-ch);ctx.lineTo(sq-ch,sq);ctx.lineTo(-sq+ch,sq);
-    ctx.lineTo(-sq,sq-ch);ctx.lineTo(-sq,-sq+ch);ctx.closePath();
-    ctx.fillStyle='#151515';ctx.fill();
-    ctx.strokeStyle=f?col+'99':'#2a2030';ctx.lineWidth=2.0;ctx.stroke();
-    // Grid lines H + V
-    const gl=sq*.82;
-    ctx.strokeStyle=f?col+'88':col+'28';ctx.lineWidth=1.2;
-    ctx.shadowColor=col;ctx.shadowBlur=f?12:0;
-    ctx.beginPath();ctx.moveTo(-gl,0);ctx.lineTo(gl,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-gl);ctx.lineTo(0,gl);ctx.stroke();
-    ctx.shadowBlur=0;
-    // Diagonal cross lines (dim)
-    ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.8;
-    ctx.beginPath();ctx.moveTo(-gl*.70,-gl*.70);ctx.lineTo(gl*.70,gl*.70);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(gl*.70,-gl*.70);ctx.lineTo(-gl*.70,gl*.70);ctx.stroke();
-    // Inner square ring
-    const sq2=r*.52;
-    ctx.strokeStyle=f?col+'55':col+'1e';ctx.lineWidth=1.0;
-    ctx.beginPath();ctx.rect(-sq2,-sq2,sq2*2,sq2*2);ctx.stroke();
-    // 4 corner emitter nodes
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2+Math.PI/4;
-      const nx=Math.cos(a)*sq*.78,ny=Math.sin(a)*sq*.78;
-      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.4;
-      ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-      ctx.beginPath();ctx.arc(nx,ny,r*.11,0,Math.PI*2);ctx.fill();ctx.stroke();
-      const eg=ctx.createRadialGradient(nx,ny,0,nx,ny,r*.11);
-      eg.addColorStop(0,f?'#fff':col+'aa');eg.addColorStop(1,col+'00');
-      ctx.fillStyle=eg;ctx.beginPath();ctx.arc(nx,ny,r*.11,0,Math.PI*2);ctx.fill();
+    // CIRCULAR ARMOR BASE
+    ctx.beginPath();ctx.arc(0,0,r*.90,0,Math.PI*2);
+    ctx.fillStyle='#111';ctx.fill();
+    ctx.strokeStyle=f?col+'aa':'#2a2030';ctx.lineWidth=2.0;ctx.stroke();
+    // 6 border dots on rim
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3,bx=Math.cos(a)*r*.82,by=Math.sin(a)*r*.82;
+      ctx.fillStyle=f?col:'#2d2d2d';ctx.strokeStyle=f?col+'88':col+'22';ctx.lineWidth=0.8;
+      ctx.shadowColor=col;ctx.shadowBlur=f?8:0;
+      ctx.beginPath();ctx.arc(bx,by,r*.055,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    }
+    // Pulsing outer energy ring
+    const pulse=.5+Math.sin(t*4)*.5;
+    ctx.globalAlpha=f?pulse*.55:.15;ctx.strokeStyle=col;ctx.lineWidth=2.0;
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
+    ctx.beginPath();ctx.arc(0,0,r*.86,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+    // 3 tuning-fork arms at 120°
+    const prongL=r*.68,prongW=r*.065,forkGap=r*.14,forkL=r*.22;
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3-Math.PI/2;
+      ctx.save();ctx.rotate(a);
+      // arm shaft
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'55':'#333';ctx.lineWidth=1.0;
+      ctx.beginPath();ctx.rect(-prongW*.5,r*.12,prongW,prongL-forkL-r*.12);ctx.fill();ctx.stroke();
+      // cross-bar at fork point
+      const forkY=-(prongL-forkL);
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'66':'#3a3a3a';ctx.lineWidth=1.1;
+      ctx.beginPath();ctx.rect(-forkGap-prongW*.4,forkY-prongW*.5,forkGap*2+prongW*.8,prongW);ctx.fill();ctx.stroke();
+      // 2 prongs (left and right)
+      for(const sx of[-1,1]){
+        const px=sx*forkGap;
+        ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col+'66':'#363636';ctx.lineWidth=0.9;
+        ctx.beginPath();ctx.rect(px-prongW*.4,forkY-forkL,prongW*.8,forkL);ctx.fill();ctx.stroke();
+        // emitter node at prong tip
+        const ny=forkY-forkL;
+        ctx.fillStyle='#181818';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.3;
+        ctx.shadowColor=col;ctx.shadowBlur=f?20:4;
+        ctx.beginPath();ctx.arc(px,ny,r*.095,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+        const eg=ctx.createRadialGradient(px,ny,0,px,ny,r*.095);
+        eg.addColorStop(0,f?'#fff':col+'cc');eg.addColorStop(.5,col+(f?'88':'33'));eg.addColorStop(1,col+'00');
+        ctx.fillStyle=eg;ctx.beginPath();ctx.arc(px,ny,r*.095,0,Math.PI*2);ctx.fill();
+      }
+      ctx.restore();
+    }
+    // Field arcs connecting 6 prong tips when firing
+    if(f){
+      const tips=[];
+      for(let i=0;i<3;i++){
+        const armA=i*Math.PI*2/3-Math.PI/2;
+        for(const sx of[-1,1]){
+          const lx=sx*forkGap,ly=-(prongL-forkL)-forkL;
+          tips.push({x:lx*Math.cos(armA)-ly*Math.sin(armA),y:lx*Math.sin(armA)+ly*Math.cos(armA)});
+        }
+      }
+      tips.sort((a,b)=>Math.atan2(a.y,a.x)-Math.atan2(b.y,b.x));
+      ctx.strokeStyle=col+'88';ctx.lineWidth=1.2;ctx.shadowColor=col;ctx.shadowBlur=16;
+      for(let i=0;i<tips.length;i++){
+        const a=tips[i],b=tips[(i+1)%tips.length];
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(0,0,b.x,b.y);ctx.stroke();
+      }
       ctx.shadowBlur=0;
     }
-    // Rotating outer dashed ring
-    ctx.save();ctx.rotate(-t*.9);ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.2;ctx.setLineDash([r*.20,r*.12]);
-    ctx.beginPath();ctx.arc(0,0,r*.76,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // Central control hub
+    // Counter-rotating outer triangle prism
+    ctx.save();ctx.rotate(t*.7);ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.2;ctx.setLineDash([r*.15,r*.08]);
+    ctx.beginPath();
+    for(let i=0;i<3;i++){const a=i*Math.PI*2/3;if(i===0)ctx.moveTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);else ctx.lineTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);}
+    ctx.closePath();ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // Rotating inner triangle
+    ctx.save();ctx.rotate(-t*1.2);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=1.0;
+    ctx.beginPath();
+    for(let i=0;i<3;i++){const a=i*Math.PI*2/3+Math.PI/3;if(i===0)ctx.moveTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);else ctx.lineTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);}
+    ctx.closePath();ctx.stroke();ctx.restore();
+    // Central hub
     ctx.shadowColor=col;ctx.shadowBlur=f?28:10;
     const cg=ctx.createRadialGradient(0,0,0,0,0,r*.22);
     cg.addColorStop(0,f?'#fff':col);cg.addColorStop(.4,col+(f?'cc':'88'));cg.addColorStop(1,col+'00');
@@ -1616,7 +1681,7 @@ class Tower{
 // ═══════════════════════════════════════════════════════
 // 이펙트
 // ═══════════════════════════════════════════════════════
-class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.size=opts.size||1;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>7)this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;const sz=this.size;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*.48;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,(3.2-i*.3)*sz,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6*sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}
+class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.size=opts.size||1;this.type=opts.type||null;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>(this.type==='coreShooter'?10:7))this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;const sz=this.size,isCS=this.type==='coreShooter';const trailLen=isCS?10:7;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*(isCS?.65:.48);ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,(isCS?5.5-i*.42:3.2-i*.3)*sz,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;if(isCS){ctx.shadowColor=this.color;ctx.shadowBlur=28;ctx.strokeStyle=this.color;ctx.lineWidth=2;ctx.beginPath();ctx.arc(this.x,this.y,8*sz,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=40;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,5.5*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,3.2*sz,0,Math.PI*2);ctx.fill();const fl=9*sz;ctx.strokeStyle='#fff';ctx.lineWidth=1.2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(this.x-fl,this.y);ctx.lineTo(this.x+fl,this.y);ctx.stroke();ctx.beginPath();ctx.moveTo(this.x,this.y-fl);ctx.lineTo(this.x,this.y+fl);ctx.stroke();ctx.lineCap='butt';ctx.shadowBlur=0;}else{ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6*sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}}
 class RingEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.32;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.55;ctx.strokeStyle=this.col;ctx.lineWidth=2.5;ctx.shadowColor=this.col;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=p*.25;ctx.lineWidth=6;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class GridFlashEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.5;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.save();ctx.shadowColor=this.col;
   ctx.globalAlpha=p*.6;ctx.strokeStyle=this.col;ctx.lineWidth=3;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(0.95+(1-p)*.05),0,Math.PI*2);ctx.stroke();
@@ -1624,6 +1689,47 @@ class GridFlashEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=co
   ctx.globalAlpha=p*.7;ctx.lineWidth=2;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p*.5,0,Math.PI*2);ctx.stroke();
   const hl=this.r*(0.92+(1-p)*.08);ctx.globalAlpha=p*.45;ctx.lineWidth=1.5;ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(this.x-hl,this.y);ctx.lineTo(this.x+hl,this.y);ctx.moveTo(this.x,this.y-hl);ctx.lineTo(this.x,this.y+hl);ctx.stroke();
   ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();}}
+class TwinFieldEff{
+  constructor(x,y,r,col){
+    this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.55;
+    this.sparks=Array.from({length:12},()=>{
+      const a=Math.random()*Math.PI*2,sp=r*(.8+Math.random()*.6);
+      return{a,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,s:2+Math.random()*2.5};
+    });
+  }
+  update(dt){this.life-=dt;for(const s of this.sparks){s.life-=dt*2.2;s.vx*=.88;s.vy*=.88;}}
+  draw(ctx){
+    if(this.life<=0)return;
+    const p=this.life/this.max;
+    ctx.save();ctx.shadowColor=this.col;
+    // outer expanding ring
+    ctx.globalAlpha=p*.7;ctx.strokeStyle=this.col;ctx.lineWidth=3;ctx.shadowBlur=20;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1-p*.7),0,Math.PI*2);ctx.stroke();
+    // inner expanding ring
+    ctx.globalAlpha=p*.5;ctx.lineWidth=1.5;ctx.shadowBlur=10;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r*(.5+(1-p)*.35),0,Math.PI*2);ctx.stroke();
+    // 6 radial beams
+    ctx.globalAlpha=p*.55;ctx.lineWidth=1.5;ctx.shadowBlur=14;
+    for(let i=0;i<6;i++){const a=i*Math.PI/3,rl=this.r*(1-p*.6);ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(a)*rl,this.y+Math.sin(a)*rl);ctx.stroke();}
+    // expanding triangle outline
+    ctx.globalAlpha=p*.45;ctx.lineWidth=1.2;ctx.shadowBlur=8;
+    ctx.beginPath();
+    for(let i=0;i<3;i++){const a=i*Math.PI*2/3-Math.PI/2,tl=this.r*(.85-p*.4);if(i===0)ctx.moveTo(this.x+Math.cos(a)*tl,this.y+Math.sin(a)*tl);else ctx.lineTo(this.x+Math.cos(a)*tl,this.y+Math.sin(a)*tl);}
+    ctx.closePath();ctx.stroke();
+    // outward particle sparks
+    ctx.shadowBlur=12;
+    for(const s of this.sparks){
+      if(s.life<=0)continue;
+      const sx=this.x+s.vx*(1-s.life),sy=this.y+s.vy*(1-s.life);
+      ctx.globalAlpha=s.life*.8;ctx.fillStyle=s.life>.5?'#fff':this.col;
+      ctx.beginPath();ctx.arc(sx,sy,s.s*s.life,0,Math.PI*2);ctx.fill();
+    }
+    // center flash
+    ctx.globalAlpha=p*.9;ctx.shadowBlur=30;ctx.lineWidth=4;ctx.strokeStyle=this.col;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r*p*.18,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.restore();
+  }
+}
 class ZapEff{
   constructor(x1,y1,x2,y2,col){
     this.x1=x1;this.y1=y1;this.x2=x2;this.y2=y2;this.col=col;this.life=this.max=.17;this.z=0;
