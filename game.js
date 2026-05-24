@@ -261,29 +261,29 @@ applyScale();window.addEventListener('resize',applyScale);
 // 데이터
 // ═══════════════════════════════════════════════════════
 const ORE={
-  normal:  {name:'일반 원석',   color:'#78909C',hp:18,  spd:44, reward:8,   dmg:2,  grade:1},
-  fast:    {name:'고속 원석',   color:'#FFB300',hp:10,  spd:90, reward:11,  dmg:2,  grade:1},
-  multi:   {name:'다중 원석',   color:'#00E5FF',hp:35,  spd:46, reward:20,  dmg:3,  grade:2,special:'split'},
-  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:110, spd:26, reward:28,  dmg:5,  grade:3},
-  pure:    {name:'고순도 원석', color:'#FFD54F',hp:28,  spd:44, reward:45,  dmg:4,  grade:2},
-  unstable:{name:'불안정 원석', color:'#76FF03',hp:48,  spd:74, reward:34,  dmg:10, grade:2,special:'bigdmg'},
-  compres: {name:'압축 원석',   color:'#E040FB',hp:380, spd:20, reward:70,  dmg:8,  grade:3},
-  core:    {name:'코어 원석',   color:'#B3E5FC',hp:1800,spd:12, reward:250, dmg:20, grade:4,special:'boss'},
+  normal:  {name:'일반 원석',   color:'#78909C',hp:18,  spd:44, reward:15,  dmg:2,  grade:1},
+  fast:    {name:'고속 원석',   color:'#FFB300',hp:10,  spd:90, reward:22,  dmg:2,  grade:1},
+  multi:   {name:'다중 원석',   color:'#00E5FF',hp:35,  spd:46, reward:40,  dmg:3,  grade:2,special:'split'},
+  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:110, spd:26, reward:55,  dmg:5,  grade:3},
+  pure:    {name:'고순도 원석', color:'#FFD54F',hp:28,  spd:44, reward:90,  dmg:4,  grade:2},
+  unstable:{name:'불안정 원석', color:'#76FF03',hp:48,  spd:74, reward:70,  dmg:10, grade:2,special:'bigdmg'},
+  compres: {name:'압축 원석',   color:'#E040FB',hp:380, spd:20, reward:140, dmg:8,  grade:3},
+  core:    {name:'코어 원석',   color:'#B3E5FC',hp:1800,spd:12, reward:500, dmg:20, grade:4,special:'boss'},
 };
 
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,  color:'#2196F3',type:'single',   dmg:42,  spd:1.0,  range:2.0, upgMult:18.0, lvM:[0.80,1.20,1.70,2.35], upgCosts:[1620,3240,5040],  desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.', descEn:'An industrial robotic arm grabs the lead ore on the conveyor and performs a high-power disassembly process. The most economical base-line equipment for early control.'},
-  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:240,  color:'#FF3040',type:'single',   dmg:25,  spd:2.0,  range:3.0, upgMult:7.4,  lvM:[0.95,1.32,1.68,2.15], upgCosts:[1597,3194,4969],  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.', descEn:'Fires port core energy in rapid bursts, triggering chain reactions inside ores. A mid-range striker for focused single-target processing.'},
-  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:345,  color:'#9C27B0',type:'twinhub',  dmg:8,   spd:0,    range:1.0, upgMult:5.1,  lvM:[0.90,1.25,1.62,2.10], upgCosts:[1579,3159,4917],  desc:'궤도 타격 임팩터가 반경 내를 선회하며 원석에 물리 충격을 가해 이송 속도를 50% 감쇄시킨다. 원석이 공정 구간에 머무는 시간을 늘려 후속 설비 효율을 높인다.', descEn:'Orbital strike impactors orbit within range, applying physical force to reduce ore speed by 50%. Extends dwell time to boost downstream efficiency.'},
-  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:510,  color:'#00C853',type:'scan',     dmg:220, spd:0.25, range:5.0, upgMult:3.4,  lvM:[1.00,1.35,1.68,2.05], upgCosts:[1552,3105,4833],  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.', descEn:'An omnidirectional optical analyzer scans the entire line and precisely strikes the highest-mass ore. Long-range, high-power equipment specialized for dense ores.'},
-  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:765,  color:'#FF6D00',type:'focus',    dmg:55,  spd:1.0,  range:5.0, upgMult:2.2,  lvM:[1.35,1.57,1.78,2.00], upgCosts:[1511,3022,4702],  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.', descEn:'Continuously fires a particle beam at the rearmost ore on the line. Handles ores before they escape, preventing port loss. Long-range rear-defense equipment.'},
-  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1050, color:'#FFD700',type:'refinery', dmg:42,  spd:1.0,  range:2.0, upgMult:1.55, lvM:[1.25,1.53,1.80,2.07], upgCosts:[1464,2929,4557],  desc:'전자기 펄스로 원석을 처리하며 분해 부산물을 포트로 직접 환원한다. 공정 완료 시 일반 설비 대비 20% 추가 포트를 회수하는 수익 특화 설비.', descEn:'Processes ores with electromagnetic pulses and converts byproducts directly into ports. Recovers 20% more ports than standard equipment on each process.'},
-  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:1540, color:'#F44336',type:'aoe',      dmg:15,  spd:1.0,  range:3.0, upgMult:1.0,  lvM:[1.63,1.84,2.05,2.26], upgCosts:[1384,2768,4308],  desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.', descEn:'Periodically deploys a grid laser field to simultaneously process all ores in range. Efficiency scales exponentially as ore density increases.'},
-  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:2270, color:'#03A9F4',type:'chain',    dmg:38,  spd:1.0,  range:3.0, upgMult:0.62, lvM:[1.58,1.72,1.86,2.00], upgCosts:[1264,2529,3937],  desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.', descEn:'Chain discharge module strikes up to 3 ores in sequence, triggering magnetic chain reactions. Total output increases explosively in dense zones.'},
-  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:3120, color:'#7DDFFF',type:'drone',    dmg:45,  spd:2.0,  range:3.0, upgMult:0.40, lvM:[1.35,1.52,1.68,1.85], upgCosts:[1125,2251,3504],  desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.', descEn:'An autonomous patrol drone orbits the perimeter at high speed, instantly processing ores with its laser. Eliminates blind spots that fixed equipment cannot cover.'},
-  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:4120, color:'#EEEEEE',type:'pierce',   dmg:14,  spd:6.0,  range:5.0, upgMult:0.26, lvM:[1.30,1.43,1.57,1.70], upgCosts:[962,1924,2994],   desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.', descEn:'Fires ultra-high-speed plasma beams in rapid succession, piercing up to 8 ores in a straight line. Efficiency scales exponentially as the line becomes denser.'},
+  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'산업용 로봇암이 컨베이어 선두 원석을 그리퍼로 포착해 고출력 분해 공정을 수행한다. 초기 라인 제어에 가장 경제적인 기초 공정 설비.', descEn:'An industrial robotic arm grabs the lead ore on the conveyor and performs a high-power disassembly process. Most economical early-control equipment.'},
+  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#FF3040',type:'single',   dmg:100,  spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'포트 코어 에너지를 연사해 원석 내부에서 연쇄 분해 반응을 일으킨다. 빠른 연사로 단일 원석을 집중 처리하는 중거리 타격 설비.', descEn:'Fires port core energy in rapid bursts, triggering chain reactions inside ores. Mid-range focused single-target striker.'},
+  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:90,   spd:1.0,  range:3.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'범위 내 모든 원석을 동시에 타격하며 이동 속도를 둔화시킨다. 레이저 그리드와 유사한 광역 공격에 둔화 효과가 추가된 제어형 광역 설비.', descEn:'Simultaneously strikes all ores in range while slowing their movement. AoE control unit similar to Laser Grid but with added slow effect.'},
+  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'전방위 광학 분석기가 라인 전체를 스캔해 가장 질량이 높은 원석을 선별 정밀 타격한다. 고밀도 원석에 특화된 장거리 고출력 공정 설비.', descEn:'Omnidirectional optical analyzer scans the line and precisely strikes the highest-mass ore. Long-range high-power equipment specialized for dense ores.'},
+  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'입자 가속 빔을 라인 최후방 원석에 지속 조사한다. 탈출 직전 원석을 연속 처리해 포트 손실을 막는 장거리 후방 방어형 공정 설비.', descEn:'Continuously fires a particle beam at the rearmost ore. Handles ores before they escape, preventing port loss. Long-range rear-defense equipment.'},
+  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'타격할 때마다 해당 원석의 처치 포트 일부를 즉시 수확한다. 원석을 처치하지 않아도 포트를 벌 수 있는 경제형 보조 딜러.', descEn:'Harvests a portion of kill reward from each hit. Earns ports on every strike, even without killing the ore. Economic support dealer.'},
+  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:430,  spd:1.0,  range:3.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'격자 레이저망을 주기적으로 전개해 범위 내 모든 원석을 동시 처리한다. 원석이 밀집할수록 면적 공정 효율이 기하급수적으로 증가하는 광역 설비.', descEn:'Periodically deploys a grid laser field to simultaneously process all ores in range. Efficiency scales exponentially as ore density increases.'},
+  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:120,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'연쇄 방전 모듈이 원석 최대 3개를 순차 타격하고 자기 분해 반응을 유발한다. 밀집 구간에서 총 공정량이 폭발적으로 증가한다.', descEn:'Chain discharge module strikes up to 3 ores in sequence, triggering magnetic reactions. Total output increases explosively in dense zones.'},
+  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'자율 비행 공정 드론이 설비 외곽을 고속 순찰하며 레이저로 원석을 즉시 처리한다. 고정 설비가 커버하지 못하는 사각지대를 실시간으로 제거한다.', descEn:'Autonomous patrol drone orbits at high speed, instantly processing ores with its laser. Eliminates blind spots that fixed equipment cannot cover.'},
+  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'극고속 플라즈마 빔을 연속 발사해 직선 경로상 원석 최대 8개를 관통 처리한다. 라인이 밀집할수록 처리 효율이 기하급수적으로 증가하는 관통형 설비.', descEn:'Fires ultra-high-speed plasma beams, piercing up to 8 ores in a straight line. Efficiency scales exponentially as the line becomes denser.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -345,31 +345,33 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W10:≈1.36 W20:≈2.06 W30:≈4.86 W40:≈11.36 W50:≈26.36 W60:≈61 W70:≈141 W80:≈261 W90:≈441 W100:≈661
+  // W20≈6 W30≈22 W40≈70 W50≈200 W60≈560 W70≈1360 W80≈3160 W90≈6660 W100≈13660
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.04;
-  if(w<=20)return hpS(10)+(w-10)*0.07;
-  if(w<=30)return hpS(20)+(w-20)*0.28;
-  if(w<=40)return hpS(30)+(w-30)*0.65;
-  if(w<=50)return hpS(40)+(w-40)*1.50;
-  if(w<=60)return hpS(50)+(w-50)*3.5;
-  if(w<=70)return hpS(60)+(w-60)*8.0;
-  if(w<=80)return hpS(70)+(w-70)*12.0;
-  if(w<=90)return hpS(80)+(w-80)*18.0;
-  return hpS(90)+(w-90)*22.0;
+  if(w<=10)return 1.0+(w-1)*0.11;
+  if(w<=20)return hpS(10)+(w-10)*0.50;
+  if(w<=30)return hpS(20)+(w-20)*1.60;
+  if(w<=40)return hpS(30)+(w-30)*4.80;
+  if(w<=50)return hpS(40)+(w-40)*13.0;
+  if(w<=60)return hpS(50)+(w-50)*36.0;
+  if(w<=70)return hpS(60)+(w-60)*80.0;
+  if(w<=80)return hpS(70)+(w-70)*180.0;
+  if(w<=90)return hpS(80)+(w-80)*350.0;
+  return hpS(90)+(w-90)*700.0;
 }
 function spdS(w){
-  if(w<=20)return 1+Math.min(w-1,19)*0.008;
-  if(w<=50)return spdS(20)+(w-20)*0.018;
-  if(w<=80)return spdS(50)+(w-50)*0.04;
-  return spdS(80)+(w-80)*0.08;
+  if(w<=10)return 1+Math.min(w-1,9)*0.006;
+  if(w<=20)return spdS(10)+(w-10)*0.010;
+  if(w<=50)return spdS(20)+(w-20)*0.016;
+  if(w<=80)return spdS(50)+(w-50)*0.032;
+  return spdS(80)+(w-80)*0.06;
 }
 function countS(w){
-  if(w<=3) return 6+w*2;
-  if(w<=20)return Math.floor(14+w*2.2);
-  if(w<=50)return Math.floor(58+(w-20)*3.8);
-  if(w<=75)return Math.floor(172+(w-50)*5.5);
-  return Math.floor(309+(w-75)*9.5);
+  if(w<=3) return 12+w*3;
+  if(w<=10)return Math.floor(20+w*4.0);
+  if(w<=20)return Math.floor(60+(w-10)*5.5);
+  if(w<=50)return Math.floor(115+(w-20)*5.0);
+  if(w<=75)return Math.floor(265+(w-50)*7.0);
+  return Math.floor(440+(w-75)*12.0);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -546,7 +548,7 @@ class Ore{
     this.alive=true;this.escaped=false;
     this.slowTimer=0;this._sR=0;this.ampRatio=0;this.ampTimer=0;
     this.shockTimer=0;this.shockDps=0;this.freezeTimer=0;this.freezeImmune=0;
-    this._twinSlowT=0;this._twinImmuneT=0;this._lastDmgType=null;
+    this._twinSlowT=0;this._twinImmuneT=0;this._twinSlowPct=0;this._lastDmgType=null;
     this.flashT=0;this.spin=Math.random()*Math.PI*2;
     const sz=[0,TS*.21,TS*.26,TS*.32,TS*.40];this.radius=sz[this.grade]||TS*.21;
   }
@@ -565,7 +567,7 @@ class Ore{
       if(this.hp<=0&&this.alive){this.alive=false;this._die();}
       if(this.shockTimer<=0)this.shockDps=0;
     }
-    let mv=this.spd*dt*(this._twinSlowT>0?0.5:1);
+    let mv=this.spd*dt*(this._twinSlowT>0?Math.max(0,1-this._twinSlowPct):1);
     while(mv>0&&this.pathIdx<PATH.length-1){
       const fr=PATH[this.pathIdx],to=PATH[this.pathIdx+1];
       const fx=R.tx(fr.c),fy=R.ty(fr.r),tx2=R.tx(to.c),ty2=R.ty(to.r);
@@ -588,7 +590,7 @@ class Ore{
     SFX.hit(this.grade>=3);
     if(this.special==='split'){for(let i=0;i<3;i++){const o=new Ore('normal',this.wave);o.pathIdx=this.pathIdx;o.progress=this.progress;o.x=this.x;o.y=this.y;GS.ores.push(o);}}
     for(let i=0;i<12;i++)GS.particles.push(new Particle(this.x,this.y,this.color,i,12));
-    const pr=this._lastDmgType==='refinery'?Math.round(this.reward*1.2):this.reward;
+    const pr=this.reward;
     GS.port+=pr;GS.totalPort+=pr;GS.portHist.push({t:GS.time,v:pr});
     GS.popups.push(new Popup(this.x,this.y-this.radius-5,'+'+pr,'#FFD700'));UI.updHUD();
   }
@@ -680,7 +682,7 @@ class Tower{
   _eff(e){e.z=this.basePrice*(this.isMega?4:1);const z=e.z,arr=GS.effects;let i=arr.length;while(i>0&&(arr[i-1].z||0)>z)i--;arr.splice(i,0,e);return e;}
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
-  getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*this._lm();}
+  getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*LVL[this.level-1].mult;}
   getRange(){return TWR[this.tId].range+(this.isMega?1:0);}
   update(dt,ores){
     this._animT+=dt;this._calcTwin();if(this._firingT>0)this._firingT-=dt;
@@ -702,31 +704,25 @@ class Tower{
     }
     if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;let best=null,bestHp=-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
     if(tp==='twinhub'){
-      const orbSpd=Math.PI*2/5,dr=this.getRange()*TS,hitR=TS*.36;
-      const baseDur=[1.0,1.33,1.67,2.0][this.level-1]||1.0;
-      const slowDur=this.isMega?baseDur*2.5:baseDur;
-      const nOrbs=2;
-      // both orbs rotate same direction (CCW)
-      this._twinAngles[0]+=dt*orbSpd;
-      this._twinAngles[1]+=dt*orbSpd;
-      for(let i=0;i<nOrbs;i++){
-        if(this._twin_hcd[i]>0){this._twin_hcd[i]-=dt;continue;}
-        const ox=this.cx+Math.cos(this._twinAngles[i])*dr,oy=this.cy+Math.sin(this._twinAngles[i])*dr;
+      this._aoeT+=dt;const iv=1/Math.max(.1,this.getSpd());
+      if(this._aoeT>=iv){
+        this._aoeT=0;
+        const rng=this.getRange()*TS,rng2=rng*rng,cx0=this.cx,cy0=this.cy;
+        const slowPcts=[0.10,0.13,0.16,0.20];
+        const pct=this.isMega?1.0:slowPcts[this.level-1]||0.10;
+        let hit=false;
         for(const o of ores){
-          if(!o.alive)continue;
-          if(o._twinImmuneT>0||o._twinSlowT>0)continue;
-          const _hr=hitR+o.radius;if((o.x-ox)*(o.x-ox)+(o.y-oy)*(o.y-oy)<_hr*_hr){
-            o.takeDmg(this.getDmg(),'twinhub');
-            o._twinSlowT=slowDur;
-            this._twin_hcd[i]=0.35;this._firingT=.22;
-            this._eff(new RingEff(ox,oy,hitR*2.5,this.color));
-            break;
-          }
+          const _x=o.x-cx0,_y=o.y-cy0;
+          if(!o.alive||_x*_x+_y*_y>rng2)continue;
+          o.takeDmg(this.getDmg(),'twinhub');
+          if(o._twinImmuneT<=0){o._twinSlowT=1.0;o._twinSlowPct=pct;}
+          hit=true;
         }
+        if(hit){this._firingT=.28;this._eff(new GridFlashEff(cx0,cy0,rng,this.color));SFX.shoot('aoe');}
       }
       return;
     }
-    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);tgt.takeDmg(this.getDmg(),'refinery');this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
+    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);tgt.takeDmg(this.getDmg(),'refinery');const _hp=[0.02,0.03,0.04,0.05];const _pp=this.isMega?0.25:_hp[this.level-1]||0.02;const _pg=Math.max(1,Math.floor(tgt.reward*_pp));GS.port+=_pg;GS.totalPort+=_pg;GS.popups.push(new Popup(this.cx,this.cy-14,'+◈'+_pg,'#FFD700'));UI.updHUD();this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
     if(tp==='drone'){
       this._droneAngle+=dt*(0.55+this._lm()*.08);
       const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;
@@ -1575,68 +1571,43 @@ class Tower{
   }
   _dTwinHub(ctx,r,t){
     const col=this.color,f=this._firingT>0;
-    // circular armored base
+    // Circular base
     ctx.beginPath();ctx.arc(0,0,r*.88,0,Math.PI*2);
     ctx.fillStyle='#141414';ctx.fill();
-    ctx.strokeStyle=f?col+'99':'#3a3a40';ctx.lineWidth=2;ctx.stroke();
-    // 8-segment panel inlays
-    for(let i=0;i<8;i++){
-      const a=i*Math.PI/4,a2=a+Math.PI/4;
-      ctx.fillStyle=f&&i%2===0?col+'06':'#181818';
-      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.86,a,a2);ctx.closePath();ctx.fill();
+    ctx.strokeStyle=f?col+'88':'#38304a';ctx.lineWidth=1.8;ctx.stroke();
+    // 6 arc segments
+    for(let i=0;i<6;i++){
+      const a0=i*Math.PI/3,a1=a0+Math.PI/3;
+      ctx.fillStyle=f&&i%2===0?col+'07':'#181818';
+      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.86,a0,a1);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#222';ctx.lineWidth=0.6;ctx.stroke();
     }
-    // inner circle ring
-    ctx.strokeStyle=f?col+'28':col+'10';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,r*.6,0,Math.PI*2);ctx.stroke();
-    // 4 radial strut channels (NSEW)
+    // 3 concentric pulse rings
+    const ringR=[r*.26,r*.46,r*.66];const ringA=f?['50','36','22']:['1a','12','0a'];
+    for(let i=0;i<3;i++){ctx.strokeStyle=col+ringA[i];ctx.lineWidth=f?1.4:0.9;ctx.beginPath();ctx.arc(0,0,ringR[i],0,Math.PI*2);ctx.stroke();}
+    // 4 cardinal emitter nodes
     for(let i=0;i<4;i++){
-      const a=i*Math.PI/2;
-      ctx.strokeStyle=f?col+'55':col+'22';ctx.lineWidth=3;ctx.lineCap='round';
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.2,Math.sin(a)*r*.2);ctx.lineTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);ctx.stroke();
-      ctx.strokeStyle=col+(f?'28':'10');ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.22,Math.sin(a)*r*.22);ctx.lineTo(Math.cos(a)*r*.6,Math.sin(a)*r*.6);ctx.stroke();
+      const a=i*Math.PI/2,nx=Math.cos(a)*r*.60,ny=Math.sin(a)*r*.60;
+      ctx.fillStyle='#1c1c1c';ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.5;
+      ctx.shadowColor=col;ctx.shadowBlur=f?14:4;
+      ctx.beginPath();ctx.arc(nx,ny,r*.12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+      const eg=ctx.createRadialGradient(nx,ny,0,nx,ny,r*.12);
+      eg.addColorStop(0,f?'#fff':col+'99');eg.addColorStop(.5,col+'44');eg.addColorStop(1,col+'00');
+      ctx.fillStyle=eg;ctx.beginPath();ctx.arc(nx,ny,r*.12,0,Math.PI*2);ctx.fill();
     }
-    // outer rotating dashed orbit-track ring
-    ctx.save();ctx.rotate(t*.75);
-    ctx.strokeStyle=col+(f?'55':'22');ctx.lineWidth=1.3;ctx.setLineDash([r*.22,r*.09]);
-    ctx.beginPath();ctx.arc(0,0,r*.8,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // twin left/right hub nodes (E/W)
-    for(const sx of[-1,1]){
-      const nx=sx*r*.62;
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.8;
-      ctx.shadowColor=col;ctx.shadowBlur=f?20:6;
-      ctx.beginPath();ctx.arc(nx,0,r*.19,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-      const ng=ctx.createRadialGradient(nx,0,0,nx,0,r*.19);
-      ng.addColorStop(0,f?'#fff':col+'dd');ng.addColorStop(.45,col+'88');ng.addColorStop(1,col+'00');
-      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(nx,0,r*.19,0,Math.PI*2);ctx.fill();
-      // node outer collar
-      ctx.strokeStyle=col+(f?'33':'14');ctx.lineWidth=.9;ctx.setLineDash([2,2]);
-      ctx.beginPath();ctx.arc(nx,0,r*.29,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
-      // node tick marks
-      for(let i=0;i<4;i++){
-        const a=i*Math.PI/2;
-        ctx.strokeStyle=col+(f?'44':'18');ctx.lineWidth=0.8;
-        ctx.beginPath();ctx.moveTo(nx+Math.cos(a)*r*.2,Math.sin(a)*r*.2);ctx.lineTo(nx+Math.cos(a)*r*.27,Math.sin(a)*r*.27);ctx.stroke();
-      }
-    }
-    // central counter-rotating hex coil
-    ctx.save();ctx.rotate(-t*1.8);
-    ctx.strokeStyle=f?col:col+'66';ctx.lineWidth=1.6;ctx.shadowColor=col;ctx.shadowBlur=f?10:2;
-    ctx.beginPath();
-    for(let i=0;i<6;i++){const a=i/6*Math.PI*2;i===0?ctx.moveTo(Math.cos(a)*r*.28,Math.sin(a)*r*.28):ctx.lineTo(Math.cos(a)*r*.28,Math.sin(a)*r*.28);}
-    ctx.closePath();ctx.stroke();ctx.shadowBlur=0;ctx.restore();
-    // inner CW rotating triangle
-    ctx.save();ctx.rotate(t*2.4);
-    ctx.strokeStyle=col+(f?'55':'1c');ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let i=0;i<3;i++){const a=i*Math.PI*2/3-Math.PI/6;i===0?ctx.moveTo(Math.cos(a)*r*.18,Math.sin(a)*r*.18):ctx.lineTo(Math.cos(a)*r*.18,Math.sin(a)*r*.18);}
-    ctx.closePath();ctx.stroke();ctx.restore();
-    // core
-    ctx.shadowColor=col;ctx.shadowBlur=f?26:10;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.19);
-    cg.addColorStop(0,'#fff');cg.addColorStop(.4,col);cg.addColorStop(.75,col+'55');cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.19,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=f?col+'bb':col+'44';ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.stroke();
-    ctx.shadowBlur=0;
+    // Rotating field ring
+    ctx.save();ctx.rotate(-t*1.2);ctx.strokeStyle=f?col+'55':col+'1c';ctx.lineWidth=1.2;ctx.setLineDash([r*.20,r*.10]);
+    ctx.beginPath();ctx.arc(0,0,r*.76,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // Counter-rotating cross lines
+    ctx.save();ctx.rotate(t*.7);ctx.strokeStyle=f?col+'40':col+'12';ctx.lineWidth=1.2;ctx.globalAlpha=f?.7:.35;
+    const gl=r*.64;
+    for(let i=0;i<2;i++){ctx.beginPath();ctx.moveTo(i===0?-gl:0,i===0?0:-gl);ctx.lineTo(i===0?gl:0,i===0?0:gl);ctx.stroke();}
+    ctx.globalAlpha=1;ctx.restore();
+    // Core node
+    ctx.shadowColor=col;ctx.shadowBlur=f?26:8;
+    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.20);
+    cg.addColorStop(0,f?'#fff':col);cg.addColorStop(.4,col+(f?'cc':'77'));cg.addColorStop(1,col+'00');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.20,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
   }
   _drawTwinOrbit(ctx){
     const dr=this.getRange()*TS,col=this.color;
@@ -1836,16 +1807,18 @@ function checkMerge(){
 // ═══════════════════════════════════════════════════════
 function makeWave(w){
   const pool=getPool(w),totalCount=countS(w),q=[];
-  const rushes=w<=20?2:w<=50?3:4;
+  const rushes=w<=20?3:w<=50?4:5;
   const perRush=Math.ceil(totalCount/rushes);
-  const rushGap=w<=20?8:w<=50?6:5;
+  const interval=w<=20?0.40:w<=50?0.32:0.25;
+  const rushGap=w<=20?7:w<=50?5:4;
   let t=0;
   for(let ri=0;ri<rushes;ri++){
     const n=ri<rushes-1?perRush:totalCount-perRush*(rushes-1);
-    for(let i=0;i<n;i++)q.push({type:pool[Math.floor(Math.random()*pool.length)],delay:t+i*.5});
-    t+=n*.5+rushGap;
+    for(let i=0;i<n;i++)q.push({type:pool[Math.floor(Math.random()*pool.length)],delay:t+i*interval});
+    t+=n*interval+rushGap;
   }
-  if(w%10===0&&w>0)q.push({type:'core',delay:t});
+  if(w%5===0&&w>0)q.push({type:'core',delay:t});
+  if(w%20===0&&w>0){q.push({type:'core',delay:t+2});q.push({type:'core',delay:t+4});}
   return q;
 }
 
@@ -1930,10 +1903,10 @@ const UI={
     tags+=`<span class="mc-tag">${L('범위','Range')} <b>${d.range}</b></span>`;
     if(d.type==='focus')tags+=`<span class="mc-tag">${L('집중 레이저','Focus Laser')}</span>`;
     if(d.type==='scan')tags+=`<span class="mc-tag">${L('광역','AoE')}</span>`;
-    if(d.type==='refinery')tags+=`<span class="mc-tag">${L('전격·포트 획득','Shock & Port Gain')}</span>`;
+    if(d.type==='refinery')tags+=`<span class="mc-tag">${L('타격 포트 획득','Port on Hit')}</span>`;
     if(d.type==='chain')tags+=`<span class="mc-tag">${L('연쇄','Chain')} <b>3${L('개','×')}</b></span>`;
     if(d.type==='pierce')tags+=`<span class="mc-tag">${L('관통','Pierce')} <b>8${L('개','×')}</b></span>`;
-    if(d.type==='twinhub')tags+=`<span class="mc-tag">${L('궤도 감속','Orbital Slow')}</span>`;
+    if(d.type==='twinhub')tags+=`<span class="mc-tag">${L('광역+둔화','AoE+Slow')}</span>`;
     if(d.type==='drone')tags+=`<span class="mc-tag">선회공격</span>`;
     document.getElementById('mc-tags').innerHTML=tags;
   },
@@ -1987,10 +1960,10 @@ const UI={
     if(d.spd>0)s+=`<div class="tis">${L('속도','Rate')}<span>${tower.getSpd().toFixed(1)}/${L('초','s')}</span></div>`;
     s+=`<div class="tis">${L('범위','Range')}<span>${tower.getRange()}</span></div>`;
     if(tower.type==='focus')s+=`<div class="tis">${L('집중 레이저','Focus Laser')}<span>${L('지속','Active')}</span></div>`;
-    if(tower.type==='refinery'){const pg=Math.max(1,Math.round(tower.getDmg()*1.5));s+=`<div class="tis">${L('포트/발사','Port/Shot')}<span>+◈${pg}</span></div>`;}
+    if(tower.type==='refinery'){const _rhp=[2,3,4,5];const _rp=tower.isMega?25:_rhp[tower.level-1]||2;s+=`<div class="tis">${L('타격 포트','Hit Port')}<span>${L('처치포트의','Kill Reward')} ${_rp}%</span></div>`;}
     if(tower.type==='chain'){const sd=Math.round(tower.getDmg()*0.5);s+=`<div class="tis">${L('연쇄','Chain')}<span>${L('3개','×3')}</span></div>`;s+=`<div class="tis">${L('감전','Shock')}<span>DPS ${sd} / ${L('3초','3s')}</span></div>`;}
     if(tower.type==='pierce')s+=`<div class="tis">${L('관통','Pierce')}<span>${L('8개','×8')}</span></div>`;
-    if(tower.type==='twinhub'){const bd=[1.0,1.33,1.67,2.0][tower.level-1]||1.0;const dur=tower.isMega?bd*5:bd;s+=`<div class="tis">${L('감속','Slow')}<span>50% / ${dur.toFixed(1)}${L('초','s')}</span></div>`;s+=`<div class="tis">${L('면역','Immune')}<span>${L('접촉 후 1초','1s after hit')}</span></div>`;}
+    if(tower.type==='twinhub'){const _tsp=[10,13,16,20];const _sp=tower.isMega?100:_tsp[tower.level-1]||10;s+=`<div class="tis">${L('광역 둔화','AoE Slow')}<span>${_sp}% / 1${L('초','s')}</span></div>`;s+=`<div class="tis">${L('면역','Immune')}<span>${L('둔화 후 1초','1s post-slow')}</span></div>`;}
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
     if(tower.isMega||tower.level>=4){bu.disabled=true;bu.textContent=L('최대','MAX');}
@@ -2176,6 +2149,11 @@ const UI={
   showClear(){
     SFX.victory();
     const el=document.getElementById('clrovly');el.style.display='block';
+    const _badge=document.getElementById('clr-badge');_badge.textContent='MISSION COMPLETE';_badge.style.color='';_badge.style.borderColor='';
+    const _ti=document.getElementById('clr-title');_ti.innerHTML='<span>100</span>'+(LANG==='ko'?'웨이브':'Waves');_ti.style.textShadow='';if(_ti.querySelector('span'))_ti.querySelector('span').style.color='';
+    document.getElementById('clr-sub').textContent=LANG==='ko'?'ALL WAVES CLEARED':'ALL WAVES CLEARED';
+    document.getElementById('clr-divider').style.background='';
+    const _btn=document.getElementById('clr-btn');_btn.style.background='';_btn.style.color='';_btn.innerHTML=LANG==='ko'?'↩ &nbsp;다시 가동':'↩ &nbsp;Restart';
     const t=Math.floor(GS.time);
     const eggRow=GS.eggActive
       ?`<div style="text-align:center;padding:11px 0 13px;margin-bottom:6px;background:#FF450018;border:1.5px solid #FF4500;border-radius:6px;"><span style="color:#FF4500;font-size:14px;font-weight:900;letter-spacing:1px;text-shadow:0 0 12px #FF450099;">포트 무한 사용 클리어</span></div>`
@@ -2219,29 +2197,38 @@ const UI={
   },
 
   showGO(){
-    const el=document.getElementById('govly');el.style.display='block';
+    const el=document.getElementById('clrovly');el.style.display='block';
     const bw=+localStorage.getItem('ieg_bw')||0,bp=+localStorage.getItem('ieg_bp')||0;
     if(GS.wave>bw)localStorage.setItem('ieg_bw',GS.wave);
     if(GS.totalPort>bp)localStorage.setItem('ieg_bp',GS.totalPort);
-    // Wave display
-    document.getElementById('go-wave').textContent=GS.wave;
+    // Populate clrovly with game-over content
+    const badge=document.getElementById('clr-badge');
+    badge.textContent='GAME OVER';badge.style.color='#EF5350';badge.style.borderColor='#EF535055';
+    const titleEl=document.getElementById('clr-title');
+    titleEl.innerHTML=`W<span>${GS.wave}</span>`;
+    titleEl.style.textShadow='0 0 40px #EF535066';
+    titleEl.querySelector('span').style.color='#EF5350';
+    document.getElementById('clr-sub').textContent=LANG==='ko'?'가동 중지':'FACTORY HALT';
+    document.getElementById('clr-divider').style.background='linear-gradient(90deg,transparent,#EF5350,transparent)';
+    const btn=document.getElementById('clr-btn');
+    btn.style.background='linear-gradient(135deg,#EF5350,#b71c1c)';btn.style.color='#fff';
+    btn.innerHTML=LANG==='ko'?'↩ &nbsp;재가동':'↩ &nbsp;Restart';
     // Score calculation
     const towerScore=GS.towers.reduce((s,tw)=>s+tw.basePrice+tw.upgCost,0);
     const stabilityBonus=GS.stability*100;
     const portBonus=GS.port;
     const score=towerScore+stabilityBonus+portBonus;
-    const t=Math.floor(GS.time);
-    const ko=LANG==='ko';
-    document.getElementById('go-stats').innerHTML=`
-      <div class="go-score-row"><span class="go-score-lbl">${ko?'최종 점수':'TOTAL SCORE'}</span><span class="go-score-val">${score.toLocaleString()}</span></div>
+    const t=Math.floor(GS.time);const ko=LANG==='ko';
+    document.getElementById('clr-stats').innerHTML=`
+      <div class="clr-row" style="background:#EF535014;border-color:#EF535033"><span class="clr-lbl" style="color:#EF5350;font-size:13px">${ko?'최종 점수':'TOTAL SCORE'}</span><span class="clr-val" style="font-size:20px">${score.toLocaleString()}</span></div>
       <div class="clr-row"><span class="clr-lbl">${ko?'장비 자산':'Tower Assets'}</span><span class="clr-val">◈ ${towerScore.toLocaleString()}</span></div>
-      <div class="clr-row"><span class="clr-lbl">${ko?'안정성 보너스':'Stability Bonus'}</span><span class="clr-val">${GS.stability} × 100 = ${stabilityBonus.toLocaleString()}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'안정성 보너스':'Stability Bonus'}</span><span class="clr-val">${GS.stability}×100 = ${stabilityBonus.toLocaleString()}</span></div>
       <div class="clr-row"><span class="clr-lbl">${ko?'보유 포트':'Port Balance'}</span><span class="clr-val">◈ ${portBonus.toLocaleString()}</span></div>
       <div class="clr-row"><span class="clr-lbl">${ko?'최종 웨이브':'Final Wave'}</span><span class="clr-val">${GS.wave}/100</span></div>
       <div class="clr-row"><span class="clr-lbl">${ko?'운영 시간':'Operation Time'}</span><span class="clr-val">${Math.floor(t/60)}${ko?'분 ':'m '}${t%60}${ko?'초':'s'}</span></div>
     `;
-    // Game over canvas (red falling particles)
-    const cv=document.getElementById('go-canvas');
+    // Red particle canvas
+    const cv=document.getElementById('clr-canvas');
     cv.width=480;cv.height=900;
     const cx=cv.getContext('2d');
     const bg=cx.createRadialGradient(240,380,20,240,380,420);
@@ -2257,7 +2244,7 @@ const UI={
       col:Math.random()<.6?'#EF5350':Math.random()<.5?'#FF8A80':'#ffffff'
     }));
     const tick=()=>{
-      if(document.getElementById('govly').style.display==='none')return;
+      if(document.getElementById('clrovly').style.display==='none')return;
       cx.fillStyle='#0000001e';cx.fillRect(0,0,480,900);
       for(const p of pts){
         p.x+=p.vx;p.y+=p.vy;p.life-=.004;
@@ -2334,7 +2321,7 @@ const G={
     if(GS.waveActive&&GS.oreQ.length===0&&GS.ores.length===0){
       GS.waveActive=false;
       // 클리어 보상: 초반엔 넉넉히, 후반엔 크게
-      const bonus=Math.floor(80+GS.wave*18+Math.pow(GS.wave,1.3)*1.5);
+      const bonus=Math.floor(100+GS.wave*55+Math.pow(GS.wave,1.5)*2.0);
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
       if(GS.wave>=100){GS.running=false;UI.showClear();return;}
