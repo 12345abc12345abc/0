@@ -838,116 +838,91 @@ class Tower{
     g.addColorStop(0,'#fff');g.addColorStop(.4,col);g.addColorStop(1,col+'88');
     ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   }
-  // 코어슈터: 사각 플랫폼 + X 직사각 핀 + 챔퍼 포탑
+  // 코어슈터: 육각형 베이스 + 드럼형 포탑
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // BASE: square platform + 4 rectangular fins at X positions (angular, boxy)
-    const sq=r*.52;
-    // Main square platform
-    ctx.fillStyle='#181818';ctx.strokeStyle='#292929';ctx.lineWidth=1.8;
-    ctx.beginPath();ctx.rect(-sq,-sq,sq*2,sq*2);ctx.fill();ctx.stroke();
-    // Inner inset square panel
-    const iq=sq*.62;
-    ctx.fillStyle='#121212';ctx.strokeStyle='#1d1d1d';ctx.lineWidth=1.0;
-    ctx.beginPath();ctx.rect(-iq,-iq,iq*2,iq*2);ctx.fill();ctx.stroke();
-    // Cross panel lines
-    ctx.strokeStyle='#1c1c1c';ctx.lineWidth=0.8;
-    ctx.beginPath();ctx.moveTo(-sq,0);ctx.lineTo(sq,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(0,-sq);ctx.lineTo(0,sq);ctx.stroke();
-    // 4 rectangular fins at 45°/135°/225°/315° (X pattern)
-    const fy0=sq*Math.SQRT2-r*.03;
-    for(let i=0;i<4;i++){
-      ctx.save();ctx.rotate(i*Math.PI/2+Math.PI/4);
-      const fw=r*.20,fh=r*.36;
-      ctx.fillStyle='#1d1d1d';ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1.2;
-      ctx.beginPath();ctx.rect(-fw,fy0,fw*2,fh);ctx.fill();ctx.stroke();
-      ctx.shadowColor=col;ctx.shadowBlur=f?9:2;
-      ctx.strokeStyle=col+(f?'44':'12');ctx.lineWidth=1.0;ctx.stroke();ctx.shadowBlur=0;
-      // Horizontal panel line on fin
-      ctx.strokeStyle=col+(f?'28':'09');ctx.lineWidth=0.7;
-      ctx.beginPath();ctx.moveTo(-fw*.78,fy0+fh*.44);ctx.lineTo(fw*.78,fy0+fh*.44);ctx.stroke();
-      // Bolt
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'14');ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.arc(0,fy0+fh*.68,r*.024,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.restore();
+    const bR=r*.82,HO=Math.PI/6;
+    // Helper: draw flat-top hexagon path at scale sc
+    const hexPath=(sc)=>{ctx.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3+HO;i===0?ctx.moveTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc):ctx.lineTo(Math.cos(a)*bR*sc,Math.sin(a)*bR*sc);}ctx.closePath();};
+    // BASE outer fill
+    ctx.fillStyle='#161616';hexPath(1);ctx.fill();
+    // 6 face panels (between consecutive vertices and center)
+    for(let i=0;i<6;i++){
+      const a0=i*Math.PI/3+HO,a1=(i+1)*Math.PI/3+HO;
+      const shade=(i===2||i===5)?'#1c1c1c':'#191919';
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a0)*bR*.98,Math.sin(a0)*bR*.98);ctx.lineTo(Math.cos(a1)*bR*.98,Math.sin(a1)*bR*.98);ctx.closePath();
+      ctx.fillStyle=shade;ctx.fill();
+      ctx.strokeStyle='#222';ctx.lineWidth=0.7;ctx.stroke();
     }
-    // 4 cardinal bolts on square face
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2,bx=Math.cos(a)*sq*.72,by=Math.sin(a)*sq*.72;
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'36':'10');ctx.lineWidth=0.7;
-      ctx.beginPath();ctx.arc(bx,by,r*.022,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.strokeStyle='#303030';ctx.lineWidth=0.5;
-      ctx.beginPath();ctx.moveTo(bx-r*.009,by);ctx.lineTo(bx+r*.009,by);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(bx,by-r*.009);ctx.lineTo(bx,by+r*.009);ctx.stroke();
+    // Middle ring
+    ctx.strokeStyle='#252525';ctx.lineWidth=1.2;hexPath(.62);ctx.stroke();
+    // Inner hex fill
+    ctx.fillStyle='#141414';hexPath(.44);ctx.fill();
+    ctx.strokeStyle='#1e1e1e';ctx.lineWidth=0.8;hexPath(.44);ctx.stroke();
+    // Glow rim
+    ctx.shadowColor=col;ctx.shadowBlur=f?16:4;
+    ctx.strokeStyle=col+(f?'55':'1a');ctx.lineWidth=1.6;hexPath(1);ctx.stroke();ctx.shadowBlur=0;
+    // 6 vertex bolts
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3+HO,bx=Math.cos(a)*bR*.90,by=Math.sin(a)*bR*.90;
+      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'44':'16');ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.arc(bx,by,r*.026,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // Glow on square
-    ctx.shadowColor=col;ctx.shadowBlur=f?14:3;
-    ctx.strokeStyle=col+(f?'55':'18');ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.rect(-sq,-sq,sq*2,sq*2);ctx.stroke();ctx.shadowBlur=0;
-    // Rotating rings
-    ctx.save();ctx.rotate(t*1.8);ctx.strokeStyle=f?col+'70':col+'22';ctx.lineWidth=1.4;ctx.setLineDash([r*.18,r*.10]);
-    ctx.beginPath();ctx.arc(0,0,sq*.80,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    ctx.save();ctx.rotate(-t*1.1);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=0.9;ctx.setLineDash([r*.10,r*.12]);
-    ctx.beginPath();ctx.arc(0,0,sq*1.08,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // TURRET: chamfered-rectangle body, rectangular side blocks, short barrel
+    // Counter-rotating dashed rings
+    ctx.save();ctx.rotate(t*1.6);ctx.strokeStyle=f?col+'60':col+'1e';ctx.lineWidth=1.3;ctx.setLineDash([r*.18,r*.12]);
+    ctx.beginPath();ctx.arc(0,0,bR*.74,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.rotate(-t*1.0);ctx.strokeStyle=f?col+'38':col+'12';ctx.lineWidth=0.9;ctx.setLineDash([r*.10,r*.14]);
+    ctx.beginPath();ctx.arc(0,0,bR*1.04,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // TURRET: drum-shaped cannon
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
-    // Main body — chamfered rectangle (boxy)
-    ctx.fillStyle='#1e1e1e';ctx.strokeStyle=f?col+'70':col+'2a';ctx.lineWidth=1.9;
-    ctx.beginPath();
-    ctx.moveTo(-r*.46,r*.12); ctx.lineTo(r*.46,r*.12);
-    ctx.lineTo(r*.46,-r*.28); ctx.lineTo(r*.36,-r*.40);
-    ctx.lineTo(-r*.36,-r*.40);ctx.lineTo(-r*.46,-r*.28);
-    ctx.closePath();ctx.fill();ctx.stroke();
-    // Rectangular side armor blocks
-    for(const sx of[-1,1]){
-      const bx=sx*r*.46,bw=sx*r*.18;
-      ctx.fillStyle='#1a1a1a';ctx.strokeStyle=col+(f?'4a':'1c');ctx.lineWidth=1.0;
-      ctx.beginPath();ctx.rect(bx,-r*.26,bw,r*.26);ctx.fill();ctx.stroke();
-      ctx.strokeStyle=col+(f?'36':'10');ctx.lineWidth=0.6;
-      for(let v=0;v<3;v++){const vy=-r*.04-v*r*.058;ctx.beginPath();ctx.moveTo(sx*r*.49,vy);ctx.lineTo(sx*r*.60,vy);ctx.stroke();}
+    const drumR=r*.36,drumY=r*.06;
+    // Mounting ring base
+    ctx.fillStyle='#1c1c1c';ctx.strokeStyle=col+(f?'40':'18');ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.arc(0,drumY,drumR*1.28,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // Drum body
+    ctx.fillStyle='#202020';ctx.strokeStyle=f?col+'70':col+'2e';ctx.lineWidth=2.0;
+    ctx.shadowColor=col;ctx.shadowBlur=f?12:2;
+    ctx.beginPath();ctx.arc(0,drumY,drumR,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    // Inner detail rings
+    ctx.strokeStyle=col+(f?'40':'14');ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.arc(0,drumY,drumR*.70,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle=col+(f?'28':'0c');ctx.lineWidth=0.6;
+    ctx.beginPath();ctx.arc(0,drumY,drumR*.44,0,Math.PI*2);ctx.stroke();
+    // 6 bolt holes on drum
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3,bx=Math.cos(a)*drumR*.80,by=drumY+Math.sin(a)*drumR*.80;
+      ctx.fillStyle='#181818';ctx.strokeStyle=col+(f?'38':'12');ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.arc(bx,by,r*.022,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
-    // Horizontal panel seam
-    ctx.strokeStyle=col+(f?'28':'0a');ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(-r*.40,-r*.18);ctx.lineTo(r*.40,-r*.18);ctx.stroke();
-    // 2 rectangular indicator cells
-    for(const sx of[-1,1]){
-      ctx.fillStyle='#1e1e1e';ctx.strokeStyle=col+(f?'60':'22');ctx.lineWidth=0.9;
-      ctx.beginPath();ctx.rect(sx*r*.10,-r*.31,sx*r*.22,r*.056);ctx.fill();ctx.stroke();
-      if(f){ctx.fillStyle=col+'aa';ctx.shadowColor=col;ctx.shadowBlur=8;
-        ctx.beginPath();ctx.rect(sx*r*.10+(sx>0?r*.014:-r*.014*3),-r*.298,r*.048,r*.032);ctx.fill();ctx.shadowBlur=0;}
-    }
-    // Barrel mount
-    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'50':col+'20';ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.rect(-r*.22,-r*.40,r*.44,r*.12);ctx.fill();ctx.stroke();
-    // SHORT wide barrel
-    const brlL=r*.16,brlHW=r*.11;
-    ctx.fillStyle='#181818';ctx.strokeStyle=f?col+'99':col+'44';ctx.lineWidth=1.7;
-    ctx.shadowColor=col;ctx.shadowBlur=f?16:3;
-    ctx.beginPath();ctx.rect(-brlHW,-r*.40-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-    // Barrel band
-    ctx.fillStyle='#212121';ctx.strokeStyle=col+(f?'66':'28');ctx.lineWidth=1.3;
-    ctx.beginPath();ctx.rect(-brlHW*1.55,-r*.40-brlL*.55,brlHW*3.1,r*.038);ctx.fill();ctx.stroke();
+    // Spinning dashed indicator ring
+    ctx.save();ctx.rotate(t*2.4);ctx.strokeStyle=f?col+'88':col+'28';ctx.lineWidth=1.1;ctx.setLineDash([r*.09,r*.08]);
+    ctx.beginPath();ctx.arc(0,drumY,drumR*.58,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // Drum center glow node
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:6;
+    const dg=ctx.createRadialGradient(0,drumY,0,0,drumY,drumR*.32);
+    dg.addColorStop(0,f?'#ffffff':col+'cc');dg.addColorStop(.4,col+(f?'dd':'88'));dg.addColorStop(1,col+'00');
+    ctx.fillStyle=dg;ctx.beginPath();ctx.arc(0,drumY,drumR*.32,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    // Short barrel
+    const brlL=r*.18,brlHW=r*.09,brlY=drumY-drumR;
+    ctx.fillStyle='#1a1a1a';ctx.strokeStyle=f?col+'88':col+'38';ctx.lineWidth=1.6;
+    ctx.shadowColor=col;ctx.shadowBlur=f?14:2;
+    ctx.beginPath();ctx.rect(-brlHW,brlY-brlL,brlHW*2,brlL);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+    // Barrel band ring
+    ctx.fillStyle='#252525';ctx.strokeStyle=col+(f?'60':'24');ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.rect(-brlHW*1.6,brlY-brlL*.52,brlHW*3.2,r*.036);ctx.fill();ctx.stroke();
     // Muzzle aperture
-    ctx.shadowColor=col;ctx.shadowBlur=f?30:7;
-    ctx.strokeStyle=col+(f?'cc':'55');ctx.lineWidth=2.4;
-    ctx.beginPath();ctx.arc(0,-r*.40-brlL,brlHW*1.35,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
-    ctx.fillStyle='#0e0e0e';ctx.beginPath();ctx.arc(0,-r*.40-brlL,brlHW*.70,0,Math.PI*2);ctx.fill();
+    ctx.shadowColor=col;ctx.shadowBlur=f?28:6;
+    ctx.strokeStyle=col+(f?'cc':'55');ctx.lineWidth=2.2;
+    ctx.beginPath();ctx.arc(0,brlY-brlL,brlHW*1.4,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='#0d0d0d';ctx.beginPath();ctx.arc(0,brlY-brlL,brlHW*.68,0,Math.PI*2);ctx.fill();
     if(f){
-      ctx.globalAlpha=.85;
-      const mg=ctx.createRadialGradient(0,-r*.40-brlL,0,0,-r*.40-brlL,r*.28);
-      mg.addColorStop(0,'#fff');mg.addColorStop(.25,col);mg.addColorStop(1,col+'00');
-      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,-r*.40-brlL,r*.28,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.80;
+      const mg=ctx.createRadialGradient(0,brlY-brlL,0,0,brlY-brlL,r*.26);
+      mg.addColorStop(0,'#fff');mg.addColorStop(.22,col);mg.addColorStop(1,col+'00');
+      ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,brlY-brlL,r*.26,0,Math.PI*2);ctx.fill();
       ctx.globalAlpha=1;
     }
     ctx.restore();
-    // Center core
-    ctx.shadowColor=col;ctx.shadowBlur=f?40:14;
-    const cg=ctx.createRadialGradient(0,0,0,0,0,r*.26);
-    cg.addColorStop(0,'#ffffff');cg.addColorStop(.22,col);cg.addColorStop(.65,col+'55');cg.addColorStop(1,col+'00');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.26,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=col+(f?'cc':'44');ctx.lineWidth=1.6;
-    ctx.beginPath();ctx.arc(0,0,r*.32,0,Math.PI*2);ctx.stroke();
-    ctx.shadowBlur=0;
   }
   // 픽셀 로봇암: 직선 대칭 산업 로봇팔 — 헥사곤 베이스
   _dPA(ctx,r,t,f){
