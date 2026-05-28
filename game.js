@@ -2317,10 +2317,10 @@ const UI={
     // Score = tower assets + current port
     const towerScore=GS.towers.reduce((s,tw)=>s+tw.basePrice+tw.upgCost,0);
     const score=towerScore+Math.max(0,Math.floor(GS.port));
-    document.getElementById('clr-eyebrow').textContent=ko?'작전 보고서':'OPERATION REPORT';
+    document.getElementById('clr-eyebrow').textContent='';
     document.getElementById('clr-score').textContent=score.toLocaleString();
     document.getElementById('clr-score-lbl').textContent='SCORE';
-    document.getElementById('clr-wave').textContent=`W${GS.wave} / 100`;
+    document.getElementById('clr-wave').textContent=`W${GS.wave}`;
     // Badges
     let badges='';
     if(isWin)badges+=`<div class="clr-badge clear">${ko?'CLEAR':'CLEAR'}</div>`;
