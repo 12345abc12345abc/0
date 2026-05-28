@@ -1808,45 +1808,57 @@ class ExplodeEff{constructor(x,y,col){this.x=x;this.y=y;this.col=col;this.life=t
 class LaserEff{constructor(x,y,dir,len,col){this.x=x;this.y=y;this.dir=dir;this.len=len;this.col=col;this.life=this.max=.2;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.82;ctx.shadowColor=this.col;ctx.shadowBlur=6;ctx.strokeStyle=this.col;ctx.lineWidth=1.5+p*1.5;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(this.dir)*this.len,this.y+Math.sin(this.dir)*this.len);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class CoreEchoEff{
   constructor(x,y,col){
-    this.x=x;this.y=y;this.col=col;this.life=this.max=.58;this.z=0;
+    this.x=x;this.y=y;this.col=col;this.life=this.max=.62;this.z=0;
     this.rot=Math.random()*Math.PI*2;
-    this.shards=Array.from({length:8},(_,i)=>({
-      a:i*Math.PI/4+Math.PI/8+(Math.random()-.5)*.18,
-      len:9+Math.random()*9
-    }));
   }
   update(dt){this.life-=dt;}
   draw(ctx){
     if(this.life<=0)return;
-    const p=this.life/this.max,rp=1-p;
-    ctx.save();ctx.shadowColor=this.col;
-    // outer ring
-    ctx.globalAlpha=p*.92;ctx.strokeStyle=this.col;ctx.lineWidth=4;ctx.shadowBlur=36;
-    ctx.beginPath();ctx.arc(this.x,this.y,32*rp+3,0,Math.PI*2);ctx.stroke();
-    // 3 rotating arc segments
-    ctx.save();
-    const segR=23*rp+2,segA=Math.PI*.52,rot=this.rot+rp*Math.PI*.65;
-    ctx.globalAlpha=p*.72;ctx.lineWidth=2.4;ctx.shadowBlur=20;
-    for(let i=0;i<3;i++){const sa=rot+i*Math.PI*2/3;ctx.beginPath();ctx.arc(this.x,this.y,segR,sa,sa+segA);ctx.stroke();}
-    ctx.restore();
-    // inner ring
-    ctx.globalAlpha=p*.55;ctx.lineWidth=2;ctx.shadowBlur=14;
-    ctx.beginPath();ctx.arc(this.x,this.y,17*rp+2,0,Math.PI*2);ctx.stroke();
-    // core radial gradient flash (early only)
-    const ca=Math.max(0,p*3-2);
-    if(ca>0){
-      ctx.globalAlpha=ca;ctx.shadowBlur=32;
-      const cg=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,12*rp+3);
-      cg.addColorStop(0,'#fff');cg.addColorStop(.4,this.col);cg.addColorStop(1,this.col+'00');
-      ctx.fillStyle=cg;ctx.beginPath();ctx.arc(this.x,this.y,12*rp+3,0,Math.PI*2);ctx.fill();
+    const p=this.life/this.max,e=1-p,x=this.x,y=this.y,c=this.col;
+    ctx.save();ctx.shadowColor=c;
+    // === PRIMARY SHOCKWAVE — thick, quadratic fade, fastest ring ===
+    ctx.globalAlpha=p*p;ctx.strokeStyle=c;ctx.lineWidth=6;ctx.shadowBlur=52;
+    ctx.beginPath();ctx.arc(x,y,40*e+2,0,Math.PI*2);ctx.stroke();
+    // === SECONDARY RING ===
+    ctx.globalAlpha=p*.82;ctx.lineWidth=3;ctx.shadowBlur=30;
+    ctx.beginPath();ctx.arc(x,y,28*e+1,0,Math.PI*2);ctx.stroke();
+    // === INNER RING ===
+    ctx.globalAlpha=p*.62;ctx.lineWidth=2;ctx.shadowBlur=18;
+    ctx.beginPath();ctx.arc(x,y,17*e,0,Math.PI*2);ctx.stroke();
+    // === CORE FLASH — white→color gradient, only first 30% ===
+    const fp=Math.max(0,1-e/0.3);
+    if(fp>0){
+      ctx.globalAlpha=fp*fp;ctx.shadowBlur=62;
+      const cg=ctx.createRadialGradient(x,y,0,x,y,17);
+      cg.addColorStop(0,'#fff');cg.addColorStop(.3,'#fff');cg.addColorStop(.65,c);cg.addColorStop(1,c+'00');
+      ctx.fillStyle=cg;ctx.beginPath();ctx.arc(x,y,17,0,Math.PI*2);ctx.fill();
     }
-    // 8 diagonal shards (22.5° offset — no cardinal directions)
-    ctx.strokeStyle=this.col;ctx.lineWidth=1.8;ctx.shadowBlur=13;ctx.lineCap='round';
-    for(const s of this.shards){
-      ctx.globalAlpha=p*.82;
-      const r0=7*rp,r1=r0+s.len*rp;
-      ctx.beginPath();ctx.moveTo(this.x+Math.cos(s.a)*r0,this.y+Math.sin(s.a)*r0);
-      ctx.lineTo(this.x+Math.cos(s.a)*r1,this.y+Math.sin(s.a)*r1);ctx.stroke();
+    // === 6 FAT ENERGY BOLTS — 60° spacing, offset by rot ===
+    ctx.lineCap='round';ctx.strokeStyle=c;ctx.lineWidth=2.8;ctx.shadowBlur=26;
+    for(let i=0;i<6;i++){
+      const a=this.rot+i*Math.PI/3;
+      ctx.globalAlpha=p*.92;
+      const r0=7*e,r1=r0+22*e;
+      ctx.beginPath();ctx.moveTo(x+Math.cos(a)*r0,y+Math.sin(a)*r0);
+      ctx.lineTo(x+Math.cos(a)*r1,y+Math.sin(a)*r1);ctx.stroke();
+    }
+    // === 12 THIN BEAMS — 30° spacing, alternating length ===
+    ctx.lineWidth=1.4;ctx.shadowBlur=16;
+    for(let i=0;i<12;i++){
+      const a=this.rot+i*Math.PI/6+Math.PI/12;
+      ctx.globalAlpha=p*.75;
+      const r0=9*e,r1=r0+(i%2===0?14:9)*e;
+      ctx.beginPath();ctx.moveTo(x+Math.cos(a)*r0,y+Math.sin(a)*r0);
+      ctx.lineTo(x+Math.cos(a)*r1,y+Math.sin(a)*r1);ctx.stroke();
+    }
+    // === 6 SPARK DOTS — fly outward along bolt angles ===
+    ctx.shadowBlur=14;
+    for(let i=0;i<6;i++){
+      const a=this.rot+i*Math.PI/3+Math.PI/6;
+      const dist=30*e;
+      ctx.globalAlpha=p*.95;
+      ctx.fillStyle=e<0.3?'#fff':c;
+      ctx.beginPath();ctx.arc(x+Math.cos(a)*dist,y+Math.sin(a)*dist,2.2*p+.5,0,Math.PI*2);ctx.fill();
     }
     ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.lineCap='butt';ctx.restore();
   }
