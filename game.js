@@ -906,20 +906,19 @@ class Tower{
     ctx.beginPath();
     for(let i=0;i<6;i++){const a=i*Math.PI/3+HO;if(i===0)ctx.moveTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);else ctx.lineTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);}
     ctx.closePath();ctx.stroke();ctx.restore();
-    // outer rotating arc ring
+    // outer rotating arc ring — 4 arcs, 4-fold symmetric (상하좌우 대칭)
     ctx.save();ctx.rotate(t*(f?4.0:2.0));
     ctx.strokeStyle=f?col+'88':col+'2a';ctx.lineWidth=2.2;ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
-    ctx.setLineDash([r*.42,r*.16]);
-    ctx.beginPath();ctx.arc(0,0,r*.58,0,Math.PI*2);ctx.stroke();
-    ctx.setLineDash([]);ctx.shadowBlur=0;ctx.restore();
-    // inner counter-rotating arc ring
-    ctx.save();ctx.rotate(-t*(f?2.8:1.3));
-    ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.3;ctx.setLineDash([r*.26,r*.12]);
-    ctx.beginPath();ctx.arc(0,0,r*.74,0,Math.PI*2);ctx.stroke();
-    ctx.setLineDash([]);ctx.restore();
-    // 3 orbiting energy nodes
+    for(let i=0;i<4;i++){const a0=i*Math.PI/2-Math.PI*.21;ctx.beginPath();ctx.arc(0,0,r*.58,a0,a0+Math.PI*.42);ctx.stroke();}
+    ctx.shadowBlur=0;ctx.restore();
+    // inner counter-rotating arc ring — 4 arcs, offset 45°
+    ctx.save();ctx.rotate(-t*(f?2.8:1.3)+Math.PI/4);
+    ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.3;
+    for(let i=0;i<4;i++){const a0=i*Math.PI/2-Math.PI*.175;ctx.beginPath();ctx.arc(0,0,r*.74,a0,a0+Math.PI*.35);ctx.stroke();}
+    ctx.restore();
+    // 4 orbiting energy nodes — 4-fold symmetric
     ctx.save();ctx.rotate(t*(f?4.0:2.0));
-    for(let i=0;i<3;i++){const na=i*Math.PI*2/3,nx=Math.cos(na)*r*.58,ny=Math.sin(na)*r*.58;ctx.fillStyle=f?col:'#252525';ctx.shadowColor=col;ctx.shadowBlur=f?16:1;ctx.beginPath();ctx.arc(nx,ny,r*.075,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+    for(let i=0;i<4;i++){const na=i*Math.PI/2,nx=Math.cos(na)*r*.58,ny=Math.sin(na)*r*.58;ctx.fillStyle=f?col:'#252525';ctx.shadowColor=col;ctx.shadowBlur=f?16:1;ctx.beginPath();ctx.arc(nx,ny,r*.075,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
     ctx.restore();
     // TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
