@@ -106,6 +106,21 @@ const SFX={
       this._osc('sawtooth',1800,.03,.09,300);
       this._osc('sine',600,.06,.11);
       this._noise(.04,.10,4500);
+    } else if(type==='aoe'){
+      // 레이저 그리드: 강렬한 전기 방전
+      this._osc('sawtooth',100,.12,.20);
+      this._osc('square',200,.07,.16);
+      this._noise(.14,.18,700);
+    } else if(type==='twinhub'){
+      // 트윈 컨트롤러: 부드러운 에너지 필드 파동
+      this._osc('sine',160,.12,.32);
+      this._osc('sine',80,.16,.26);
+      this._osc('triangle',320,.04,.18);
+    } else if(type==='scanner'){
+      // 비전 스캐너: 고주파 타겟팅 스캔
+      this._osc('sine',1400,.02,.18,700);
+      this._osc('sawtooth',480,.06,.22);
+      this._noise(.03,.12,3000);
     }
   },
 
@@ -284,9 +299,9 @@ const TWR={
   pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'컨베이어 최선두 원석을 포착해 파쇄 처리한다.', descEn:'Captures and crushes the leading ore on the conveyor line.'},
   coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#E91E63',type:'single',   dmg:55,   spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'단일 원석을 집중 추적해 처리한다. 공정 1초 후 동일한 재공정이 자동 가동된다.', descEn:'Tracks and processes a single ore. One second after each cycle, the same process automatically re-engages.'},
   twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:250,  spd:0.5,  range:2.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'범위 내 원석 전체를 광역 공정한다. 확률로 원석 이송을 일시 정지시킨다.', descEn:'Processes all ores in range at once. Has a chance to pause ore transport temporarily.'},
-  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'라인 이탈 위험이 가장 높은 원석을 자동 선별해 집중 처리한다.', descEn:'Automatically selects the highest-risk ore and delivers concentrated processing.'},
-  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'라인 이탈 직전의 원석에 고속 연속 공정을 집중한다.', descEn:'Concentrates rapid continuous processing on ores at the final stage before line exit.'},
-  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석 처리 시마다 포트 자원을 추가 수확한다.', descEn:'Harvests additional port resources with every ore processed.'},
+  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1400, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'라인 이탈 위험이 가장 높은 원석을 자동 선별해 집중 처리한다.', descEn:'Automatically selects the highest-risk ore and delivers concentrated processing.'},
+  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:49,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'라인 이탈 직전의 원석에 고속 연속 공정을 집중한다.', descEn:'Concentrates rapid continuous processing on ores at the final stage before line exit.'},
+  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:520,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석 처리 시마다 포트 자원을 추가 수확한다.', descEn:'Harvests additional port resources with every ore processed.'},
   laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:900,  spd:1.0,  range:2.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'범위 내 원석 전체를 동시에 처리한다. 원석이 밀집할수록 효율이 극대화된다.', descEn:'Processes all ores in range simultaneously. Efficiency peaks when ores are clustered.'},
   chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:480,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'원석 하나를 공정하면 방전이 인접 원석으로 연쇄 확산된다.', descEn:'Processing one ore discharges a chain reaction that spreads to adjacent ores.'},
   drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'자율 드론이 순찰 궤도를 비행하며 범위 내 원석을 처리한다.', descEn:'An autonomous drone patrols its orbit, processing ores within its flight range.'},
@@ -373,11 +388,14 @@ function spdS(w){
   return spdS(90)+(w-90)*0.150;        // W100≈5.4x
 }
 function countS(w){
-  if(w<=10)return Math.floor(22+w*7);
-  if(w<=20)return Math.floor(92+(w-10)*9);
-  if(w<=50)return Math.floor(182+(w-20)*8);
-  if(w<=75)return Math.floor(422+(w-50)*11);
-  return Math.floor(697+(w-75)*17);  // W100≈1122
+  if(w<=1) return 12;
+  if(w<=3) return Math.floor(12+(w-1)*10);   // W2:22, W3:32
+  if(w<=5) return Math.floor(32+(w-3)*12);   // W4:44, W5:56
+  if(w<=10)return Math.floor(56+(w-5)*8);    // W6:64→W10:96
+  if(w<=20)return Math.floor(96+(w-10)*9);   // W20:186
+  if(w<=50)return Math.floor(186+(w-20)*8);  // W50:426
+  if(w<=75)return Math.floor(426+(w-50)*11); // W75:701
+  return Math.floor(701+(w-75)*17);          // W100≈1126
 }
 
 // ═══════════════════════════════════════════════════════
@@ -751,7 +769,7 @@ class Tower{
           if(o._twinImmuneT<=0&&Math.random()<chance){o._twinFreezeT=1.0;}
           hit=true;
         }
-        if(hit){this._firingT=.28;this._eff(new TwinFieldEff(cx0,cy0,rng,this.color));SFX.shoot('aoe');}
+        if(hit){this._firingT=.28;this._eff(new TwinFieldEff(cx0,cy0,rng,this.color));SFX.shoot('twinhub');}
       }
       return;
     }
@@ -1942,9 +1960,9 @@ function checkMerge(){
 // ═══════════════════════════════════════════════════════
 function makeWave(w){
   const pool=getPool(w),totalCount=countS(w),q=[];
-  const rushes=w<=20?3:w<=50?4:5;
+  const rushes=w<=3?1:w<=20?3:w<=50?4:5;
   const perRush=Math.ceil(totalCount/rushes);
-  const interval=w<=20?0.40:w<=50?0.32:0.25;
+  const interval=w<=1?1.2:w<=3?0.80:w<=20?0.40:w<=50?0.32:0.25;
   const rushGap=w<=20?7:w<=50?5:4;
   let t=0;
   for(let ri=0;ri<rushes;ri++){
