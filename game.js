@@ -2007,6 +2007,7 @@ const UI={
     if(d.type==='pierce')tags+=`<span class="mc-tag">${L('관통','Pierce')} <b>8${L('개','×')}</b></span>`;
     if(d.type==='twinhub')tags+=`<span class="mc-tag">${L('광역+정지','AoE+Freeze')}</span>`;
     if(d.type==='drone')tags+=`<span class="mc-tag">${L('자율 궤도','Auto Orbit')}</span>`;
+    if(id==='coreShooter')tags+=`<span class="mc-tag">${L('역송','Reverse')} <b>3%</b></span>`;
     document.getElementById('mc-tags').innerHTML=tags;
   },
 
@@ -2087,6 +2088,7 @@ const UI={
     if(tower.type==='chain'){const sd=Math.round(tower.getDmg()*0.5);s+=`<div class="tis">${L('연쇄','Chain')}<span>${L('3개','×3')}</span></div>`;s+=`<div class="tis">${L('감전','Shock')}<span>DPS ${sd} / ${L('3초','3s')}</span></div>`;}
     if(tower.type==='pierce')s+=`<div class="tis">${L('관통','Pierce')}<span>${L('8개','×8')}</span></div>`;
     if(tower.type==='twinhub'){const _tsp=[5,10,15,20];const _sp=tower.isMega?100:_tsp[tower.level-1]||5;s+=`<div class="tis">${L('정지 확률','Freeze Chance')}<span>${_sp}% / 1${L('초','s')}</span></div>`;}
+    if(tower.tId==='coreShooter'){const _kb=[3,5,7,10];const _kp=tower.isMega?50:_kb[tower.level-1]||3;s+=`<div class="tis">${L('역송 확률','Reverse Chance')}<span>${_kp}%</span></div>`;}
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
     if(tower.isMega||tower.level>=4){bu.disabled=true;bu.textContent=L('최대','MAX');}
