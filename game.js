@@ -582,7 +582,7 @@ class Ore{
     this.alive=true;this.escaped=false;
     this.slowTimer=0;this._sR=0;this.ampRatio=0;this.ampTimer=0;
     this.shockTimer=0;this.shockDps=0;this.freezeTimer=0;this.freezeImmune=0;
-    this._twinFreezeT=0;this._twinImmuneT=0;this._lastDmgType=null;
+    this._twinFreezeT=0;this._twinImmuneT=0;this._knockT=0;this._knockSX=0;this._knockSY=0;this._knockEX=0;this._knockEY=0;this._knockImmuneT=0;this._lastDmgType=null;
     this.flashT=0;this.spin=Math.random()*Math.PI*2;
     const sz=[0,TS*.21,TS*.26,TS*.32,TS*.40];this.radius=sz[this.grade]||TS*.21;
   }
@@ -593,6 +593,8 @@ class Ore{
     if(this.slowTimer>0){this.slowTimer-=dt;if(this.slowTimer<=0){this.spd=this.baseSpd;this._sR=0;this.freezeImmune=3.0;}}
     if(this._twinFreezeT>0){this._twinFreezeT-=dt;if(this._twinFreezeT<=0)this._twinImmuneT=1.0;this.flashT=.06;}
     if(this._twinImmuneT>0)this._twinImmuneT-=dt;
+    if(this._knockT>0){this._knockT-=dt;if(this._knockT<=0){this.x=this._knockEX;this.y=this._knockEY;this._knockImmuneT=2.0;}else{const _kr=1-this._knockT/0.1;this.x=this._knockSX+(this._knockEX-this._knockSX)*_kr;this.y=this._knockSY+(this._knockEY-this._knockSY)*_kr;}if(this.flashT>0)this.flashT-=dt;return;}
+    if(this._knockImmuneT>0)this._knockImmuneT-=dt;
     if(this.ampTimer>0)this.ampTimer-=dt;if(this.flashT>0)this.flashT-=dt;
     if(this.shockTimer>0){
       this.shockTimer-=dt;
@@ -630,7 +632,7 @@ class Ore{
   }
   applySlow(ratio,dur){if(this.freezeImmune>0)return;const res=ORE_RESIST[this.type];const eff=res&&res.slow!==undefined?ratio*res.slow:ratio;this._sR=Math.max(this._sR,eff);this.spd=this.baseSpd*(1-this._sR);if(this.slowTimer<dur)this.slowTimer=dur;}
   applyFreeze(dur){if(this.freezeImmune>0)return;if(this.freezeTimer<dur)this.freezeTimer=dur;}
-  _doKnockback(){if(this.pathIdx<=0)return;this.pathIdx=Math.max(0,this.pathIdx-1);this.progress=0;const p=PATH[this.pathIdx];this.x=R.tx(p.c);this.y=R.ty(p.r);this.flashT=.18;}
+  _doKnockback(){if(this._knockImmuneT>0||this.pathIdx<=0)return;const _ti=Math.max(0,this.pathIdx-1);const _p=PATH[_ti];this._knockSX=this.x;this._knockSY=this.y;this._knockEX=R.tx(_p.c);this._knockEY=R.ty(_p.r);this._knockT=0.1;this.pathIdx=_ti;this.progress=0;this.flashT=0.25;}
   applyAmp(ratio,dur){this.ampRatio=Math.max(this.ampRatio,ratio);if(this.ampTimer<dur)this.ampTimer=dur;}
   applyShock(dps,dur){this.shockDps=Math.max(this.shockDps,dps);if(this.shockTimer<dur)this.shockTimer=dur;}
   draw(ctx,gt){
@@ -818,8 +820,8 @@ class Tower{
     }else{
       const opts={color:this.color,slow:null,size:1,type:this.tId};
       if(this.tId==='coreShooter'){
-        const chances=[0.03,0.05,0.07,0.10];
-        opts.knockbackChance=this.isMega?0.50:(chances[this.level-1]||0.03);
+        const chances=[0.05,0.08,0.12,0.18];
+        opts.knockbackChance=this.isMega?0.60:(chances[this.level-1]||0.05);
       }
       GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),opts));
     }
@@ -905,20 +907,21 @@ class Tower{
     ctx.beginPath();
     for(let i=0;i<6;i++){const a=i*Math.PI/3+HO;if(i===0)ctx.moveTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);else ctx.lineTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);}
     ctx.closePath();ctx.stroke();ctx.restore();
-    // rotating gear-breach ring (12 teeth)
-    ctx.save();ctx.rotate(t*(f?4.5:2.2));
-    const teeth=12,gR=r*.50,tR=r*.58,tW=Math.PI*2/teeth*.38;
-    ctx.strokeStyle=f?col+'55':col+'1e';ctx.lineWidth=1.2;ctx.shadowColor=col;ctx.shadowBlur=f?10:0;
-    ctx.beginPath();
-    for(let i=0;i<teeth;i++){const a=i*Math.PI*2/teeth,a2=a+tW;
-      ctx.moveTo(Math.cos(a-tW*.5)*gR,Math.sin(a-tW*.5)*gR);
-      ctx.lineTo(Math.cos(a-tW*.5)*tR,Math.sin(a-tW*.5)*tR);
-      ctx.lineTo(Math.cos(a2-tW*.5)*tR,Math.sin(a2-tW*.5)*tR);
-      ctx.lineTo(Math.cos(a2-tW*.5)*gR,Math.sin(a2-tW*.5)*gR);}
-    ctx.stroke();ctx.shadowBlur=0;ctx.restore();
-    // counter-rotating dashed ring
-    ctx.save();ctx.rotate(-t*.8);ctx.strokeStyle=f?col+'44':col+'14';ctx.lineWidth=1.0;ctx.setLineDash([r*.19,r*.14]);
-    ctx.beginPath();ctx.arc(0,0,r*.78,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // outer rotating arc ring
+    ctx.save();ctx.rotate(t*(f?4.0:2.0));
+    ctx.strokeStyle=f?col+'88':col+'2a';ctx.lineWidth=2.2;ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
+    ctx.setLineDash([r*.42,r*.16]);
+    ctx.beginPath();ctx.arc(0,0,r*.58,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);ctx.shadowBlur=0;ctx.restore();
+    // inner counter-rotating arc ring
+    ctx.save();ctx.rotate(-t*(f?2.8:1.3));
+    ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.3;ctx.setLineDash([r*.26,r*.12]);
+    ctx.beginPath();ctx.arc(0,0,r*.74,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);ctx.restore();
+    // 3 orbiting energy nodes
+    ctx.save();ctx.rotate(t*(f?4.0:2.0));
+    for(let i=0;i<3;i++){const na=i*Math.PI*2/3,nx=Math.cos(na)*r*.58,ny=Math.sin(na)*r*.58;ctx.fillStyle=f?col:'#252525';ctx.shadowColor=col;ctx.shadowBlur=f?16:1;ctx.beginPath();ctx.arc(nx,ny,r*.075,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+    ctx.restore();
     // TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     const bW=r*.38,bH=r*.24,brlL=r*.56,brlW=r*.14;
@@ -2006,7 +2009,7 @@ const UI={
     if(d.type==='pierce')tags+=`<span class="mc-tag">${L('관통','Pierce')} <b>8${L('개','×')}</b></span>`;
     if(d.type==='twinhub')tags+=`<span class="mc-tag">${L('광역+정지','AoE+Freeze')}</span>`;
     if(d.type==='drone')tags+=`<span class="mc-tag">${L('자율 궤도','Auto Orbit')}</span>`;
-    if(id==='coreShooter')tags+=`<span class="mc-tag">${L('역송','Reverse')} <b>3%</b></span>`;
+    if(id==='coreShooter')tags+=`<span class="mc-tag">${L('역송','Reverse')}</span>`;
     document.getElementById('mc-tags').innerHTML=tags;
   },
 
@@ -2087,7 +2090,7 @@ const UI={
     if(tower.type==='chain'){const sd=Math.round(tower.getDmg()*0.5);s+=`<div class="tis">${L('연쇄','Chain')}<span>${L('3개','×3')}</span></div>`;s+=`<div class="tis">${L('감전','Shock')}<span>DPS ${sd} / ${L('3초','3s')}</span></div>`;}
     if(tower.type==='pierce')s+=`<div class="tis">${L('관통','Pierce')}<span>${L('8개','×8')}</span></div>`;
     if(tower.type==='twinhub'){const _tsp=[5,10,15,20];const _sp=tower.isMega?100:_tsp[tower.level-1]||5;s+=`<div class="tis">${L('정지 확률','Freeze Chance')}<span>${_sp}% / 1${L('초','s')}</span></div>`;}
-    if(tower.tId==='coreShooter'){const _kb=[3,5,7,10];const _kp=tower.isMega?50:_kb[tower.level-1]||3;s+=`<div class="tis">${L('역송 확률','Reverse Chance')}<span>${_kp}%</span></div>`;}
+    if(tower.tId==='coreShooter'){const _kb=[5,8,12,18];const _kp=tower.isMega?60:_kb[tower.level-1]||5;s+=`<div class="tis">${L('역송','Reverse')}<span>${_kp}%</span></div>`;}
     document.getElementById('mi-stats').innerHTML=s;
     const bu=document.getElementById('bupg');
     if(tower.isMega||tower.level>=4){bu.disabled=true;bu.textContent=L('최대','MAX');}
