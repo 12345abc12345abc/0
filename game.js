@@ -281,16 +281,16 @@ const ORE={
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
-  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'라인 선두의 원석을 잡아 분해한다.', descEn:'Grabs and disassembles the ore at the front of the line.'},
-  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#E91E63',type:'single',   dmg:55,   spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'단일 원석을 집중 추적해 처리한다. 타격 1초 후 동일한 재공정 충격이 자동으로 추가된다.', descEn:'Tracks and processes a single ore. One second after each hit, an identical echo strike automatically follows.'},
-  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:250,  spd:0.5,  range:2.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'범위 내 원석 전체를 광역 공정한다. 확률로 원석을 일시 정지시킨다.', descEn:'Processes all nearby ores at once. Has a chance to momentarily halt ore movement.'},
-  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'탈출 임박 원석을 자동 식별해 집중 처리한다.', descEn:'Automatically identifies escape-imminent ore and delivers concentrated processing.'},
-  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'탈출 직전의 원석을 끊임없이 처리한다.', descEn:'Relentlessly processes ores that are about to escape.'},
-  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석 처리 시마다 포트 자원을 수확한다.', descEn:'Harvests port resources with every ore processed.'},
-  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:900,  spd:1.0,  range:2.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'범위 내 원석 전체를 한 번에 처리한다. 밀집할수록 효율이 높아진다.', descEn:'Processes all ores in range at once. More effective as ores cluster.'},
-  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:260,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'한 원석을 처리하면 주변 원석에 연쇄 공정이 이어진다.', descEn:'Processing one ore triggers a chain reaction on surrounding ores.'},
-  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'자율 드론이 순찰 궤도 내 원석을 탐지해 처리한다.', descEn:'An autonomous drone patrols its orbit, detecting and processing ores within range.'},
-  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'한 줄로 늘어선 원석을 한 번에 관통 처리한다.', descEn:'Pierces and processes ores lined up in a row with a single pass.'},
+  pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'컨베이어 최선두 원석을 포착해 파쇄 처리한다.', descEn:'Captures and crushes the leading ore on the conveyor line.'},
+  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#E91E63',type:'single',   dmg:55,   spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'단일 원석을 집중 추적해 처리한다. 공정 1초 후 동일한 재공정이 자동 가동된다.', descEn:'Tracks and processes a single ore. One second after each cycle, the same process automatically re-engages.'},
+  twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:250,  spd:0.5,  range:2.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'범위 내 원석 전체를 광역 공정한다. 확률로 원석 이송을 일시 정지시킨다.', descEn:'Processes all ores in range at once. Has a chance to pause ore transport temporarily.'},
+  scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'라인 이탈 위험이 가장 높은 원석을 자동 선별해 집중 처리한다.', descEn:'Automatically selects the highest-risk ore and delivers concentrated processing.'},
+  magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'라인 이탈 직전의 원석에 고속 연속 공정을 집중한다.', descEn:'Concentrates rapid continuous processing on ores at the final stage before line exit.'},
+  refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석 처리 시마다 포트 자원을 추가 수확한다.', descEn:'Harvests additional port resources with every ore processed.'},
+  laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:900,  spd:1.0,  range:2.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'범위 내 원석 전체를 동시에 처리한다. 원석이 밀집할수록 효율이 극대화된다.', descEn:'Processes all ores in range simultaneously. Efficiency peaks when ores are clustered.'},
+  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:260,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'원석 하나를 공정하면 방전이 인접 원석으로 연쇄 확산된다.', descEn:'Processing one ore discharges a chain reaction that spreads to adjacent ores.'},
+  drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'자율 드론이 순찰 궤도를 비행하며 범위 내 원석을 처리한다.', descEn:'An autonomous drone patrols its orbit, processing ores within its flight range.'},
+  plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'플라즈마 절단선이 일렬로 늘어선 원석 여럿을 동시에 관통 처리한다.', descEn:'A plasma cutting beam simultaneously pierces and processes multiple ores lined up in a row.'},
 };
 // 레벨: 1=기본, 2=1강(은), 3=2강(금), 4=3강(흑) ← 최대
 const LVL=[{mult:1},{mult:1.33,cm:.9},{mult:1.67,cm:1.8},{mult:2.0,cm:2.8}];
@@ -2380,13 +2380,17 @@ const UI={
     const towerScore=GS.towers.reduce((s,tw)=>s+tw.basePrice+tw.upgCost,0);
     const score=towerScore+Math.max(0,Math.floor(GS.port));
     document.getElementById('clr-eyebrow').textContent='';
-    document.getElementById('clr-score').textContent=score.toLocaleString();
-    document.getElementById('clr-score-lbl').textContent='SCORE';
+    if(GS.eggActive){
+      document.getElementById('clr-score-lbl').textContent=ko?'포트 무한 사용':'INFINITE PORT';
+      document.getElementById('clr-score').textContent='∞';
+    }else{
+      document.getElementById('clr-score-lbl').textContent='SCORE';
+      document.getElementById('clr-score').textContent=score.toLocaleString();
+    }
     document.getElementById('clr-wave').textContent=`W${GS.wave}`;
     // Badges
     let badges='';
-    if(isWin)badges+=`<div class="clr-badge clear">${ko?'CLEAR':'CLEAR'}</div>`;
-    if(GS.eggActive)badges+=`<div class="clr-badge inf">${ko?'포트 무한 사용':'INFINITE PORT'}</div>`;
+    if(isWin)badges+=`<div class="clr-badge clear">CLEAR</div>`;
     document.getElementById('clr-badges').innerHTML=badges;
     // Stats
     const t=Math.floor(GS.time);
