@@ -2529,16 +2529,15 @@ const G={
       document.getElementById('pauseovly').classList.remove('show');
       SFX.victory();UI.showResult();return;
     }
-    // 30초: 포트 무한 + 전 유닛 해금 + W100 즉시 시작
+    // 30초: 포트 무한 + 전 유닛 해금 + W99 세팅 (웨이브 버튼으로 W100 시작)
     if(GS.running&&this._eggWindow30){
       GS.eggActive=true;GS.port=999999999;
       for(const id of TWR_ORDER)GS.unlocked.add(id);
-      GS.ores=[];GS.projs=[];GS.waveActive=false;
+      GS.ores=[];GS.projs=[];GS.oreQ=[];GS.waveActive=false;
       GS.wave=99;
       const ico=document.getElementById('hport-ico');
       if(ico){ico.style.color='#FF4500';ico.style.textShadow='0 0 14px #FF4500';}
-      UI.updHUD();UI.showBanner('W100 도전 모드 — 포트 무한','#FF4500');
-      setTimeout(()=>this.nextWave(),800);return;
+      UI.updHUD();UI.showBanner('W100 도전 준비 — 설비 배치 후 웨이브 시작','#FF4500');return;
     }
   },
 };
