@@ -2112,7 +2112,7 @@ const UI={
       document.getElementById('mconf-name').textContent=L(d.name,d.nameEn||d.name);
       document.getElementById('mconf-name').style.color=d.color;
       document.getElementById('mconf-cost').textContent='◈ '+d.price;
-      document.getElementById('mconf-msg').textContent=L('설치하시겠습니까? (더블탭: 바로 설치)','Install? (double-tap to place directly)');
+      document.getElementById('mconf-msg').textContent=L('설치하시겠습니까?','Install this unit?');
       if(iconEl){
         iconEl.style.display='block';
         const ctx2=iconEl.getContext('2d');
