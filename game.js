@@ -271,10 +271,10 @@ const ORE={
   normal:  {name:'일반 원석',   color:'#78909C',hp:18,  spd:44, reward:15,  dmg:2,  grade:1},
   fast:    {name:'고속 원석',   color:'#FFB300',hp:10,  spd:90, reward:22,  dmg:2,  grade:1},
   multi:   {name:'다중 원석',   color:'#00E5FF',hp:35,  spd:46, reward:40,  dmg:3,  grade:2,special:'split'},
-  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:110, spd:26, reward:55,  dmg:5,  grade:3},
+  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:75,  spd:26, reward:55,  dmg:5,  grade:3},
   pure:    {name:'고순도 원석', color:'#FFD54F',hp:28,  spd:44, reward:90,  dmg:4,  grade:2},
   unstable:{name:'불안정 원석', color:'#76FF03',hp:48,  spd:74, reward:70,  dmg:10, grade:2,special:'bigdmg'},
-  compres: {name:'압축 원석',   color:'#E040FB',hp:380, spd:20, reward:140, dmg:8,  grade:3},
+  compres: {name:'압축 원석',   color:'#E040FB',hp:200, spd:20, reward:140, dmg:8,  grade:3},
   core:    {name:'코어 원석',   color:'#B3E5FC',hp:1800,spd:12, reward:500, dmg:20, grade:4,special:'boss'},
 };
 
@@ -351,18 +351,18 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W20≈7 (무난) → W50≈200 → W70≈2360 → W90≈56360 → W100≈281360
+  // W20≈9 → W50≈244 → W70≈1394 → W90≈17994 → W100≈49994
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.11;
-  if(w<=20)return hpS(10)+(w-10)*0.50;
-  if(w<=30)return hpS(20)+(w-20)*1.60;
-  if(w<=40)return hpS(30)+(w-30)*4.80;
-  if(w<=50)return hpS(40)+(w-40)*13.0;
-  if(w<=60)return hpS(50)+(w-50)*36.0;
-  if(w<=70)return hpS(60)+(w-60)*180.0;
-  if(w<=80)return hpS(70)+(w-70)*900.0;
-  if(w<=90)return hpS(80)+(w-80)*4500.0;
-  return hpS(90)+(w-90)*22500.0;       // W100≈281361
+  if(w<=10)return 1.0+(w-1)*0.167;
+  if(w<=20)return hpS(10)+(w-10)*0.65;
+  if(w<=30)return hpS(20)+(w-20)*2.0;
+  if(w<=40)return hpS(30)+(w-30)*6.5;
+  if(w<=50)return hpS(40)+(w-40)*15.0;
+  if(w<=60)return hpS(50)+(w-50)*45.0;
+  if(w<=70)return hpS(60)+(w-60)*70.0;
+  if(w<=80)return hpS(70)+(w-70)*360.0;
+  if(w<=90)return hpS(80)+(w-80)*1300.0;
+  return hpS(90)+(w-90)*3200.0;       // W100≈49994
 }
 function spdS(w){
   if(w<=10)return 1+Math.min(w-1,9)*0.006;
@@ -373,12 +373,11 @@ function spdS(w){
   return spdS(90)+(w-90)*0.150;        // W100≈5.4x
 }
 function countS(w){
-  if(w<=3) return 12+w*3;
-  if(w<=10)return Math.floor(20+w*4.0);
-  if(w<=20)return Math.floor(60+(w-10)*5.5);
-  if(w<=50)return Math.floor(115+(w-20)*5.0);
-  if(w<=75)return Math.floor(265+(w-50)*7.0);
-  return Math.floor(440+(w-75)*15.0);  // W100≈815
+  if(w<=10)return Math.floor(22+w*7);
+  if(w<=20)return Math.floor(92+(w-10)*9);
+  if(w<=50)return Math.floor(182+(w-20)*8);
+  if(w<=75)return Math.floor(422+(w-50)*11);
+  return Math.floor(697+(w-75)*17);  // W100≈1122
 }
 
 // ═══════════════════════════════════════════════════════
