@@ -1807,29 +1807,47 @@ class LightningEff{
 class ExplodeEff{constructor(x,y,col){this.x=x;this.y=y;this.col=col;this.life=this.max=.55;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max,rp=1-p;ctx.save();ctx.shadowColor=this.col;ctx.globalAlpha=p*.5;ctx.strokeStyle=this.col;ctx.lineWidth=4+rp*3;ctx.shadowBlur=24;ctx.beginPath();ctx.arc(this.x,this.y,28*rp+4,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=p*.7;ctx.lineWidth=2.5;ctx.shadowBlur=16;ctx.beginPath();ctx.arc(this.x,this.y,18*rp+2,0,Math.PI*2);ctx.stroke();const cr=7*Math.max(0,p-.35)*2.8;if(cr>0){ctx.globalAlpha=p*.9;ctx.fillStyle='#fff';ctx.shadowBlur=20;ctx.beginPath();ctx.arc(this.x,this.y,cr,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=p*.38;ctx.strokeStyle=this.col;ctx.lineWidth=1.5;ctx.shadowBlur=6;for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(this.x+Math.cos(a)*(10+rp*6),this.y+Math.sin(a)*(10+rp*6));ctx.lineTo(this.x+Math.cos(a)*(24*rp+10),this.y+Math.sin(a)*(24*rp+10));ctx.stroke();}ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();}}
 class LaserEff{constructor(x,y,dir,len,col){this.x=x;this.y=y;this.dir=dir;this.len=len;this.col=col;this.life=this.max=.2;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.82;ctx.shadowColor=this.col;ctx.shadowBlur=6;ctx.strokeStyle=this.col;ctx.lineWidth=1.5+p*1.5;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x+Math.cos(this.dir)*this.len,this.y+Math.sin(this.dir)*this.len);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class CoreEchoEff{
-  constructor(x,y,col){this.x=x;this.y=y;this.col=col;this.life=this.max=.5;this.z=0;}
+  constructor(x,y,col){
+    this.x=x;this.y=y;this.col=col;this.life=this.max=.58;this.z=0;
+    this.rot=Math.random()*Math.PI*2;
+    this.shards=Array.from({length:8},(_,i)=>({
+      a:i*Math.PI/4+Math.PI/8+(Math.random()-.5)*.18,
+      len:9+Math.random()*9
+    }));
+  }
   update(dt){this.life-=dt;}
   draw(ctx){
     if(this.life<=0)return;
     const p=this.life/this.max,rp=1-p;
     ctx.save();ctx.shadowColor=this.col;
-    // outer expanding ring
-    ctx.globalAlpha=p*.9;ctx.strokeStyle=this.col;ctx.lineWidth=3.5;ctx.shadowBlur=28;
-    ctx.beginPath();ctx.arc(this.x,this.y,26*rp+3,0,Math.PI*2);ctx.stroke();
-    // mid ring
-    ctx.globalAlpha=p*.65;ctx.lineWidth=2;ctx.shadowBlur=16;
-    ctx.beginPath();ctx.arc(this.x,this.y,16*rp+2,0,Math.PI*2);ctx.stroke();
-    // inner bright flash
-    ctx.globalAlpha=p*.8;ctx.lineWidth=1.5;ctx.shadowBlur=10;
-    ctx.beginPath();ctx.arc(this.x,this.y,8*rp+1,0,Math.PI*2);ctx.stroke();
-    // cross flash
-    ctx.globalAlpha=Math.min(1,p*2)*.9;ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.shadowBlur=12;ctx.lineCap='round';
-    const fl=14*(1-rp*.4);
-    ctx.beginPath();ctx.moveTo(this.x-fl,this.y);ctx.lineTo(this.x+fl,this.y);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(this.x,this.y-fl);ctx.lineTo(this.x,this.y+fl);ctx.stroke();
-    // 4 diagonal sparks
-    ctx.globalAlpha=p*.7;ctx.strokeStyle=this.col;ctx.lineWidth=1.5;ctx.shadowBlur=8;
-    for(let i=0;i<4;i++){const a=i*Math.PI/2+Math.PI/4,sl=10*rp;ctx.beginPath();ctx.moveTo(this.x+Math.cos(a)*4,this.y+Math.sin(a)*4);ctx.lineTo(this.x+Math.cos(a)*(4+sl),this.y+Math.sin(a)*(4+sl));ctx.stroke();}
+    // outer ring
+    ctx.globalAlpha=p*.92;ctx.strokeStyle=this.col;ctx.lineWidth=4;ctx.shadowBlur=36;
+    ctx.beginPath();ctx.arc(this.x,this.y,32*rp+3,0,Math.PI*2);ctx.stroke();
+    // 3 rotating arc segments
+    ctx.save();
+    const segR=23*rp+2,segA=Math.PI*.52,rot=this.rot+rp*Math.PI*.65;
+    ctx.globalAlpha=p*.72;ctx.lineWidth=2.4;ctx.shadowBlur=20;
+    for(let i=0;i<3;i++){const sa=rot+i*Math.PI*2/3;ctx.beginPath();ctx.arc(this.x,this.y,segR,sa,sa+segA);ctx.stroke();}
+    ctx.restore();
+    // inner ring
+    ctx.globalAlpha=p*.55;ctx.lineWidth=2;ctx.shadowBlur=14;
+    ctx.beginPath();ctx.arc(this.x,this.y,17*rp+2,0,Math.PI*2);ctx.stroke();
+    // core radial gradient flash (early only)
+    const ca=Math.max(0,p*3-2);
+    if(ca>0){
+      ctx.globalAlpha=ca;ctx.shadowBlur=32;
+      const cg=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,12*rp+3);
+      cg.addColorStop(0,'#fff');cg.addColorStop(.4,this.col);cg.addColorStop(1,this.col+'00');
+      ctx.fillStyle=cg;ctx.beginPath();ctx.arc(this.x,this.y,12*rp+3,0,Math.PI*2);ctx.fill();
+    }
+    // 8 diagonal shards (22.5° offset — no cardinal directions)
+    ctx.strokeStyle=this.col;ctx.lineWidth=1.8;ctx.shadowBlur=13;ctx.lineCap='round';
+    for(const s of this.shards){
+      ctx.globalAlpha=p*.82;
+      const r0=7*rp,r1=r0+s.len*rp;
+      ctx.beginPath();ctx.moveTo(this.x+Math.cos(s.a)*r0,this.y+Math.sin(s.a)*r0);
+      ctx.lineTo(this.x+Math.cos(s.a)*r1,this.y+Math.sin(s.a)*r1);ctx.stroke();
+    }
     ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.lineCap='butt';ctx.restore();
   }
 }
