@@ -282,13 +282,13 @@ const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','re
 const UNLOCK_ORDER=['coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
 const TWR={
   pixelArm:    {name:'픽셀 로봇암',   nameEn:'Pixel Arm',       price:100,   color:'#2196F3',type:'single',   dmg:150,  spd:1.0,  range:2.0, lvM:[1,11.78,22.55,33.33], upgCosts:[19980,29970,49950],  desc:'라인 선두의 원석을 잡아 분해한다.', descEn:'Grabs and disassembles the ore at the front of the line.'},
-  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#E91E63',type:'single',   dmg:100,  spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'단일 원석을 집중 추적해 빠르게 분해한다.', descEn:'Locks on to a single ore and rapidly disassembles it.'},
+  coreShooter: {name:'코어 슈터',     nameEn:'Core Shooter',    price:200,   color:'#E91E63',type:'single',   dmg:90,   spd:2.0,  range:3.0, lvM:[1,8.58,16.17,23.75],  upgCosts:[19960,29940,49900],  desc:'단일 원석을 집중 추적해 처리한다. 처리 완료 시 원석이 재검사 라인으로 복귀할 수 있다.', descEn:'Tracks and processes a single ore. Processed ores may be rerouted for secondary inspection.'},
   twinHub:     {name:'트윈 컨트롤러', nameEn:'Twin Controller', price:300,   color:'#9C27B0',type:'twinhub',  dmg:250,  spd:0.5,  range:2.0, lvM:[1,7.33,13.67,20.0],   upgCosts:[19940,29910,49850],  desc:'범위 내 원석 전체를 광역 공정한다. 확률로 원석을 일시 정지시킨다.', descEn:'Processes all nearby ores at once. Has a chance to momentarily halt ore movement.'},
   scanner:     {name:'비전 스캐너',   nameEn:'Vision Scanner',  price:500,   color:'#00C853',type:'scan',     dmg:1200, spd:0.25, range:5.0, lvM:[1,5.39,9.78,14.17],   upgCosts:[19900,29850,49750],  desc:'가장 위험한 원석을 선별해 강력하게 처리한다.', descEn:'Identifies and powerfully eliminates the most threatening ore.'},
   magnetCannon:{name:'포인트 버스터', nameEn:'Point Buster',    price:1000,  color:'#FF6D00',type:'focus',    dmg:42,   spd:10.0, range:5.0, lvM:[1,4.05,7.07,10.12],   upgCosts:[19800,29700,49500],  desc:'탈출 직전의 원석을 끊임없이 처리한다.', descEn:'Relentlessly processes ores that are about to escape.'},
   refinery:    {name:'포트 허브',     nameEn:'Port Hub',        price:1500,  color:'#FFD700',type:'refinery', dmg:430,  spd:1.0,  range:2.0, lvM:[1,3.38,5.76,8.14],    upgCosts:[19700,29550,49250],  desc:'원석 처리 시마다 포트 자원을 수확한다.', descEn:'Harvests port resources with every ore processed.'},
   laserGrid:   {name:'레이저 그리드', nameEn:'Laser Grid',      price:2000,  color:'#F44336',type:'aoe',      dmg:900,  spd:1.0,  range:2.0, lvM:[1,2.99,4.98,6.98],    upgCosts:[19600,29400,49000],  desc:'범위 내 원석 전체를 한 번에 처리한다. 밀집할수록 효율이 높아진다.', descEn:'Processes all ores in range at once. More effective as ores cluster.'},
-  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:120,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'한 원석을 처리하면 주변 원석에 연쇄 공정이 이어진다.', descEn:'Processing one ore triggers a chain reaction on surrounding ores.'},
+  chainBolt:   {name:'체인 볼트',     nameEn:'Chain Bolt',      price:3000,  color:'#03A9F4',type:'chain',    dmg:260,  spd:1.0,  range:3.0, lvM:[1,2.33,3.67,5.0],     upgCosts:[19400,29100,48500],  desc:'한 원석을 처리하면 주변 원석에 연쇄 공정이 이어진다.', descEn:'Processing one ore triggers a chain reaction on surrounding ores.'},
   drone:       {name:'레이스 드론',   nameEn:'Race Drone',      price:5000,  color:'#7DDFFF',type:'drone',    dmg:520,  spd:2.0,  range:3.0, lvM:[1,2.19,3.38,4.57],    upgCosts:[19000,28500,47500],  desc:'자율 드론이 궤도 안 원석을 자동으로 탐지해 처리한다.', descEn:'An autonomous drone automatically tracks and processes ores in its orbit.'},
   plasmaCutter:{name:'플라즈마 커터', nameEn:'Plasma Cutter',   price:10000, color:'#EEEEEE',type:'pierce',   dmg:160,  spd:3.0,  range:5.0, lvM:[1,1.71,2.42,3.13],    upgCosts:[18000,27000,45000],  desc:'한 줄로 늘어선 원석을 한 번에 관통 처리한다.', descEn:'Pierces and processes ores lined up in a row with a single pass.'},
 };
@@ -631,6 +631,7 @@ class Ore{
   }
   applySlow(ratio,dur){if(this.freezeImmune>0)return;const res=ORE_RESIST[this.type];const eff=res&&res.slow!==undefined?ratio*res.slow:ratio;this._sR=Math.max(this._sR,eff);this.spd=this.baseSpd*(1-this._sR);if(this.slowTimer<dur)this.slowTimer=dur;}
   applyFreeze(dur){if(this.freezeImmune>0)return;if(this.freezeTimer<dur)this.freezeTimer=dur;}
+  _doKnockback(){if(this.pathIdx<=0)return;this.pathIdx=Math.max(0,this.pathIdx-1);this.progress=0;const p=PATH[this.pathIdx];this.x=R.tx(p.c);this.y=R.ty(p.r);this.flashT=.18;}
   applyAmp(ratio,dur){this.ampRatio=Math.max(this.ampRatio,ratio);if(this.ampTimer<dur)this.ampTimer=dur;}
   applyShock(dps,dur){this.shockDps=Math.max(this.shockDps,dps);if(this.shockTimer<dur)this.shockTimer=dur;}
   draw(ctx,gt){
@@ -816,7 +817,12 @@ class Tower{
       tgt.takeDmg(this.getDmg(),'single');
       this._eff(new LaserEff(this.cx,this.cy,dir,Math.hypot(tgt.x-this.cx,tgt.y-this.cy)+8,this.color));
     }else{
-      GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),{color:this.color,slow:null,size:1,type:this.tId}));
+      const opts={color:this.color,slow:null,size:1,type:this.tId};
+      if(this.tId==='coreShooter'){
+        const chances=[0.03,0.05,0.07,0.10];
+        opts.knockbackChance=this.isMega?0.50:(chances[this.level-1]||0.03);
+      }
+      GS.projs.push(new Proj(this.cx,this.cy,tgt,this.getDmg(),opts));
     }
   }
   _firePierce(ores){const rng=this.getRange()*TS;const rng2=rng*rng;const cx0=this.cx,cy0=this.cy;let best=null,bestP=-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rng2)continue;const p=o.pathIdx+o.progress;if(p>bestP){bestP=p;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);const dx=Math.cos(this.angle),dy=Math.sin(this.angle);let hit=0;for(const o of ores){if(!o.alive||hit>=8)continue;const ex=o.x-this.cx,ey=o.y-this.cy,dot=ex*dx+ey*dy;if(dot<0||dot>rng)continue;if(Math.abs(ex*dy-ey*dx)<TS*.5){o.takeDmg(this.getDmg(),'pierce');hit++;}}this._eff(new LaserEff(this.cx,this.cy,this.angle,rng,this.color));}
@@ -1701,7 +1707,7 @@ class Tower{
 // ═══════════════════════════════════════════════════════
 // 이펙트
 // ═══════════════════════════════════════════════════════
-class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.size=opts.size||1;this.type=opts.type||null;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>(this.type==='coreShooter'?10:7))this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;const sz=this.size,isCS=this.type==='coreShooter';const trailLen=isCS?10:7;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*(isCS?.65:.48);ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,(isCS?5.5-i*.42:3.2-i*.3)*sz,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;if(isCS){ctx.shadowColor=this.color;ctx.shadowBlur=28;ctx.strokeStyle=this.color;ctx.lineWidth=2;ctx.beginPath();ctx.arc(this.x,this.y,8*sz,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=40;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,5.5*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,3.2*sz,0,Math.PI*2);ctx.fill();const fl=9*sz;ctx.strokeStyle='#fff';ctx.lineWidth=1.2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(this.x-fl,this.y);ctx.lineTo(this.x+fl,this.y);ctx.stroke();ctx.beginPath();ctx.moveTo(this.x,this.y-fl);ctx.lineTo(this.x,this.y+fl);ctx.stroke();ctx.lineCap='butt';ctx.shadowBlur=0;}else{ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6*sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}}
+class Proj{constructor(x,y,tgt,dmg,opts){this.x=x;this.y=y;this.target=tgt;this.dmg=dmg;this.color=opts.color||'#00E5FF';this.slow=opts.slow||null;this.size=opts.size||1;this.type=opts.type||null;this.knockbackChance=opts.knockbackChance||0;this.spd=420;this.alive=true;this.trail=[];}update(dt){if(!this.alive)return;if(!this.target||!this.target.alive){this.alive=false;return;}const dx=this.target.x-this.x,dy=this.target.y-this.y,d=Math.hypot(dx,dy);if(d<this.spd*dt+6){this.target.takeDmg(this.dmg);if(this.slow)this.target.applySlow(this.slow.ratio,this.slow.dur);if(this.knockbackChance&&Math.random()<this.knockbackChance)this.target._doKnockback();this.alive=false;return;}this.trail.unshift({x:this.x,y:this.y});if(this.trail.length>(this.type==='coreShooter'?10:7))this.trail.pop();const sp=this.spd*dt/d;this.x+=dx*sp;this.y+=dy*sp;}draw(ctx){if(!this.alive)return;const sz=this.size,isCS=this.type==='coreShooter';const trailLen=isCS?10:7;for(let i=0;i<this.trail.length;i++){ctx.globalAlpha=(1-i/this.trail.length)*(isCS?.65:.48);ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.trail[i].x,this.trail[i].y,(isCS?5.5-i*.42:3.2-i*.3)*sz,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;if(isCS){ctx.shadowColor=this.color;ctx.shadowBlur=28;ctx.strokeStyle=this.color;ctx.lineWidth=2;ctx.beginPath();ctx.arc(this.x,this.y,8*sz,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=40;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,5.5*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,3.2*sz,0,Math.PI*2);ctx.fill();const fl=9*sz;ctx.strokeStyle='#fff';ctx.lineWidth=1.2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(this.x-fl,this.y);ctx.lineTo(this.x+fl,this.y);ctx.stroke();ctx.beginPath();ctx.moveTo(this.x,this.y-fl);ctx.lineTo(this.x,this.y+fl);ctx.stroke();ctx.lineCap='butt';ctx.shadowBlur=0;}else{ctx.shadowColor=this.color;ctx.shadowBlur=9;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,4.2*sz,0,Math.PI*2);ctx.fill();ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2.6*sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}}}
 class RingEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.32;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p*.55;ctx.strokeStyle=this.col;ctx.lineWidth=2.5;ctx.shadowColor=this.col;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=p*.25;ctx.lineWidth=6;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(1.3-p*.3),0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}}
 class GridFlashEff{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.life=this.max=.5;}update(dt){this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.save();ctx.shadowColor=this.col;
   ctx.globalAlpha=p*.6;ctx.strokeStyle=this.col;ctx.lineWidth=3;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(this.x,this.y,this.r*(0.95+(1-p)*.05),0,Math.PI*2);ctx.stroke();
@@ -1887,7 +1893,7 @@ function checkMerge(){
         mega.upgCost=tA.upgCost+tB.upgCost+tC.upgCost+tD.upgCost;
         GS.towers.push(mega);
         SFX.upgrade();
-        UI.showBanner('합체! '+mega.name+' 가동!','#FFD700');
+        UI.showBanner('합체 '+mega.name+' 가동','#FFD700');
         found=true;break outer;
       }
     }
@@ -2046,11 +2052,13 @@ const UI={
         if(GRID[row][col]===1){this.showBanner(L('경로 위에 설치 불가','Cannot place on path'),'#EF5350');return;}
         if(towerAt(row,col)){this.showBanner(L('이미 설치됨','Already placed'),'#EF5350');return;}
         const cost=TWR[this.selCard].price;
-        if(!GS.eggActive&&GS.port<cost){this.showBanner(L('포트가 부족합니다!','Not enough ports!'),'#EF5350');return;}
+        if(!GS.eggActive&&GS.port<cost){this.showBanner(L('포트가 부족합니다','Not enough ports'),'#EF5350');return;}
         const _r=row,_c=col;
         this._pendRow=_r;this._pendCol=_c;
         this._pendAction=()=>G.place(_r,_c);
         this._showConfirm('place',this.selCard);
+      }else{
+        this.desel();
       }
       return;
     }
@@ -2095,12 +2103,12 @@ const UI={
   upgrade(){
     const t=this.selTwr;if(!t||t.level>=4)return;
     const c=TWR[t.tId].upgCosts[t.level-1];
-    if(!GS.eggActive&&GS.port<c){this.showBanner(L('포트가 부족합니다!','Not enough ports!'),'#EF5350');return;}
+    if(!GS.eggActive&&GS.port<c){this.showBanner(L('포트가 부족합니다','Not enough ports'),'#EF5350');return;}
     if(!GS.eggActive)GS.port-=c;t.upgCost+=c;t.level++;
     SFX.upgrade();
     checkMerge();
     if(!GS.towers.includes(t)){this.updHUD();return;}
-    this._showTowerInfo(t);this.updHUD();this.showBanner(t.name+' '+L('업그레이드!','Upgraded!'),'#00BCD4');
+    this._showTowerInfo(t);this.updHUD();this.showBanner(t.name+' '+L('업그레이드','Upgraded'),'#00BCD4');
   },
 
   sell(){
@@ -2121,9 +2129,10 @@ const UI={
     if(GRID[row][col]===1){this.showBanner(L('경로 위에 설치 불가','Cannot place on path'),'#EF5350');return;}
     if(towerAt(row,col)){this.showBanner(L('이미 설치됨','Already placed'),'#EF5350');return;}
     const cost=TWR[this.selCard].price;
-    if(!GS.eggActive&&GS.port<cost){this.showBanner(L('포트가 부족합니다!','Not enough ports!'),'#EF5350');return;}
+    if(!GS.eggActive&&GS.port<cost){this.showBanner(L('포트가 부족합니다','Not enough ports'),'#EF5350');return;}
     this._pendAction=null;this._pendRow=null;this._pendCol=null;this._hideConfirm();
     G.place(row,col);
+    if(this.selCard!==null){this._showCardInfo(this.selCard);}else{this._showPromo();}
   },
   _pendAction:null,_pendRow:null,_pendCol:null,
   _showConfirm(type,data){
@@ -2457,7 +2466,7 @@ const G={
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
       if(GS.wave>=100){GS.running=false;SFX.victory();UI.showResult();return;}
-      UI.showBanner(`W${GS.wave} 클리어! +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
+      UI.showBanner(`W${GS.wave} 클리어 +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
       checkUnlocks(GS.wave,()=>{if(GS.autoWave){GS.autoActive=true;GS.autoTimer=5;}});
     }
     for(const t of GS.towers)t.update(dt,GS.ores);
@@ -2473,7 +2482,7 @@ const G={
     GS.autoActive=false;document.getElementById('acd').textContent='';
     GS.wave++;GS.oreQ=makeWave(GS.wave);GS.spawnT=0;GS.waveActive=true;
     SFX.waveStart();
-    UI.updHUD();UI.showBanner(`웨이브 ${GS.wave} 시작!`,'#FF4500');
+    UI.updHUD();UI.showBanner(`웨이브 ${GS.wave} 시작`,'#FF4500');
   },
 
   place(row,col){
@@ -2481,7 +2490,7 @@ const G={
     if(GRID[row][col]===1){UI.showBanner('경로 위에 설치 불가','#EF5350');return;}
     if(towerAt(row,col)){UI.showBanner('이미 설치됨','#EF5350');return;}
     const cost=TWR[id].price;
-    if(!GS.eggActive&&GS.port<cost){UI.showBanner('포트가 부족합니다!','#EF5350');return;}
+    if(!GS.eggActive&&GS.port<cost){UI.showBanner('포트가 부족합니다','#EF5350');return;}
     if(!GS.eggActive)GS.port-=cost;
     GS.towers.push(new Tower(id,row,col));SFX.place();UI.updHUD();UI.showBanner(TWR[id].name+' 설치','#00BCD4');
     checkMerge();
@@ -2520,7 +2529,7 @@ const G={
       for(const id of TWR_ORDER)GS.unlocked.add(id);
       const ico=document.getElementById('hport-ico');
       if(ico){ico.style.color='#FFD700';ico.style.textShadow='0 0 12px #FFD700';}
-      UI.showBanner('∞ 포트 무한 활성화!','#FFD700');
+      UI.showBanner('∞ 포트 무한 활성화','#FFD700');
       UI.updHUD();return;
     }
     // 20초: 100웨이브 즉시 클리어 (시간만 맞으면 항상)

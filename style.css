@@ -467,11 +467,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
 #clr-content{
   position:relative;z-index:2;width:100%;height:100%;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 24px;
 }
 #clr-eyebrow{
   font-size:9px;font-weight:900;letter-spacing:5px;color:#ffffff38;
-  margin-bottom:22px;
+  text-align:center;margin-bottom:22px;
   animation:clrIn .4s both;
 }
 #clr-score-row{
@@ -479,18 +478,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   margin-bottom:10px;
   animation:clrIn .5s .08s both;
 }
-#clr-score-lbl{font-size:11px;font-weight:900;color:#ffffff88;letter-spacing:5px;}
+#clr-score-lbl{
+  font-size:11px;font-weight:900;color:#ffffff88;letter-spacing:5px;
+  text-align:center;
+}
 #clr-score{
   font-size:54px;font-weight:900;color:#fff;line-height:1.05;
-  text-shadow:0 0 40px #ffffff33;
+  text-align:center;text-shadow:0 0 40px #ffffff33;
 }
 #clr-wave{
   font-size:13px;font-weight:900;color:#ffffff50;letter-spacing:4px;
-  margin-bottom:16px;
+  text-align:center;margin-bottom:16px;
   animation:clrIn .5s .14s both;
 }
 #clr-badges{
-  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;
   margin-bottom:14px;
   animation:clrIn .5s .2s both;
 }
@@ -505,12 +507,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   margin-bottom:18px;animation:clrIn .4s .25s both;
 }
 #clr-stats{
-  display:flex;flex-direction:column;gap:5px;width:84%;
-  margin-bottom:24px;animation:clrIn .5s .3s both;
+  display:flex;flex-direction:column;gap:5px;
+  width:300px;margin:0 auto 24px;
+  animation:clrIn .5s .3s both;
 }
 .clr-row{
   display:flex;justify-content:space-between;align-items:center;
-  padding:6px 12px;background:#ffffff06;border-radius:5px;
+  padding:6px 14px;background:#ffffff06;border-radius:5px;
   border:1px solid #ffffff0a;font-size:11.5px;
 }
 .clr-lbl{color:#888;font-weight:600;letter-spacing:.3px;}
