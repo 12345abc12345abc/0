@@ -882,27 +882,30 @@ class Tower{
   // 코어슈터: 헥사곤 장갑 배틀 캐논
   _dCS(ctx,r,t,f){
     const col=this.color;
-    // circular base
-    ctx.beginPath();ctx.arc(0,0,r*.90,0,Math.PI*2);
-    ctx.fillStyle='#131313';ctx.fill();
+    // hex base — HO=0: flat top/bottom edges, 상하좌우 대칭
+    ctx.beginPath();
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;if(i===0)ctx.moveTo(Math.cos(a)*r*.92,Math.sin(a)*r*.92);else ctx.lineTo(Math.cos(a)*r*.92,Math.sin(a)*r*.92);}
+    ctx.closePath();ctx.fillStyle='#131313';ctx.fill();
     ctx.strokeStyle=f?col+'bb':'#383838';ctx.lineWidth=2.4;ctx.stroke();
-    // 4 quadrant panels (상하좌우 대칭)
-    for(let i=0;i<4;i++){
-      const a0=i*Math.PI/2-Math.PI/4,a1=a0+Math.PI/2;
-      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r*.88,a0,a1);ctx.closePath();
-      ctx.fillStyle=i%2===0?(f?col+'0e':'#1d1d1d'):'#181818';ctx.fill();
+    // 6 alternating armor panels
+    for(let i=0;i<6;i++){
+      const a0=i*Math.PI/3,a1=(i+1)*Math.PI/3;
+      ctx.fillStyle=i%2===0?(f?col+'0e':'#1d1d1d'):'#181818';
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a0)*r*.90,Math.sin(a0)*r*.90);ctx.lineTo(Math.cos(a1)*r*.90,Math.sin(a1)*r*.90);ctx.closePath();ctx.fill();
     }
-    // 4 bolt nodes at cardinal directions
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2,bx=Math.cos(a)*r*.80,by=Math.sin(a)*r*.80;
+    // 6 corner bolt nodes
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3,bx=Math.cos(a)*r*.86,by=Math.sin(a)*r*.86;
       ctx.fillStyle='#212121';ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=1.0;
       ctx.shadowColor=col;ctx.shadowBlur=f?8:1;
       ctx.beginPath();ctx.arc(bx,by,r*.07,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
       ctx.fillStyle=f?col+'99':'#3a3a3a';ctx.beginPath();ctx.arc(bx,by,r*.035,0,Math.PI*2);ctx.fill();
     }
-    // inner ring
+    // inner hex ring
     ctx.strokeStyle=f?col+'44':col+'16';ctx.lineWidth=1.0;
-    ctx.beginPath();ctx.arc(0,0,r*.58,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;if(i===0)ctx.moveTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);else ctx.lineTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);}
+    ctx.closePath();ctx.stroke();
     // TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     const bW=r*.38,bH=r*.24,brlL=r*.56,brlW=r*.14;
