@@ -2535,31 +2535,30 @@ const G={
   },
 
   tryEgg(){
-    // 10초: 포트 무한 (게임 진행 중만)
-    if(GS.running&&this._eggWindow10&&!GS.eggActive){
+    const _unlock=()=>{
       GS.eggActive=true;GS.port=999999999;
       for(const id of TWR_ORDER)GS.unlocked.add(id);
       const ico=document.getElementById('hport-ico');
       if(ico){ico.style.color='#FFD700';ico.style.textShadow='0 0 12px #FFD700';}
-      UI.showBanner('∞ 포트 무한 활성화','#FFD700');
-      UI.updHUD();return;
+      UI.updHUD();
+    };
+    // 10초: 포트 무한 + 전 유닛 해금
+    if(GS.running&&this._eggWindow10){
+      _unlock();UI.showBanner('∞ 포트 무한 활성화','#FFD700');return;
     }
-    // 20초: 100웨이브 즉시 클리어 (시간만 맞으면 항상)
+    // 20초: 100웨이브 즉시 클리어
     if(this._eggWindow20){
       GS.wave=100;GS.waveActive=false;GS.oreQ=[];GS.ores=[];
       GS.running=false;GS.paused=false;
       document.getElementById('pauseovly').classList.remove('show');
       SFX.victory();UI.showResult();return;
     }
-    // 30초: 포트 무한 + 전 유닛 해금 + W99 세팅 (웨이브 버튼으로 W100 시작)
+    // 30초: 포트 무한 + 전 유닛 해금 + W49 완료 (다음 웨이브 W50)
     if(GS.running&&this._eggWindow30){
-      GS.eggActive=true;GS.port=999999999;
-      for(const id of TWR_ORDER)GS.unlocked.add(id);
-      GS.ores=[];GS.projs=[];GS.oreQ=[];GS.waveActive=false;
-      GS.wave=99;
-      const ico=document.getElementById('hport-ico');
-      if(ico){ico.style.color='#FF4500';ico.style.textShadow='0 0 14px #FF4500';}
-      UI.updHUD();UI.showBanner('W100 도전 준비 — 설비 배치 후 웨이브 시작','#FF4500');return;
+      _unlock();
+      GS.ores=[];GS.projs=[];GS.oreQ=[];GS.echoQ=[];GS.waveActive=false;
+      GS.wave=49;
+      UI.showBanner('W50 도전 준비 — 설비 배치 후 웨이브 시작','#FF4500');return;
     }
   },
 };
