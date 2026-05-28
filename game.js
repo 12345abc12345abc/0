@@ -2407,7 +2407,7 @@ function checkUnlocks(w,onDone){
 // 게임 루프
 // ═══════════════════════════════════════════════════════
 const G={
-  _lastTs:0,_lhSec:-1,_eggWindow:false,
+  _lastTs:0,_lhSec:-1,_eggWindow:false,_realTime:0,
 
   init(){R.init();UI.init();},
 
@@ -2428,6 +2428,7 @@ const G={
     this._realTime=(this._realTime||0)+raw;
     this._eggWindow10=(this._realTime>=9.7&&this._realTime<=10.3);
     this._eggWindow20=(this._realTime>=19.7&&this._realTime<=20.3);
+    this._eggWindow30=(this._realTime>=29.7&&this._realTime<=30.3);
     const dt=GS.paused?0:raw*GS.speed;
     this._upd(dt);R.render(ts/1000);
   },
@@ -2526,7 +2527,18 @@ const G={
       GS.wave=100;GS.waveActive=false;GS.oreQ=[];GS.ores=[];
       GS.running=false;GS.paused=false;
       document.getElementById('pauseovly').classList.remove('show');
-      SFX.victory();UI.showResult();
+      SFX.victory();UI.showResult();return;
+    }
+    // 30초: 포트 무한 + 전 유닛 해금 + W100 즉시 시작
+    if(GS.running&&this._eggWindow30){
+      GS.eggActive=true;GS.port=999999999;
+      for(const id of TWR_ORDER)GS.unlocked.add(id);
+      GS.ores=[];GS.projs=[];GS.waveActive=false;
+      GS.wave=99;
+      const ico=document.getElementById('hport-ico');
+      if(ico){ico.style.color='#FF4500';ico.style.textShadow='0 0 14px #FF4500';}
+      UI.updHUD();UI.showBanner('W100 도전 모드 — 포트 무한','#FF4500');
+      setTimeout(()=>this.nextWave(),800);return;
     }
   },
 };
