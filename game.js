@@ -906,16 +906,6 @@ class Tower{
     ctx.beginPath();
     for(let i=0;i<6;i++){const a=i*Math.PI/3+HO;if(i===0)ctx.moveTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);else ctx.lineTo(Math.cos(a)*r*.62,Math.sin(a)*r*.62);}
     ctx.closePath();ctx.stroke();ctx.restore();
-    // outer rotating dashed ring
-    ctx.save();ctx.rotate(t*(f?4.0:2.0));
-    ctx.strokeStyle=f?col+'88':col+'2a';ctx.lineWidth=2.2;ctx.shadowColor=col;ctx.shadowBlur=f?16:0;
-    ctx.setLineDash([r*.28,r*.18]);ctx.beginPath();ctx.arc(0,0,r*.58,0,Math.PI*2);ctx.stroke();
-    ctx.setLineDash([]);ctx.shadowBlur=0;ctx.restore();
-    // inner counter-rotating dashed ring
-    ctx.save();ctx.rotate(-t*(f?2.8:1.3));
-    ctx.strokeStyle=f?col+'55':col+'1a';ctx.lineWidth=1.3;ctx.setLineDash([r*.22,r*.14]);
-    ctx.beginPath();ctx.arc(0,0,r*.74,0,Math.PI*2);ctx.stroke();
-    ctx.setLineDash([]);ctx.restore();
     // TURRET
     ctx.save();ctx.rotate(this.angle+Math.PI/2);
     const bW=r*.38,bH=r*.24,brlL=r*.56,brlW=r*.14;
