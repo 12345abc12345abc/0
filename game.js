@@ -2132,7 +2132,7 @@ const UI={
     if(!GS.eggActive&&GS.port<cost){this.showBanner(L('포트가 부족합니다','Not enough ports'),'#EF5350');return;}
     this._pendAction=null;this._pendRow=null;this._pendCol=null;this._hideConfirm();
     G.place(row,col);
-    if(this.selCard!==null){this._showCardInfo(this.selCard);}else{this._showPromo();}
+    this.desel();
   },
   _pendAction:null,_pendRow:null,_pendCol:null,
   _showConfirm(type,data){
@@ -2179,8 +2179,9 @@ const UI={
   _hideConfirm(){document.getElementById('mid-confirm').classList.remove('show');},
   _confirmAction(){
     if(!this._pendAction)return;
+    const wasPlace=this._pendRow!=null;
     this._pendAction();this._pendAction=null;this._pendRow=null;this._pendCol=null;this._hideConfirm();
-    if(this.selCard!==null){this._showCardInfo(this.selCard);}
+    if(wasPlace){this.desel();}
     else if(this.selTwr){this._showTowerInfo(this.selTwr);}
     else{this._showPromo();}
   },
