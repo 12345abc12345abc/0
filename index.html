@@ -112,6 +112,7 @@
           <div class="mi-name" id="mconf-name">-</div>
           <div class="mi-lvl" id="mconf-cost"></div>
         </div>
+        <canvas id="mconf-icon" width="56" height="56"></canvas>
       </div>
       <div id="mconf-msg"></div>
       <div class="mi-btns">
@@ -165,16 +166,20 @@
     </div>
   </div>
 
-  <!-- ── 클리어 오버레이 ── -->
+  <!-- ── 결과 오버레이 ── -->
   <div id="clrovly" style="display:none;position:absolute;inset:0;z-index:70;overflow:hidden;">
     <canvas id="clr-canvas" style="position:absolute;inset:0;"></canvas>
-    <div id="clr-content" style="position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;">
-      <div id="clr-badge">MISSION COMPLETE</div>
-      <div id="clr-title"><span>100</span>웨이브</div>
-      <div id="clr-sub">ALL WAVES CLEARED</div>
+    <div id="clr-content">
+      <div id="clr-eyebrow">OPERATION REPORT</div>
+      <div id="clr-score-row">
+        <div id="clr-score-lbl">SCORE</div>
+        <div id="clr-score">—</div>
+      </div>
+      <div id="clr-wave">W— / 100</div>
+      <div id="clr-badges"></div>
       <div id="clr-divider"></div>
       <div id="clr-stats"></div>
-      <button id="clr-btn" onclick="location.reload()">↩ &nbsp;다시 가동</button>
+      <button id="clr-btn" onclick="location.reload()">↩ &nbsp;재가동</button>
     </div>
   </div>
 

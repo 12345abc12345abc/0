@@ -320,17 +320,16 @@ const PATH=[];
 function mk(r,c){if(r>=0&&r<ROWS2&&c>=0&&c<COLS)GRID[r][c]=1;}
 function ap(r,c){if(!PATH.length||(PATH[PATH.length-1].r!==r||PATH[PATH.length-1].c!==c))PATH.push({r,c});}
 
-// S자 경로 — 시작: 좌상단(0,0), 종료: 우하단(12,13)
-// 위아래 설치영역 2줄, 중앙 설치영역 3줄씩
-for(let r=0;r<=2;r++){mk(r,0);ap(r,0);}         // 아래로
-for(let c=0;c<=13;c++){mk(2,c);ap(2,c);}         // 오른쪽으로
-for(let r=2;r<=6;r++){mk(r,13);ap(r,13);}        // 아래로
-for(let c=13;c>=0;c--){mk(6,c);ap(6,c);}        // 왼쪽으로
-for(let r=6;r<=10;r++){mk(r,0);ap(r,0);}         // 아래로
-for(let c=0;c<=13;c++){mk(10,c);ap(10,c);}       // 오른쪽으로
-for(let r=10;r<=12;r++){mk(r,13);ap(r,13);}      // 아래로
+// S자 경로 — 시작: (0,1), 종료: (12,12) — 양쪽 1칸씩 설치영역 확보
+for(let r=0;r<=2;r++){mk(r,1);ap(r,1);}          // 아래로
+for(let c=1;c<=12;c++){mk(2,c);ap(2,c);}         // 오른쪽으로
+for(let r=2;r<=6;r++){mk(r,12);ap(r,12);}        // 아래로
+for(let c=12;c>=1;c--){mk(6,c);ap(6,c);}        // 왼쪽으로
+for(let r=6;r<=10;r++){mk(r,1);ap(r,1);}         // 아래로
+for(let c=1;c<=12;c++){mk(10,c);ap(10,c);}       // 오른쪽으로
+for(let r=10;r<=12;r++){mk(r,12);ap(r,12);}      // 아래로
 
-const ENTRY={r:0,c:0},EXIT={r:12,c:13};
+const ENTRY={r:0,c:1},EXIT={r:12,c:12};
 
 function getDir(r,c){
   const i=PATH.findIndex(p=>p.r===r&&p.c===c);
@@ -352,7 +351,7 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W20≈6 W30≈22 W40≈70 W50≈200 W60≈560 W70≈1360 W80≈3160 W90≈6660 W100≈13660
+  // W20≈7 (무난) → W50≈200 → W70≈2360 → W90≈56360 → W100≈281360
   if(w<=1) return 1.0;
   if(w<=10)return 1.0+(w-1)*0.11;
   if(w<=20)return hpS(10)+(w-10)*0.50;
@@ -360,17 +359,18 @@ function hpS(w){
   if(w<=40)return hpS(30)+(w-30)*4.80;
   if(w<=50)return hpS(40)+(w-40)*13.0;
   if(w<=60)return hpS(50)+(w-50)*36.0;
-  if(w<=70)return hpS(60)+(w-60)*80.0;
-  if(w<=80)return hpS(70)+(w-70)*180.0;
-  if(w<=90)return hpS(80)+(w-80)*350.0;
-  return hpS(90)+(w-90)*700.0;
+  if(w<=70)return hpS(60)+(w-60)*180.0;
+  if(w<=80)return hpS(70)+(w-70)*900.0;
+  if(w<=90)return hpS(80)+(w-80)*4500.0;
+  return hpS(90)+(w-90)*22500.0;       // W100≈281361
 }
 function spdS(w){
   if(w<=10)return 1+Math.min(w-1,9)*0.006;
   if(w<=20)return spdS(10)+(w-10)*0.010;
   if(w<=50)return spdS(20)+(w-20)*0.016;
-  if(w<=80)return spdS(50)+(w-50)*0.032;
-  return spdS(80)+(w-80)*0.06;
+  if(w<=70)return spdS(50)+(w-50)*0.040;
+  if(w<=90)return spdS(70)+(w-70)*0.080;
+  return spdS(90)+(w-90)*0.150;        // W100≈5.4x
 }
 function countS(w){
   if(w<=3) return 12+w*3;
@@ -378,7 +378,7 @@ function countS(w){
   if(w<=20)return Math.floor(60+(w-10)*5.5);
   if(w<=50)return Math.floor(115+(w-20)*5.0);
   if(w<=75)return Math.floor(265+(w-50)*7.0);
-  return Math.floor(440+(w-75)*12.0);
+  return Math.floor(440+(w-75)*15.0);  // W100≈815
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1596,117 +1596,79 @@ class Tower{
   }
   _dTwinHub(ctx,r,t){
     const col=this.color,f=this._firingT>0;
-    const pulse=.5+Math.sin(t*5)*.5;
-    // === BASE FILL ===
-    ctx.beginPath();ctx.arc(0,0,r*.94,0,Math.PI*2);ctx.fillStyle='#080808';ctx.fill();
-    // === 6-SEGMENT OUTER ARMOR RING ===
-    for(let i=0;i<6;i++){
-      const a0=i*Math.PI/3+.1,a1=(i+1)*Math.PI/3-.1;
-      ctx.beginPath();ctx.arc(0,0,r*.94,a0,a1);ctx.arc(0,0,r*.74,a1,a0,true);ctx.closePath();
-      ctx.fillStyle='#181820';ctx.fill();
-      ctx.strokeStyle=f?col+'55':'#252528';ctx.lineWidth=1.2;ctx.stroke();
+    const pulse=.5+.5*Math.sin(t*6);
+    // === DARK BASE ===
+    ctx.beginPath();ctx.arc(0,0,r*.93,0,Math.PI*2);ctx.fillStyle='#07070f';ctx.fill();
+    // === 4-SEGMENT OUTER ARMOR RING ===
+    for(let i=0;i<4;i++){
+      const a0=i*Math.PI/2+.18,a1=(i+1)*Math.PI/2-.18;
+      ctx.beginPath();ctx.arc(0,0,r*.93,a0,a1);ctx.arc(0,0,r*.77,a1,a0,true);ctx.closePath();
+      ctx.fillStyle=f?'#1a1a2a':'#111120';ctx.fill();
+      ctx.strokeStyle=f?col+'66':'#252530';ctx.lineWidth=1.2;ctx.stroke();
     }
-    // outer rim glow ring
-    ctx.beginPath();ctx.arc(0,0,r*.94,0,Math.PI*2);
-    ctx.strokeStyle=f?col+'cc':'#2e2e38';ctx.lineWidth=2.4;
-    ctx.shadowColor=col;ctx.shadowBlur=f?24:3;ctx.stroke();ctx.shadowBlur=0;
-    // === 6 EMITTER NODES (slowly orbit) ===
-    const nodeAngle=t*.22;
-    const nodes=[];
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3+nodeAngle;
-      nodes.push({x:Math.cos(a)*r*.84,y:Math.sin(a)*r*.84,a});
-    }
-    for(let i=0;i<6;i++){
-      const n=nodes[i];
-      ctx.save();ctx.translate(n.x,n.y);
-      // housing
-      ctx.beginPath();ctx.arc(0,0,r*.10,0,Math.PI*2);
-      ctx.fillStyle='#0e0e12';ctx.fill();
-      ctx.strokeStyle=f?col:col+'55';ctx.lineWidth=1.6;
-      ctx.shadowColor=col;ctx.shadowBlur=f?20:6;ctx.stroke();ctx.shadowBlur=0;
-      // inner glow
-      const ng=ctx.createRadialGradient(0,0,0,0,0,r*.10);
-      ng.addColorStop(0,f?'#fff':col+'ee');
-      ng.addColorStop(.35,col+(f?'dd':'55'));
-      ng.addColorStop(1,col+'00');
-      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(0,0,r*.10,0,Math.PI*2);ctx.fill();
+    // Outer rim glow
+    ctx.beginPath();ctx.arc(0,0,r*.93,0,Math.PI*2);
+    ctx.strokeStyle=f?col+'cc':col+'28';ctx.lineWidth=2;
+    ctx.shadowColor=col;ctx.shadowBlur=f?22:3;ctx.stroke();ctx.shadowBlur=0;
+    // === 4 ROTATING VORTEX BLADES (cyclone) ===
+    ctx.save();ctx.rotate(t*(f?1.4:.45));
+    ctx.fillStyle=f?'#181828':'#0e0e1e';
+    for(let i=0;i<4;i++){
+      ctx.save();ctx.rotate(i*Math.PI/2);
+      ctx.beginPath();
+      ctx.arc(0,0,r*.58,-.05,Math.PI*.42);
+      ctx.arc(0,0,r*.32,Math.PI*.42,-.05,true);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle=f?col+'55':col+'1e';ctx.lineWidth=1.1;ctx.stroke();
       ctx.restore();
     }
-    // === FIRING ENERGY ARCS BETWEEN NODES ===
-    if(f){
-      ctx.shadowColor=col;ctx.shadowBlur=18;
-      for(let i=0;i<6;i++){
-        const a=nodes[i],b=nodes[(i+1)%6];
-        const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-        const jx=mx*(1+(Math.random()-.5)*.2),jy=my*(1+(Math.random()-.5)*.2);
-        ctx.strokeStyle=col+'99';ctx.lineWidth=1.5;
-        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(jx,jy,b.x,b.y);ctx.stroke();
-      }
-      // cross spokes (opposite nodes)
-      ctx.strokeStyle=col+'44';ctx.lineWidth=1.0;
-      for(let i=0;i<3;i++){
-        const a=nodes[i],b=nodes[i+3];
-        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
-      }
-      ctx.shadowBlur=0;
-    }
-    // === COUNTER-ROTATING INNER RINGS ===
-    ctx.save();ctx.rotate(t*.95);
-    ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=1.6;ctx.setLineDash([r*.14,r*.07]);
-    ctx.beginPath();ctx.arc(0,0,r*.64,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    ctx.save();ctx.rotate(-t*1.6);
-    ctx.strokeStyle=f?col+'44':col+'15';ctx.lineWidth=1.1;ctx.setLineDash([r*.09,r*.11]);
-    ctx.beginPath();ctx.arc(0,0,r*.48,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-    // === ROTATING HEXAGRAM (resonance star) ===
-    ctx.save();ctx.rotate(t*1.1);
-    ctx.strokeStyle=f?col+'66':col+'20';ctx.lineWidth=1.3;
-    for(let tri=0;tri<2;tri++){
-      ctx.beginPath();
-      for(let i=0;i<3;i++){
-        const a=i*Math.PI*2/3+tri*Math.PI/3;
-        const px=Math.cos(a)*r*.38,py=Math.sin(a)*r*.38;
-        if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
-      }
-      ctx.closePath();ctx.stroke();
+    ctx.restore();
+    // === COUNTER-ROTATING DASHED RING ===
+    ctx.save();ctx.rotate(-t*1.8);
+    ctx.strokeStyle=f?col+'66':col+'22';ctx.lineWidth=1.4;ctx.setLineDash([r*.12,r*.08]);
+    ctx.beginPath();ctx.arc(0,0,r*.60,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    ctx.restore();
+    // === 4 SENSOR PODS (rotate slowly) ===
+    ctx.save();ctx.rotate(t*.38+Math.PI/4);
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2;
+      const px=Math.cos(a)*r*.74,py=Math.sin(a)*r*.74;
+      ctx.save();ctx.translate(px,py);
+      ctx.beginPath();ctx.arc(0,0,r*.088,0,Math.PI*2);
+      ctx.fillStyle='#0c0c18';ctx.fill();
+      ctx.strokeStyle=f?col:'#303038';ctx.lineWidth=1.4;
+      ctx.shadowColor=col;ctx.shadowBlur=f?14:2;ctx.stroke();ctx.shadowBlur=0;
+      const sg=ctx.createRadialGradient(0,0,0,0,0,r*.088);
+      sg.addColorStop(0,f?col+'ff':col+'55');sg.addColorStop(1,col+'00');
+      ctx.fillStyle=sg;ctx.beginPath();ctx.arc(0,0,r*.088,0,Math.PI*2);ctx.fill();
+      ctx.restore();
     }
     ctx.restore();
-    // === 12 TICK MARKS on mid orbit ring ===
-    for(let i=0;i<12;i++){
-      const a=i*Math.PI/6+t*.4;
-      const inner=r*(i%3===0?.52:.56),outer=r*(i%3===0?.64:.61);
-      ctx.strokeStyle=f?col+(i%3===0?'aa':'55'):col+(i%3===0?'33':'18');
-      ctx.lineWidth=i%3===0?1.6:0.9;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(a)*inner,Math.sin(a)*inner);
-      ctx.lineTo(Math.cos(a)*outer,Math.sin(a)*outer);
-      ctx.stroke();
-    }
-    // === PULSING RIM GLOW ===
-    ctx.globalAlpha=f?pulse*.55:.18;
-    ctx.strokeStyle=col;ctx.lineWidth=3.5;
-    ctx.shadowColor=col;ctx.shadowBlur=f?32:0;
-    ctx.beginPath();ctx.arc(0,0,r*.94,0,Math.PI*2);ctx.stroke();
-    ctx.globalAlpha=1;ctx.shadowBlur=0;
-    // === CENTER SINGULARITY CORE ===
-    ctx.shadowColor=col;ctx.shadowBlur=f?44:16;
+    // === INNER VORTEX RING ===
+    ctx.save();ctx.rotate(t*2.4);
+    ctx.strokeStyle=f?col+'88':col+'28';ctx.lineWidth=1.6;ctx.setLineDash([r*.11,r*.07]);
+    ctx.beginPath();ctx.arc(0,0,r*.40,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    ctx.restore();
+    // === CENTER ENERGY CORE ===
+    ctx.shadowColor=col;ctx.shadowBlur=f?48:16;
     const cg=ctx.createRadialGradient(0,0,0,0,0,r*.30);
     cg.addColorStop(0,'#fff');
-    cg.addColorStop(.15,f?'#fff':col+'ff');
-    cg.addColorStop(.38,col+(f?'ee':'bb'));
-    cg.addColorStop(.7,col+'44');
+    cg.addColorStop(.22,f?'#fff':col);
+    cg.addColorStop(.5,col+'77');
     cg.addColorStop(1,col+'00');
     ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,r*.30,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle=f?col+'ff':col+'66';ctx.lineWidth=1.6;
-    ctx.beginPath();ctx.arc(0,0,r*.33,0,Math.PI*2);ctx.stroke();
-    // 6 rotating spokes on core
-    for(let i=0;i<6;i++){
-      const sa=i*Math.PI/3+t*3.5;
-      ctx.strokeStyle=f?col+'cc':col+'44';ctx.lineWidth=1.4;
-      ctx.beginPath();ctx.moveTo(Math.cos(sa)*r*.16,Math.sin(sa)*r*.16);
-      ctx.lineTo(Math.cos(sa)*r*.31,Math.sin(sa)*r*.31);ctx.stroke();
-    }
+    ctx.strokeStyle=f?col+'ff':col+'55';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(0,0,r*.23,0,Math.PI*2);ctx.stroke();
     ctx.shadowBlur=0;
+    // === PULSING RIM WHEN FIRING ===
+    if(f){
+      ctx.globalAlpha=pulse*.42;
+      ctx.strokeStyle=col;ctx.lineWidth=3.5;
+      ctx.shadowColor=col;ctx.shadowBlur=22;
+      ctx.beginPath();ctx.arc(0,0,r*.93,0,Math.PI*2);ctx.stroke();
+      ctx.globalAlpha=1;ctx.shadowBlur=0;
+    }
   }
 }
 
@@ -2027,8 +1989,18 @@ const UI={
       // 캔버스 top=59px
       return{row:Math.floor((gy-59-MAP_OY)/TS),col:Math.floor((gx-MAP_OX)/TS)};
     };
+    this._lastTapT=0;this._lastTapR=null;this._lastTapC=null;
     cv.addEventListener('click',e=>{if(!GS.running)return;const p=getP(e);this._tap(p.row,p.col);});
-    cv.addEventListener('touchstart',e=>{if(!GS.running)return;e.preventDefault();const p=getP(e);this._tap(p.row,p.col);},{passive:false});
+    cv.addEventListener('dblclick',e=>{if(!GS.running)return;const p=getP(e);this._doubleTap(p.row,p.col);});
+    cv.addEventListener('touchstart',e=>{
+      if(!GS.running)return;e.preventDefault();
+      const p=getP(e);const now=Date.now();
+      if(now-this._lastTapT<350&&this._lastTapR===p.row&&this._lastTapC===p.col){
+        this._lastTapT=0;this._doubleTap(p.row,p.col);return;
+      }
+      this._lastTapT=now;this._lastTapR=p.row;this._lastTapC=p.col;
+      this._tap(p.row,p.col);
+    },{passive:false});
     cv.addEventListener('mousemove',e=>{if(!GS.running)return;const p=getP(e);GS.hovR=p.row;GS.hovC=p.col;});
     cv.addEventListener('mouseleave',()=>{GS.hovR=null;GS.hovC=null;});
   },
@@ -2118,18 +2090,48 @@ const UI={
     this._showConfirm('sell',t);
   },
 
+  _doubleTap(row,col){
+    if(this.selCard===null)return;
+    if(row<0||row>=ROWS2||col<0||col>=COLS)return;
+    if(GRID[row][col]===1){this.showBanner(L('경로 위에 설치 불가','Cannot place on path'),'#EF5350');return;}
+    if(towerAt(row,col)){this.showBanner(L('이미 설치됨','Already placed'),'#EF5350');return;}
+    const cost=TWR[this.selCard].price;
+    if(!GS.eggActive&&GS.port<cost){this.showBanner(L('포트가 부족합니다!','Not enough ports!'),'#EF5350');return;}
+    this._pendAction=null;this._pendRow=null;this._pendCol=null;this._hideConfirm();
+    G.place(row,col);
+  },
   _pendAction:null,_pendRow:null,_pendCol:null,
   _showConfirm(type,data){
     document.getElementById('mid-info').classList.remove('show');
     document.getElementById('mid-card').classList.remove('show');
     document.getElementById('mid-promo').style.display='none';
     document.getElementById('mid-confirm').classList.add('show');
+    const iconEl=document.getElementById('mconf-icon');
     if(type==='place'){
-      const d=TWR[data];
+      const id=data,d=TWR[id];
       document.getElementById('mconf-name').textContent=L(d.name,d.nameEn||d.name);
       document.getElementById('mconf-name').style.color=d.color;
       document.getElementById('mconf-cost').textContent='◈ '+d.price;
-      document.getElementById('mconf-msg').textContent=L('설치하시겠습니까?','Install this unit?');
+      document.getElementById('mconf-msg').textContent=L('설치하시겠습니까? (더블탭: 바로 설치)','Install? (double-tap to place directly)');
+      if(iconEl){
+        iconEl.style.display='block';
+        const ctx2=iconEl.getContext('2d');
+        ctx2.clearRect(0,0,56,56);ctx2.fillStyle='#1a1a1a';ctx2.fillRect(0,0,56,56);
+        const dummy=new Tower(id,0,0);
+        dummy.cx=28;dummy.cy=28;dummy.angle=-Math.PI/2;dummy._animT=0;dummy._firingT=0;dummy._tDmg=0;dummy._tSpd=0;dummy._armAngle=-Math.PI/2;
+        ctx2.save();ctx2.translate(28,28);
+        const rr=56*.42;
+        if(id==='coreShooter')dummy._dCS(ctx2,rr,0,false);
+        else if(id==='pixelArm')dummy._dPA(ctx2,rr,0,false);
+        else switch(d.type){
+          case'aoe':dummy._dAOE(ctx2,rr,0,false);break;case'focus':case'slow':dummy._dSlow(ctx2,rr,0,false);break;
+          case'pierce':dummy._dPierce(ctx2,rr,0,false);break;case'chain':dummy._dChain(ctx2,rr,0,false);break;
+          case'pulseslow':dummy._dSlowField(ctx2,rr,0);break;case'scan':dummy._dScan(ctx2,rr,0);break;
+          case'refinery':dummy._dRefinery(ctx2,rr,0);break;case'twinhub':dummy._dTwinHub(ctx2,rr,0);break;
+          case'drone':dummy._dDrone(ctx2,rr,0);break;
+        }
+        ctx2.restore();
+      }
     }else if(type==='sell'){
       const d=TWR[data.tId];
       const ref=Math.round((data.basePrice+data.upgCost)*.6);
@@ -2137,6 +2139,7 @@ const UI={
       document.getElementById('mconf-name').style.color=data.color;
       document.getElementById('mconf-cost').textContent='◈ '+ref+' '+L('환급','refund');
       document.getElementById('mconf-msg').textContent=L('매각하시겠습니까?','Sell this unit?');
+      if(iconEl)iconEl.style.display='none';
     }
   },
   _hideConfirm(){document.getElementById('mid-confirm').classList.remove('show');},
@@ -2303,101 +2306,57 @@ const UI={
     clearTimeout(this._bt);this._bt=setTimeout(()=>el.classList.remove('show'),2400);
   },
 
-  showClear(){
-    SFX.victory();
+  showResult(){
+    const ko=LANG==='ko';
+    const isWin=GS.wave>=100;
     const el=document.getElementById('clrovly');el.style.display='block';
-    const _badge=document.getElementById('clr-badge');_badge.textContent='MISSION COMPLETE';_badge.style.color='';_badge.style.borderColor='';
-    const _ti=document.getElementById('clr-title');_ti.innerHTML='<span>100</span>'+(LANG==='ko'?'웨이브':'Waves');_ti.style.textShadow='';if(_ti.querySelector('span'))_ti.querySelector('span').style.color='';
-    document.getElementById('clr-sub').textContent=LANG==='ko'?'ALL WAVES CLEARED':'ALL WAVES CLEARED';
-    document.getElementById('clr-divider').style.background='';
-    const _btn=document.getElementById('clr-btn');_btn.style.background='';_btn.style.color='';_btn.innerHTML=LANG==='ko'?'↩ &nbsp;다시 가동':'↩ &nbsp;Restart';
+    // Best record tracking
+    const bw=+localStorage.getItem('ieg_bw')||0,bp=+localStorage.getItem('ieg_bp')||0;
+    if(GS.wave>bw)localStorage.setItem('ieg_bw',GS.wave);
+    if(GS.totalPort>bp)localStorage.setItem('ieg_bp',GS.totalPort);
+    // Score = tower assets + current port
+    const towerScore=GS.towers.reduce((s,tw)=>s+tw.basePrice+tw.upgCost,0);
+    const score=towerScore+Math.max(0,Math.floor(GS.port));
+    document.getElementById('clr-eyebrow').textContent=ko?'작전 보고서':'OPERATION REPORT';
+    document.getElementById('clr-score').textContent=score.toLocaleString();
+    document.getElementById('clr-score-lbl').textContent='SCORE';
+    document.getElementById('clr-wave').textContent=`W${GS.wave} / 100`;
+    // Badges
+    let badges='';
+    if(isWin)badges+=`<div class="clr-badge clear">${ko?'CLEAR':'CLEAR'}</div>`;
+    if(GS.eggActive)badges+=`<div class="clr-badge inf">${ko?'포트 무한 사용':'INFINITE PORT'}</div>`;
+    document.getElementById('clr-badges').innerHTML=badges;
+    // Stats
     const t=Math.floor(GS.time);
-    const eggRow=GS.eggActive
-      ?`<div style="text-align:center;padding:11px 0 13px;margin-bottom:6px;background:#FF450018;border:1.5px solid #FF4500;border-radius:6px;"><span style="color:#FF4500;font-size:14px;font-weight:900;letter-spacing:1px;text-shadow:0 0 12px #FF450099;">포트 무한 사용 클리어</span></div>`
-      :``;
+    const timeStr=ko?`${Math.floor(t/60)}분 ${t%60}초`:`${Math.floor(t/60)}m ${t%60}s`;
     document.getElementById('clr-stats').innerHTML=`
-      ${eggRow}
-      <div class="clr-row"><span class="clr-lbl">총 운영 시간</span><span class="clr-val">${Math.floor(t/60)}분 ${t%60}초</span></div>
-      <div class="clr-row"><span class="clr-lbl">총 생산 포트</span><span class="clr-val">◈ ${GS.totalPort.toLocaleString()}</span></div>
-      <div class="clr-row"><span class="clr-lbl">설치한 장비</span><span class="clr-val">${GS.towers.length}기</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'운영 시간':'Operation Time'}</span><span class="clr-val">${timeStr}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'장비 자산':'Tower Assets'}</span><span class="clr-val">◈ ${towerScore.toLocaleString()}</span></div>
+      <div class="clr-row"><span class="clr-lbl">${ko?'포트 잔액':'Port Balance'}</span><span class="clr-val">${GS.eggActive?'∞':'◈ '+Math.floor(GS.port).toLocaleString()}</span></div>
     `;
-    // 클리어 파티클 캔버스
-    const cv=document.getElementById('clr-canvas');
-    cv.width=480;cv.height=900;
+    document.getElementById('clr-btn').innerHTML=ko?'↩ &nbsp;재가동':'↩ &nbsp;Restart';
+    // Background canvas
+    const cv=document.getElementById('clr-canvas');cv.width=480;cv.height=900;
     const cx=cv.getContext('2d');
-    // 배경 그라데이션
-    const bg=cx.createRadialGradient(240,380,20,240,380,420);
-    bg.addColorStop(0,'#1a1200');bg.addColorStop(.6,'#0a0800');bg.addColorStop(1,'#000');
+    const bg=cx.createRadialGradient(240,380,20,240,380,440);
+    bg.addColorStop(0,'#111118');bg.addColorStop(.6,'#08080e');bg.addColorStop(1,'#000');
     cx.fillStyle=bg;cx.fillRect(0,0,480,900);
-    // 황금 격자
-    cx.strokeStyle='#FFD70010';cx.lineWidth=1;
+    cx.strokeStyle='#ffffff07';cx.lineWidth=1;
     for(let x=0;x<480;x+=32){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,900);cx.stroke();}
     for(let y=0;y<900;y+=32){cx.beginPath();cx.moveTo(0,y);cx.lineTo(480,y);cx.stroke();}
-    // 파티클 애니메이션
-    const pts=Array.from({length:80},()=>({
-      x:Math.random()*480,y:Math.random()*900+200,
-      vx:(Math.random()-.5)*1.2,vy:-(Math.random()*1.5+.5),
-      r:Math.random()*2.5+.5,life:Math.random(),
-      col:Math.random()<.5?'#FFD700':Math.random()<.5?'#FF8C00':'#ffffff'
+    const pts=Array.from({length:60},()=>({
+      x:Math.random()*480,y:Math.random()*900,
+      vx:(Math.random()-.5)*.8,vy:-(Math.random()*1.0+.3),
+      r:Math.random()*2+.4,life:.3+Math.random()*.7,
+      col:Math.random()<.6?'#ffffff':Math.random()<.5?'#aaaaaa':'#555'
     }));
     const tick=()=>{
       if(document.getElementById('clrovly').style.display==='none')return;
       cx.fillStyle='#00000018';cx.fillRect(0,0,480,900);
       for(const p of pts){
-        p.x+=p.vx;p.y+=p.vy;p.life-=.005;
-        if(p.life<=0||p.y<-10){p.x=Math.random()*480;p.y=910;p.life=.5+Math.random()*.5;}
-        cx.globalAlpha=p.life*.7;cx.fillStyle=p.col;
-        cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fill();
-      }
-      cx.globalAlpha=1;requestAnimationFrame(tick);
-    };tick();
-  },
-
-  showGO(){
-    const el=document.getElementById('clrovly');el.style.display='block';
-    const bw=+localStorage.getItem('ieg_bw')||0,bp=+localStorage.getItem('ieg_bp')||0;
-    if(GS.wave>bw)localStorage.setItem('ieg_bw',GS.wave);
-    if(GS.totalPort>bp)localStorage.setItem('ieg_bp',GS.totalPort);
-    const badge=document.getElementById('clr-badge');
-    badge.textContent='GAME OVER';badge.style.color='';badge.style.borderColor='';
-    const titleEl=document.getElementById('clr-title');
-    titleEl.innerHTML=`W<span>${GS.wave}</span>`;
-    titleEl.style.textShadow='';titleEl.querySelector('span').style.color='';
-    document.getElementById('clr-sub').textContent=LANG==='ko'?'가동 중지':'FACTORY HALT';
-    document.getElementById('clr-divider').style.background='';
-    const btn=document.getElementById('clr-btn');
-    btn.style.background='';btn.style.color='';
-    btn.innerHTML=LANG==='ko'?'↩ &nbsp;재가동':'↩ &nbsp;Restart';
-    const towerScore=GS.towers.reduce((s,tw)=>s+tw.basePrice+tw.upgCost,0);
-    const t=Math.floor(GS.time);const ko=LANG==='ko';
-    document.getElementById('clr-stats').innerHTML=`
-      <div class="clr-row"><span class="clr-lbl">${ko?'최종 웨이브':'Final Wave'}</span><span class="clr-val">${GS.wave}/100</span></div>
-      <div class="clr-row"><span class="clr-lbl">${ko?'운영 시간':'Operation Time'}</span><span class="clr-val">${Math.floor(t/60)}${ko?'분 ':'m '}${t%60}${ko?'초':'s'}</span></div>
-      <div class="clr-row"><span class="clr-lbl">${ko?'총 생산 포트':'Total Port'}</span><span class="clr-val">◈ ${GS.totalPort.toLocaleString()}</span></div>
-      <div class="clr-row"><span class="clr-lbl">${ko?'장비 자산':'Tower Assets'}</span><span class="clr-val">◈ ${towerScore.toLocaleString()}</span></div>
-    `;
-    const cv=document.getElementById('clr-canvas');
-    cv.width=480;cv.height=900;
-    const cx=cv.getContext('2d');
-    const bg=cx.createRadialGradient(240,380,20,240,380,420);
-    bg.addColorStop(0,'#1a1a1a');bg.addColorStop(.6,'#0a0a0a');bg.addColorStop(1,'#000');
-    cx.fillStyle=bg;cx.fillRect(0,0,480,900);
-    cx.strokeStyle='#ffffff08';cx.lineWidth=1;
-    for(let x=0;x<480;x+=32){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,900);cx.stroke();}
-    for(let y=0;y<900;y+=32){cx.beginPath();cx.moveTo(0,y);cx.lineTo(480,y);cx.stroke();}
-    const pts=Array.from({length:55},()=>({
-      x:Math.random()*480,y:Math.random()*900,
-      vx:(Math.random()-.5)*.7,vy:Math.random()*.9+.3,
-      r:Math.random()*2+.4,life:.3+Math.random()*.7,
-      col:Math.random()<.5?'#ffffff':Math.random()<.5?'#aaaaaa':'#555555'
-    }));
-    const tick=()=>{
-      if(document.getElementById('clrovly').style.display==='none')return;
-      cx.fillStyle='#0000001e';cx.fillRect(0,0,480,900);
-      for(const p of pts){
         p.x+=p.vx;p.y+=p.vy;p.life-=.004;
-        if(p.life<=0||p.y>910){p.x=Math.random()*480;p.y=-10;p.life=.5+Math.random()*.5;}
-        cx.globalAlpha=p.life*.7;cx.fillStyle=p.col;
+        if(p.life<=0||p.y<-10){p.x=Math.random()*480;p.y=910;p.life=.4+Math.random()*.6;}
+        cx.globalAlpha=p.life*.65;cx.fillStyle=p.col;
         cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fill();
       }
       cx.globalAlpha=1;requestAnimationFrame(tick);
@@ -2463,7 +2422,7 @@ const G={
     for(const o of GS.ores)o.update(dt);
     for(let i=GS.ores.length-1;i>=0;i--){
       const o=GS.ores[i];
-      if(o.escaped){GS.stability-=o.escapeDmg;GS.popups.push(new Popup(R.tx(EXIT.c),R.ty(EXIT.r),'-'+o.escapeDmg,'#EF5350'));GS.ores.splice(i,1);UI.updHUD();if(GS.stability<=0){GS.stability=0;GS.running=false;SFX.gameOver();UI.showGO();return;}}
+      if(o.escaped){GS.stability-=o.escapeDmg;GS.popups.push(new Popup(R.tx(EXIT.c),R.ty(EXIT.r),'-'+o.escapeDmg,'#EF5350'));GS.ores.splice(i,1);UI.updHUD();if(GS.stability<=0){GS.stability=0;GS.running=false;SFX.gameOver();UI.showResult();return;}}
     }
     sweepArr(GS.ores,o=>o.alive);
     if(GS.waveActive&&GS.oreQ.length===0&&GS.ores.length===0){
@@ -2472,7 +2431,7 @@ const G={
       const bonus=Math.floor(100+GS.wave*55+Math.pow(GS.wave,1.5)*2.0);
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
-      if(GS.wave>=100){GS.running=false;UI.showClear();return;}
+      if(GS.wave>=100){GS.running=false;SFX.victory();UI.showResult();return;}
       UI.showBanner(`W${GS.wave} 클리어! +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
       checkUnlocks(GS.wave,()=>{if(GS.autoWave){GS.autoActive=true;GS.autoTimer=5;}});
     }
@@ -2544,7 +2503,7 @@ const G={
       GS.wave=100;GS.waveActive=false;GS.oreQ=[];GS.ores=[];
       GS.running=false;GS.paused=false;
       document.getElementById('pauseovly').classList.remove('show');
-      SFX.victory();UI.showClear();
+      SFX.victory();UI.showResult();
     }
   },
 };
