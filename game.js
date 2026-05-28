@@ -523,9 +523,34 @@ const R={
         const ok=GRID[r][c2]===0&&!towerAt(r,c2);
         const px=MAP_OX+c2*TS,py=MAP_OY+r*TS;
         const isPend=UI._pendAction!=null&&UI._pendRow!=null;
-        ctx.fillStyle=ok?`rgba(255,255,255,${isPend?.22:.12})`:'rgba(239,83,80,.12)';ctx.fillRect(px,py,TS,TS);
-        ctx.strokeStyle=ok?'#ffffff':'#EF5350';ctx.lineWidth=isPend?2.5:2;ctx.strokeRect(px+1,py+1,TS-2,TS-2);
-        if(ok&&TWR[UI.selCard]){const _d=TWR[UI.selCard];this.drawRange(ctx,this.tx(c2),this.ty(r),_d.range,_d.color);}
+        ctx.fillStyle=ok?`rgba(255,255,255,${isPend?.18:.08})`:'rgba(239,83,80,.12)';ctx.fillRect(px,py,TS,TS);
+        ctx.strokeStyle=ok?'#ffffff':'#EF5350';ctx.lineWidth=isPend?2.5:1.5;ctx.strokeRect(px+1,py+1,TS-2,TS-2);
+        if(ok&&TWR[UI.selCard]){
+          const _d=TWR[UI.selCard];
+          this.drawRange(ctx,this.tx(c2),this.ty(r),_d.range,_d.color);
+          // 흑백 유닛 미리보기
+          const id=UI.selCard;
+          if(!this._pvDummy||this._pvDummyId!==id){
+            const dw=new Tower(id,0,0);
+            dw._animT=0;dw._firingT=0;dw._tDmg=0;dw._tSpd=0;dw._armAngle=-Math.PI/2;
+            this._pvDummy=dw;this._pvDummyId=id;
+          }
+          const dw=this._pvDummy,rr=TS*.44;
+          ctx.save();
+          ctx.filter='grayscale(1) brightness(0.7)';
+          ctx.globalAlpha=isPend?.82:.52;
+          ctx.translate(this.tx(c2),this.ty(r));
+          if(id==='coreShooter')dw._dCS(ctx,rr,0,false);
+          else if(id==='pixelArm')dw._dPA(ctx,rr,0,false);
+          else switch(_d.type){
+            case'aoe':dw._dAOE(ctx,rr,0,false);break;case'focus':case'slow':dw._dSlow(ctx,rr,0,false);break;
+            case'pierce':dw._dPierce(ctx,rr,0,false);break;case'chain':dw._dChain(ctx,rr,0,false);break;
+            case'pulseslow':dw._dSlowField(ctx,rr,0);break;case'scan':dw._dScan(ctx,rr,0);break;
+            case'refinery':dw._dRefinery(ctx,rr,0);break;case'twinhub':dw._dTwinHub(ctx,rr,0);break;
+            case'drone':dw._dDrone(ctx,rr,0);break;
+          }
+          ctx.restore();
+        }
       }
     }
     if(UI.selTwr){this.drawRange(ctx,UI.selTwr.cx,UI.selTwr.cy,UI.selTwr.getRange(),UI.selTwr.color);}
