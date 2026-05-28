@@ -538,7 +538,7 @@ const R={
           const dw=this._pvDummy,rr=TS*.44;
           ctx.save();
           ctx.filter='grayscale(1) brightness(0.7)';
-          ctx.globalAlpha=isPend?.82:.52;
+          ctx.globalAlpha=isPend?.80:.50;
           ctx.translate(this.tx(c2),this.ty(r));
           if(id==='coreShooter')dw._dCS(ctx,rr,0,false);
           else if(id==='pixelArm')dw._dPA(ctx,rr,0,false);
