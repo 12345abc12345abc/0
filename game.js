@@ -124,6 +124,16 @@ const SFX={
     }
   },
 
+  // ── UI 버튼 클릭음 ────────────────────────────────
+  btn(){
+    if(!this._on)return;
+    const _n=performance.now();
+    if(_n-(this._btnCd||0)<60)return;
+    this._btnCd=_n;
+    this._osc('sine',920,.03,.06);
+    this._noise(.008,.04,5000);
+  },
+
   // ── 원석 처치음 ─────────────────────────────────
   hit(isBig=false){
     if(!this._on)return;
@@ -2090,6 +2100,14 @@ const UI={
     },{passive:false});
     cv.addEventListener('mousemove',e=>{if(!GS.running)return;const p=getP(e);GS.hovR=p.row;GS.hovC=p.col;});
     cv.addEventListener('mouseleave',()=>{GS.hovR=null;GS.hovC=null;});
+    // 전역 버튼 클릭음
+    const _onBtn=e=>{
+      const t=e.target.closest('button,#wbtn,#abtn,#hport-ico,.si,.tc,.mi-cls');
+      if(!t||t.disabled||t.classList.contains('dis')||t.classList.contains('locked-card'))return;
+      SFX.btn();
+    };
+    document.addEventListener('mousedown',_onBtn,{passive:true});
+    document.addEventListener('touchstart',_onBtn,{passive:true});
   },
 
   _tap(row,col){
