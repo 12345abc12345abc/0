@@ -293,14 +293,14 @@ applyScale();window.addEventListener('resize',applyScale);
 // 데이터
 // ═══════════════════════════════════════════════════════
 const ORE={
-  normal:  {name:'일반 원석',   color:'#78909C',hp:18,  spd:44, reward:15,  dmg:2,  grade:1},
-  fast:    {name:'고속 원석',   color:'#FFB300',hp:10,  spd:90, reward:22,  dmg:2,  grade:1},
-  multi:   {name:'다중 원석',   color:'#00E5FF',hp:35,  spd:46, reward:40,  dmg:3,  grade:2,special:'split'},
-  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:75,  spd:26, reward:55,  dmg:5,  grade:3},
-  pure:    {name:'고순도 원석', color:'#FFD54F',hp:28,  spd:44, reward:90,  dmg:4,  grade:2},
-  unstable:{name:'불안정 원석', color:'#76FF03',hp:48,  spd:74, reward:70,  dmg:10, grade:2,special:'bigdmg'},
-  compres: {name:'압축 원석',   color:'#E040FB',hp:200, spd:20, reward:140, dmg:8,  grade:3},
-  core:    {name:'코어 원석',   color:'#B3E5FC',hp:1800,spd:12, reward:500, dmg:20, grade:4,special:'boss'},
+  normal:  {name:'일반 원석',   color:'#78909C',hp:18,  spd:44, reward:50,  dmg:2,  grade:1},
+  fast:    {name:'고속 원석',   color:'#FFB300',hp:10,  spd:90, reward:75,  dmg:2,  grade:1},
+  multi:   {name:'다중 원석',   color:'#00E5FF',hp:35,  spd:46, reward:130, dmg:3,  grade:2,special:'split'},
+  dense:   {name:'고밀도 원석', color:'#7E57C2',hp:75,  spd:26, reward:200, dmg:5,  grade:3},
+  pure:    {name:'고순도 원석', color:'#FFD54F',hp:28,  spd:44, reward:320, dmg:4,  grade:2},
+  unstable:{name:'불안정 원석', color:'#76FF03',hp:48,  spd:74, reward:250, dmg:10, grade:2,special:'bigdmg'},
+  compres: {name:'압축 원석',   color:'#E040FB',hp:200, spd:20, reward:500, dmg:8,  grade:3},
+  core:    {name:'코어 원석',   color:'#B3E5FC',hp:1800,spd:12, reward:1800,dmg:20, grade:4,special:'boss'},
 };
 
 const TWR_ORDER=['pixelArm','coreShooter','twinHub','scanner','magnetCannon','refinery','laserGrid','chainBolt','drone','plasmaCutter'];
@@ -376,18 +376,18 @@ function getPool(w){
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W20≈9 → W50≈244 → W70≈1394 → W90≈17994 → W100≈49994
+  // W10≈2.5 → W30≈25 → W50≈180 → W70≈900 → W90≈3000 → W100≈4500
   if(w<=1) return 1.0;
   if(w<=10)return 1.0+(w-1)*0.167;
-  if(w<=20)return hpS(10)+(w-10)*0.65;
-  if(w<=30)return hpS(20)+(w-20)*2.0;
-  if(w<=40)return hpS(30)+(w-30)*6.5;
-  if(w<=50)return hpS(40)+(w-40)*15.0;
-  if(w<=60)return hpS(50)+(w-50)*45.0;
-  if(w<=70)return hpS(60)+(w-60)*70.0;
-  if(w<=80)return hpS(70)+(w-70)*360.0;
-  if(w<=90)return hpS(80)+(w-80)*1300.0;
-  return hpS(90)+(w-90)*3200.0;       // W100≈49994
+  if(w<=20)return hpS(10)+(w-10)*0.55;
+  if(w<=30)return hpS(20)+(w-20)*1.7;
+  if(w<=40)return hpS(30)+(w-30)*4.5;
+  if(w<=50)return hpS(40)+(w-40)*11.0;
+  if(w<=60)return hpS(50)+(w-50)*27.0;
+  if(w<=70)return hpS(60)+(w-60)*45.0;
+  if(w<=80)return hpS(70)+(w-70)*90.0;
+  if(w<=90)return hpS(80)+(w-80)*120.0;
+  return hpS(90)+(w-90)*150.0;        // W100≈4500
 }
 function spdS(w){
   if(w<=10)return 1+Math.min(w-1,9)*0.006;
@@ -398,14 +398,14 @@ function spdS(w){
   return spdS(90)+(w-90)*0.150;        // W100≈5.4x
 }
 function countS(w){
-  if(w<=1) return 12;
-  if(w<=3) return Math.floor(12+(w-1)*10);   // W2:22, W3:32
-  if(w<=5) return Math.floor(32+(w-3)*12);   // W4:44, W5:56
-  if(w<=10)return Math.floor(56+(w-5)*8);    // W6:64→W10:96
-  if(w<=20)return Math.floor(96+(w-10)*9);   // W20:186
-  if(w<=50)return Math.floor(186+(w-20)*8);  // W50:426
-  if(w<=75)return Math.floor(426+(w-50)*11); // W75:701
-  return Math.floor(701+(w-75)*17);          // W100≈1126
+  if(w<=1) return 16;
+  if(w<=3) return Math.floor(16+(w-1)*15);   // W2:31, W3:46
+  if(w<=5) return Math.floor(46+(w-3)*17);   // W4:63, W5:80
+  if(w<=10)return Math.floor(80+(w-5)*12);   // W6:92→W10:140
+  if(w<=20)return Math.floor(140+(w-10)*12); // W20:260
+  if(w<=50)return Math.floor(260+(w-20)*10); // W50:560
+  if(w<=75)return Math.floor(560+(w-50)*14); // W75:910
+  return Math.floor(910+(w-75)*22);          // W100≈1460
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1972,8 +1972,8 @@ function makeWave(w){
   const pool=getPool(w),totalCount=countS(w),q=[];
   const rushes=w<=3?1:w<=20?3:w<=50?4:5;
   const perRush=Math.ceil(totalCount/rushes);
-  const interval=w<=1?1.2:w<=3?0.80:w<=20?0.40:w<=50?0.32:0.25;
-  const rushGap=w<=20?7:w<=50?5:4;
+  const interval=w<=1?1.4:w<=3?1.0:w<=20?0.50:w<=50?0.38:0.28;
+  const rushGap=w<=20?9:w<=50?6:4;
   let t=0;
   for(let ri=0;ri<rushes;ri++){
     const n=ri<rushes-1?perRush:totalCount-perRush*(rushes-1);
@@ -2543,7 +2543,7 @@ const G={
     if(GS.waveActive&&GS.oreQ.length===0&&GS.ores.length===0){
       GS.waveActive=false;
       // 클리어 보상: 초반엔 넉넉히, 후반엔 크게
-      const bonus=Math.floor(100+GS.wave*55+Math.pow(GS.wave,1.5)*2.0);
+      const bonus=Math.floor(300+GS.wave*165+Math.pow(GS.wave,1.5)*6.0);
       GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
       SFX.clear();
       if(GS.wave>=100){GS.running=false;SFX.victory();UI.showResult();return;}
