@@ -18,9 +18,7 @@
     cx.clearRect(0,0,W,H);
     for(const p of PTS){
       p.x+=p.vx;p.y+=p.vy;p.life-=.004;
-      if(p.life<=0||p.y<-10){
-        p.x=Math.random()*W;p.y=H+5;p.life=.6+Math.random()*.4;
-      }
+      if(p.life<=0||p.y<-10){p.x=Math.random()*W;p.y=H+5;p.life=.6+Math.random()*.4;}
       cx.globalAlpha=p.life*.55;
       cx.fillStyle=p.col;
       cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fill();
@@ -356,6 +354,15 @@ for(let r=10;r<=12;r++){mk(r,12);ap(r,12);}      // 아래로
 
 const ENTRY={r:0,c:1},EXIT={r:12,c:12};
 
+// 경로 세그먼트 사전계산 — Ore.update()에서 매 프레임 계산 제거
+const PATH_SEG=[];
+for(let i=0;i<PATH.length-1;i++){
+  const fr=PATH[i],to=PATH[i+1];
+  const fx=MAP_OX+fr.c*TS+TS/2,fy=MAP_OY+fr.r*TS+TS/2;
+  const tx=MAP_OX+to.c*TS+TS/2,ty=MAP_OY+to.r*TS+TS/2;
+  PATH_SEG.push({fx,fy,tx,ty,len:Math.hypot(tx-fx,ty-fy)});
+}
+
 function getDir(r,c){
   const i=PATH.findIndex(p=>p.r===r&&p.c===c);
   if(i<0||i>=PATH.length-1)return null;
@@ -365,47 +372,45 @@ function getDir(r,c){
 
 // 밸런스
 function getPool(w){
-  if(w<=5) return['normal'];
-  if(w<=9) return['normal','normal','fast'];
-  if(w<=14)return['normal','fast','multi'];
-  if(w<=20)return['normal','fast','multi','dense'];
-  if(w<=28)return['fast','multi','dense','pure'];
-  if(w<=38)return['fast','multi','dense','pure','unstable'];
-  if(w<=50)return['multi','dense','pure','unstable','compres'];
-  if(w<=70)return['dense','pure','unstable','compres'];
+  if(w<=6) return['normal'];
+  if(w<=12)return['normal','normal','fast'];
+  if(w<=19)return['normal','fast','multi'];
+  if(w<=27)return['normal','fast','multi','dense'];
+  if(w<=37)return['fast','multi','dense','pure'];
+  if(w<=49)return['fast','multi','dense','pure','unstable'];
+  if(w<=63)return['multi','dense','pure','unstable','compres'];
+  if(w<=80)return['dense','pure','unstable','compres'];
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W10≈2.5 → W30≈25 → W50≈180 → W70≈900 → W90≈3000 → W100≈4500
+  // W10≈2 → W20≈7 → W30≈18 → W50≈100 → W70≈550 → W80≈1700 → W90≈3500 → W100≈6500
   if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.167;
-  if(w<=20)return hpS(10)+(w-10)*0.55;
-  if(w<=30)return hpS(20)+(w-20)*1.7;
-  if(w<=40)return hpS(30)+(w-30)*4.5;
-  if(w<=50)return hpS(40)+(w-40)*11.0;
-  if(w<=60)return hpS(50)+(w-50)*27.0;
-  if(w<=70)return hpS(60)+(w-60)*45.0;
-  if(w<=80)return hpS(70)+(w-70)*90.0;
-  if(w<=90)return hpS(80)+(w-80)*120.0;
-  return hpS(90)+(w-90)*150.0;        // W100≈4500
+  if(w<=10)return 1.0+(w-1)*0.111;
+  if(w<=20)return hpS(10)+(w-10)*0.50;
+  if(w<=30)return hpS(20)+(w-20)*1.10;
+  if(w<=50)return hpS(30)+(w-30)*4.10;
+  if(w<=70)return hpS(50)+(w-50)*22.5;
+  if(w<=80)return hpS(70)+(w-70)*115.0;
+  if(w<=90)return hpS(80)+(w-80)*180.0;
+  return hpS(90)+(w-90)*300.0;        // W100≈6500
 }
 function spdS(w){
-  if(w<=10)return 1+Math.min(w-1,9)*0.006;
-  if(w<=20)return spdS(10)+(w-10)*0.010;
-  if(w<=50)return spdS(20)+(w-20)*0.016;
-  if(w<=70)return spdS(50)+(w-50)*0.040;
-  if(w<=90)return spdS(70)+(w-70)*0.080;
-  return spdS(90)+(w-90)*0.150;        // W100≈5.4x
+  if(w<=10)return 1+Math.min(w-1,9)*0.007;
+  if(w<=20)return spdS(10)+(w-10)*0.012;
+  if(w<=50)return spdS(20)+(w-20)*0.020;
+  if(w<=70)return spdS(50)+(w-50)*0.045;
+  if(w<=90)return spdS(70)+(w-70)*0.090;
+  return spdS(90)+(w-90)*0.200;        // W100≈6.5x
 }
 function countS(w){
-  if(w<=1) return 16;
-  if(w<=3) return Math.floor(16+(w-1)*15);   // W2:31, W3:46
-  if(w<=5) return Math.floor(46+(w-3)*17);   // W4:63, W5:80
-  if(w<=10)return Math.floor(80+(w-5)*12);   // W6:92→W10:140
-  if(w<=20)return Math.floor(140+(w-10)*12); // W20:260
-  if(w<=50)return Math.floor(260+(w-20)*10); // W50:560
-  if(w<=75)return Math.floor(560+(w-50)*14); // W75:910
-  return Math.floor(910+(w-75)*22);          // W100≈1460
+  if(w<=1) return 14;
+  if(w<=3) return Math.floor(14+(w-1)*13);    // W2:27, W3:40
+  if(w<=5) return Math.floor(40+(w-3)*18);    // W4:58, W5:76
+  if(w<=10)return Math.floor(76+(w-5)*13);    // W6:89→W10:141
+  if(w<=20)return Math.floor(141+(w-10)*12);  // W20:261
+  if(w<=50)return Math.floor(261+(w-20)*12);  // W50:621
+  if(w<=75)return Math.floor(621+(w-50)*18);  // W75:1071
+  return Math.floor(1071+(w-75)*40);           // W100≈2071
 }
 
 // ═══════════════════════════════════════════════════════
@@ -413,9 +418,9 @@ function countS(w){
 // ═══════════════════════════════════════════════════════
 const GS={
   port:100,stability:100,wave:0,time:0,totalPort:0,
-  portHist:[],towers:[],ores:[],projs:[],
+  towers:[],ores:[],projs:[],
   particles:[],popups:[],effects:[],
-  running:false,waveActive:false,oreQ:[],spawnT:0,
+  running:false,waveActive:false,oreQ:[],oreQIdx:0,spawnT:0,
   paused:false,speed:1,
   unlocked:new Set(['pixelArm']),
   autoWave:false,autoActive:false,autoTimer:0,
@@ -473,6 +478,10 @@ const R={
       bx.fillStyle='#ffffff1a';bx.beginPath();bx.moveTo(as,0);bx.lineTo(-as,as*.8);bx.lineTo(-as,-as*.8);bx.closePath();bx.fill();
       bx.restore();
     }
+    // 포털 그라디언트 사전 생성 (매 프레임 생성 방지)
+    const _pg=(px,py,col)=>{const g=this.ctx.createRadialGradient(px+TS/2,py+TS/2,1,px+TS/2,py+TS/2,TS*.52);g.addColorStop(0,col+'66');g.addColorStop(1,'transparent');return g;};
+    this._entryGrad=_pg(MAP_OX+ENTRY.c*TS,MAP_OY+ENTRY.r*TS,'#FF4500');
+    this._exitGrad=_pg(MAP_OX+EXIT.c*TS,MAP_OY+EXIT.r*TS,'#00E5FF');
   },
   // 경로 타일을 매 프레임 그림 (컨베이어 벨트 애니메이션)
   _drawPath(ctx,gt){
@@ -480,39 +489,41 @@ const R={
     const GAP=TS/3.2;
     const RAIL=4;
 
+    const globalOff=(gt*SPD)%GAP;
+    ctx.strokeStyle='#3e3e3e';ctx.lineWidth=1.8;
+    ctx.beginPath();
     for(const{r,c2,dir,ie,ix}of this._pathCells){
       if(ie||ix||!dir)continue;
       const px=MAP_OX+c2*TS,py=MAP_OY+r*TS;
-      ctx.save();
-      ctx.beginPath();ctx.rect(px+1,py+1,TS-2,TS-2);ctx.clip();
       const isH=(dir==='R'||dir==='L');
       const fwd=(dir==='R'||dir==='D');
-      // 움직이는 줄무늬 — 맵 전체 좌표 기준 offset으로 타일 간 이음새 없애기
-      const globalOff=(gt*SPD)%GAP;
-      ctx.strokeStyle='#3e3e3e';ctx.lineWidth=1.8;
       if(isH){
         const origin=fwd?MAP_OX+c2*TS:MAP_OX+(c2+1)*TS;
         const startX=fwd?origin-(((origin-MAP_OX)%GAP)-globalOff+GAP)%GAP:origin+(((MAP_OX+MAP_W-origin)%GAP)-globalOff+GAP)%GAP;
         const step=fwd?GAP:-GAP;
-        for(let x=startX;fwd?(x<px+TS+GAP):(x>px-GAP);x+=step){ctx.beginPath();ctx.moveTo(x,py+RAIL+1);ctx.lineTo(x,py+TS-RAIL-1);ctx.stroke();}
+        for(let x=startX;fwd?(x<px+TS+GAP):(x>px-GAP);x+=step){
+          if(x<px||x>px+TS)continue;
+          ctx.moveTo(x,py+RAIL+1);ctx.lineTo(x,py+TS-RAIL-1);
+        }
       }else{
         const origin=fwd?MAP_OY+r*TS:MAP_OY+(r+1)*TS;
         const startY=fwd?origin-(((origin-MAP_OY)%GAP)-globalOff+GAP)%GAP:origin+(((MAP_OY+MAP_H2-origin)%GAP)-globalOff+GAP)%GAP;
         const step=fwd?GAP:-GAP;
-        for(let y=startY;fwd?(y<py+TS+GAP):(y>py-GAP);y+=step){ctx.beginPath();ctx.moveTo(px+RAIL+1,y);ctx.lineTo(px+TS-RAIL-1,y);ctx.stroke();}
+        for(let y=startY;fwd?(y<py+TS+GAP):(y>py-GAP);y+=step){
+          if(y<py||y>py+TS)continue;
+          ctx.moveTo(px+RAIL+1,y);ctx.lineTo(px+TS-RAIL-1,y);
+        }
       }
-      ctx.restore();
     }
+    ctx.stroke();
 
     // 포털 (애니메이션 글로우)
-    this._drawPortalAnim(ctx,MAP_OX+ENTRY.c*TS,MAP_OY+ENTRY.r*TS,'#FF4500',gt);
-    this._drawPortalAnim(ctx,MAP_OX+EXIT.c*TS,MAP_OY+EXIT.r*TS,'#00E5FF',gt);
+    this._drawPortalAnim(ctx,MAP_OX+ENTRY.c*TS,MAP_OY+ENTRY.r*TS,'#FF4500',gt,this._entryGrad);
+    this._drawPortalAnim(ctx,MAP_OX+EXIT.c*TS,MAP_OY+EXIT.r*TS,'#00E5FF',gt,this._exitGrad);
   },
-  _drawPortalAnim(ctx,px,py,color,gt){
+  _drawPortalAnim(ctx,px,py,color,gt,grad){
     const pulse=.55+Math.sin(gt*3)*.2;
-    const g=ctx.createRadialGradient(px+TS/2,py+TS/2,1,px+TS/2,py+TS/2,TS*.52);
-    g.addColorStop(0,color+'66');g.addColorStop(1,'transparent');
-    ctx.fillStyle=g;ctx.fillRect(px,py,TS,TS);
+    ctx.fillStyle=grad;ctx.fillRect(px,py,TS,TS);
     ctx.strokeStyle=color;ctx.lineWidth=2+pulse;
     ctx.globalAlpha=.6+pulse*.5;
     ctx.beginPath();ctx.roundRect(px+2,py+2,TS-4,TS-4,3);ctx.stroke();
@@ -590,7 +601,9 @@ const R={
     // drone aircraft on absolute top layer (physically airborne)
     for(const t of GS.towers)if(t.type==='drone')t._drawDroneOrbit(ctx);
     for(const p of GS.particles)p.draw(ctx);
+    ctx.globalAlpha=1;
     for(const p of GS.popups)p.draw(ctx);
+    ctx.globalAlpha=1;
   }
 };
 
@@ -630,14 +643,13 @@ class Ore{
       if(this.shockTimer<=0)this.shockDps=0;
     }
     let mv=this._twinFreezeT>0?0:this.spd*dt;
-    while(mv>0&&this.pathIdx<PATH.length-1){
-      const fr=PATH[this.pathIdx],to=PATH[this.pathIdx+1];
-      const fx=R.tx(fr.c),fy=R.ty(fr.r),tx2=R.tx(to.c),ty2=R.ty(to.r);
-      const seg=Math.hypot(tx2-fx,ty2-fy),rem=seg*(1-this.progress);
-      if(mv>=rem){mv-=rem;this.pathIdx++;this.progress=0;this.x=tx2;this.y=ty2;}
-      else{this.progress+=mv/seg;this.x=fx+(tx2-fx)*this.progress;this.y=fy+(ty2-fy)*this.progress;mv=0;}
+    while(mv>0&&this.pathIdx<PATH_SEG.length){
+      const s=PATH_SEG[this.pathIdx];
+      const rem=s.len*(1-this.progress);
+      if(mv>=rem){mv-=rem;this.pathIdx++;this.progress=0;this.x=s.tx;this.y=s.ty;}
+      else{this.progress+=mv/s.len;this.x=s.fx+(s.tx-s.fx)*this.progress;this.y=s.fy+(s.ty-s.fy)*this.progress;mv=0;}
     }
-    if(this.pathIdx>=PATH.length-1){this.escaped=true;this.alive=false;}
+    if(this.pathIdx>=PATH_SEG.length){this.escaped=true;this.alive=false;}
   }
   takeDmg(dmg,dmgType='normal'){
     if(!this.alive)return;
@@ -651,10 +663,10 @@ class Ore{
   _die(){
     SFX.hit(this.grade>=3);
     if(this.special==='split'){for(let i=0;i<3;i++){const o=new Ore('normal',this.wave);o.pathIdx=this.pathIdx;o.progress=this.progress;o.x=this.x;o.y=this.y;GS.ores.push(o);}}
-    for(let i=0;i<12;i++)GS.particles.push(new Particle(this.x,this.y,this.color,i,12));
+    if(GS.particles.length<500){for(let i=0;i<12;i++)GS.particles.push(new Particle(this.x,this.y,this.color,i,12));}
     const pr=this.reward;
-    GS.port+=pr;GS.totalPort+=pr;GS.portHist.push({t:GS.time,v:pr});
-    GS.popups.push(new Popup(this.x,this.y-this.radius-5,'+'+pr,'#FFD700'));UI.updHUD();
+    GS.port+=pr;GS.totalPort+=pr;
+    if(GS.popups.length<80)GS.popups.push(new Popup(this.x,this.y-this.radius-5,'+'+pr,'#FFD700'));
   }
   applySlow(ratio,dur){if(this.freezeImmune>0)return;const res=ORE_RESIST[this.type];const eff=res&&res.slow!==undefined?ratio*res.slow:ratio;this._sR=Math.max(this._sR,eff);this.spd=this.baseSpd*(1-this._sR);if(this.slowTimer<dur)this.slowTimer=dur;}
   applyFreeze(dur){if(this.freezeImmune>0)return;if(this.freezeTimer<dur)this.freezeTimer=dur;}
@@ -669,12 +681,12 @@ class Ore{
     ctx.save();ctx.rotate(sp);
     const c=this.color;
     // hexagonal mineral crystal — 6-facet prism with directional lighting
-    const N6=6,vs=[];
-    for(let i=0;i<N6;i++){const a=(i/N6)*Math.PI*2-Math.PI/2;const ir=[1.0,.96,1.0,.95,1.0,.97][i];vs.push([Math.cos(a)*r*ir,Math.sin(a)*r*ir]);}
+    const N6=6,vs=new Array(N6);
+    for(let i=0;i<N6;i++){const a=(i/N6)*Math.PI*2-Math.PI/2;const ir=i===1?.96:i===3?.95:i===5?.97:1.0;vs[i]=[Math.cos(a)*r*ir,Math.sin(a)*r*ir];}
     // outer glow ring (grade-based)
-    if(this.grade>=2){ctx.shadowColor=c;ctx.shadowBlur=this.grade>=4?14:7;ctx.strokeStyle=c+(this.grade>=4?'66':'40');ctx.lineWidth=this.grade>=4?2.2:1.4;ctx.beginPath();vs.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();ctx.stroke();ctx.shadowBlur=0;}
+    if(this.grade>=2){ctx.shadowColor=c;ctx.shadowBlur=this.grade>=4?14:7;ctx.strokeStyle=c+(this.grade>=4?'66':'40');ctx.lineWidth=this.grade>=4?2.2:1.4;ctx.beginPath();ctx.moveTo(vs[0][0],vs[0][1]);for(let i=1;i<N6;i++)ctx.lineTo(vs[i][0],vs[i][1]);ctx.closePath();ctx.stroke();ctx.shadowBlur=0;}
     // base body gradient
-    ctx.beginPath();vs.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();
+    ctx.beginPath();ctx.moveTo(vs[0][0],vs[0][1]);for(let i=1;i<N6;i++)ctx.lineTo(vs[i][0],vs[i][1]);ctx.closePath();
     const g=ctx.createRadialGradient(-r*.16,-r*.22,r*.04,0,0,r);
     g.addColorStop(0,'#fff');g.addColorStop(.13,c);g.addColorStop(.54,c+'cc');g.addColorStop(1,c+'30');
     ctx.fillStyle=g;ctx.fill();
@@ -682,13 +694,15 @@ class Ore{
     const ft=['rgba(255,255,255,.22)','rgba(0,0,0,.07)','rgba(0,0,0,.18)','rgba(0,0,0,.26)','rgba(0,0,0,.12)','rgba(255,255,255,.30)'];
     for(let i=0;i<N6;i++){const[x1,y1]=vs[i],[x2,y2]=vs[(i+1)%N6];ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x1,y1);ctx.lineTo(x2,y2);ctx.closePath();ctx.fillStyle=ft[i];ctx.fill();}
     // crystal edge
-    ctx.beginPath();vs.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();
+    ctx.beginPath();ctx.moveTo(vs[0][0],vs[0][1]);for(let i=1;i<N6;i++)ctx.lineTo(vs[i][0],vs[i][1]);ctx.closePath();
     ctx.strokeStyle=c;ctx.lineWidth=this.grade>=3?2.0:1.4;ctx.stroke();
     // bright lit-edge highlight (upper-left edges, simulates surface plane angle)
     ctx.strokeStyle='rgba(255,255,255,.50)';ctx.lineWidth=1.4;
     ctx.beginPath();ctx.moveTo(vs[5][0],vs[5][1]);ctx.lineTo(vs[0][0],vs[0][1]);ctx.lineTo(vs[1][0],vs[1][1]);ctx.stroke();
-    // facet division spokes
-    for(let i=0;i<N6;i++){const[x,y]=vs[i];ctx.strokeStyle=c+'28';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x,y);ctx.stroke();}
+    // facet division spokes — batched into single stroke
+    ctx.strokeStyle=c+'28';ctx.lineWidth=.7;ctx.beginPath();
+    for(let i=0;i<N6;i++){ctx.moveTo(0,0);ctx.lineTo(vs[i][0],vs[i][1]);}
+    ctx.stroke();
     // inner hexagonal table (depth indicator — gemstone "girdle")
     ctx.beginPath();
     for(let i=0;i<6;i++){const a=(i/6)*Math.PI*2-Math.PI/2;i===0?ctx.moveTo(Math.cos(a)*r*.42,Math.sin(a)*r*.42):ctx.lineTo(Math.cos(a)*r*.42,Math.sin(a)*r*.42);}
@@ -740,7 +754,7 @@ class Tower{
   }
   _lm(){const m=TWR[this.tId]?.lvM;return m?m[this.level-1]:LVL[this.level-1].mult;}
   _megaMult(){return this.isMega?5:1;}
-  _eff(e){e.z=this.basePrice*(this.isMega?4:1);const z=e.z,arr=GS.effects;let i=arr.length;while(i>0&&(arr[i-1].z||0)>z)i--;arr.splice(i,0,e);return e;}
+  _eff(e){if(GS.effects.length>=120)return e;e.z=this.basePrice*(this.isMega?4:1);const z=e.z,arr=GS.effects;let i=arr.length;while(i>0&&(arr[i-1].z||0)>z)i--;arr.splice(i,0,e);return e;}
   _calcTwin(){this._tDmg=0;this._tSpd=0;}
   getDmg(){return TWR[this.tId].dmg*(1+this._tDmg)*this._lm()*this._megaMult();}
   getSpd(){return TWR[this.tId].spd*(1+this._tSpd)*LVL[this.level-1].mult;}
@@ -763,7 +777,7 @@ class Tower{
       }
       return;
     }
-    if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;const rng2=rng*rng;const rngH=rng+8,rngH2=rngH*rngH;const cx0=this.cx,cy0=this.cy;let best=null,bestHp=-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rngH2)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
+    if(tp==='scan'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const rng=this.getRange()*TS;const rng2=rng*rng;const rngH=rng+8,rngH2=rngH*rngH;const cx0=this.cx,cy0=this.cy;let best=null,bestHp=-1;for(const o of ores){if(!o.alive)continue;const _x=o.x-cx0,_y=o.y-cy0;if(_x*_x+_y*_y>rngH2)continue;if(o.hp>bestHp){bestHp=o.hp;best=o;}}if(!best)return;this.angle=Math.atan2(best.y-this.cy,best.x-this.cx);best.takeDmg(this.getDmg(),'scan');this._eff(new ExplodeEff(best.x,best.y,this.color));if(GS.particles.length<500){for(let i=0;i<8;i++)GS.particles.push(new Particle(best.x,best.y,this.color,i,8));}this.cooldown=1;this._firingT=.45;SFX.shoot('aoe');return;}
     if(tp==='twinhub'){
       this._aoeT+=dt;const iv=1/Math.max(.1,this.getSpd());
       if(this._aoeT>=iv){
@@ -783,7 +797,7 @@ class Tower{
       }
       return;
     }
-    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);tgt.takeDmg(this.getDmg(),'refinery');const _hp=[0.02,0.03,0.04,0.05];const _pp=this.isMega?0.25:_hp[this.level-1]||0.02;const _pg=Math.max(1,Math.floor(tgt.reward*_pp));GS.port+=_pg;GS.totalPort+=_pg;GS.popups.push(new Popup(this.cx,this.cy-14,'+◈'+_pg,'#FFD700'));UI.updHUD();this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
+    if(tp==='refinery'){if(this.cooldown>0){this.cooldown-=dt*this.getSpd();return;}const tgt=this._findTgt(ores);if(!tgt)return;this.angle=Math.atan2(tgt.y-this.cy,tgt.x-this.cx);tgt.takeDmg(this.getDmg(),'refinery');const _hp=[0.02,0.03,0.04,0.05];const _pp=this.isMega?0.25:_hp[this.level-1]||0.02;const _pg=Math.max(1,Math.floor(tgt.reward*_pp));GS.port+=_pg;GS.totalPort+=_pg;if(GS.popups.length<80)GS.popups.push(new Popup(this.cx,this.cy-14,'+◈'+_pg,'#FFD700'));this._eff(new ZapEff(this.cx,this.cy,tgt.x,tgt.y,this.color));this.cooldown=1;this._firingT=.22;SFX.shoot('refinery');return;}
     if(tp==='drone'){
       this._droneAngle+=dt*(0.55+this._lm()*.08);
       const rng=this.getRange()*TS;const rng2=rng*rng;const rngH=rng+8,rngH2=rngH*rngH;const cx0=this.cx,cy0=this.cy;
@@ -1927,8 +1941,8 @@ class BoltEff{
     ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.restore();
   }
 }
-class Particle{constructor(x,y,col,i,n){this.x=x;this.y=y;this.col=col;const a=(i/n)*Math.PI*2+Math.random()*.5,sp=48+Math.random()*88;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.life=this.max=.48+Math.random()*.32;this.r=2+Math.random()*3;}update(dt){this.x+=this.vx*dt;this.y+=this.vy*dt;this.vy+=80*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p;ctx.fillStyle=this.col;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}}
-class Popup{constructor(x,y,text,col,scale=1){this.x=x;this.y=y;this.text=text;this.col=col;this.life=this.max=1.6;this.vy=-36;this.scale=scale;}update(dt){this.y+=this.vy*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=Math.min(1,this.life/this.max*1.5);ctx.globalAlpha=p;const fs=Math.round(13*this.scale);ctx.font=`900 ${fs}px sans-serif`;ctx.fillStyle=this.col;ctx.textAlign='center';ctx.textBaseline='middle';if(this.scale>1){ctx.shadowColor=this.col;ctx.shadowBlur=8;}ctx.fillText(this.text,this.x,this.y);ctx.shadowBlur=0;ctx.globalAlpha=1;}}
+class Particle{constructor(x,y,col,i,n){this.x=x;this.y=y;this.col=col;const a=(i/n)*Math.PI*2+Math.random()*.5,sp=48+Math.random()*88;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.life=this.max=.48+Math.random()*.32;this.r=2+Math.random()*3;}update(dt){this.x+=this.vx*dt;this.y+=this.vy*dt;this.vy+=80*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=this.life/this.max;ctx.globalAlpha=p;ctx.fillStyle=this.col;ctx.beginPath();ctx.arc(this.x,this.y,this.r*p,0,Math.PI*2);ctx.fill();}}
+class Popup{constructor(x,y,text,col,scale=1){this.x=x;this.y=y;this.text=text;this.col=col;this.life=this.max=1.6;this.vy=-36;this.scale=scale;}update(dt){this.y+=this.vy*dt;this.life-=dt;}draw(ctx){if(this.life<=0)return;const p=Math.min(1,this.life/this.max*1.5);ctx.globalAlpha=p;const fs=Math.round(13*this.scale);ctx.font=`900 ${fs}px sans-serif`;ctx.fillStyle=this.col;ctx.textAlign='center';ctx.textBaseline='middle';if(this.scale>1){ctx.shadowColor=this.col;ctx.shadowBlur=8;}ctx.fillText(this.text,this.x,this.y);ctx.shadowBlur=0;}}
 
 // ═══════════════════════════════════════════════════════
 // 합체 시스템
@@ -1970,10 +1984,10 @@ function checkMerge(){
 // ═══════════════════════════════════════════════════════
 function makeWave(w){
   const pool=getPool(w),totalCount=countS(w),q=[];
-  const rushes=w<=3?1:w<=20?3:w<=50?4:5;
+  const rushes=w<=2?1:w<=5?2:w<=25?3:w<=60?4:5;
   const perRush=Math.ceil(totalCount/rushes);
-  const interval=w<=1?1.4:w<=3?1.0:w<=20?0.50:w<=50?0.38:0.28;
-  const rushGap=w<=20?9:w<=50?6:4;
+  const interval=w<=2?1.6:w<=5?0.9:w<=20?0.40:w<=50?0.32:w<=75?0.23:0.17;
+  const rushGap=w<=20?10:w<=50?7:w<=75?5:3;
   let t=0;
   for(let ri=0;ri<rushes;ri++){
     const n=ri<rushes-1?perRush:totalCount-perRush*(rushes-1);
@@ -2102,7 +2116,7 @@ const UI={
     cv.addEventListener('mouseleave',()=>{GS.hovR=null;GS.hovC=null;});
     // 전역 버튼 클릭음
     const _onBtn=e=>{
-      const t=e.target.closest('button,#wbtn,#abtn,#hport-ico,.si,.tc,.mi-cls');
+      const t=e.target.closest('button,#abtn,#hport-ico,.si,.tc,.mi-cls');
       if(!t||t.disabled||t.classList.contains('dis')||t.classList.contains('locked-card'))return;
       SFX.btn();
     };
@@ -2343,17 +2357,18 @@ const UI={
     document.getElementById('helpovly').classList.remove('show');
   },
 
+  _domCache:{},
+  _dc(id){return this._domCache[id]||(this._domCache[id]=document.getElementById(id));},
   updHUD(){
-    document.getElementById('hport').textContent=GS.eggActive?'∞':Math.floor(GS.port).toLocaleString();
+    this._dc('hport').textContent=GS.eggActive?'∞':Math.floor(GS.port).toLocaleString();
     const st=Math.floor(GS.stability);
-    const stEl=document.getElementById('hstab');stEl.textContent=st;
+    const stEl=this._dc('hstab');stEl.textContent=st;
     stEl.className='hv'+(st<=25?' d':st<=50?' w':' g');
-    document.getElementById('sfill').style.width=st+'%';
-    document.getElementById('sfill').style.background=st>50?'#FF4500':st>25?'#FF5722':'#BF360C';
+    const sf=this._dc('sfill');sf.style.width=st+'%';sf.style.background=st>50?'#FF4500':st>25?'#FF5722':'#BF360C';
     const tt=Math.floor(GS.time);
-    document.getElementById('htime').textContent=`${Math.floor(tt/60)}:${String(tt%60).padStart(2,'0')}`;
-    document.getElementById('hwave').textContent='W'+GS.wave;
-    document.getElementById('wnum').textContent='→ W'+(GS.wave+1);
+    this._dc('htime').textContent=`${Math.floor(tt/60)}:${String(tt%60).padStart(2,'0')}`;
+    this._dc('hwave').textContent='W'+GS.wave;
+    this._dc('wnum').textContent='→ W'+(GS.wave+1);
     for(const[id,el]of Object.entries(this._cards)){
       const locked=!GS.unlocked.has(id);
       el.classList.toggle('locked-card',locked);
@@ -2362,8 +2377,8 @@ const UI={
       if(locked&&!li){li=document.createElement('div');li.className='lock-ico';el.appendChild(li);}
       else if(!locked&&li){li.remove();}
     }
-    document.getElementById('wbtn').classList.toggle('dis',GS.waveActive);
-    if(this.selTwr&&document.getElementById('mid-info').classList.contains('show'))
+    this._dc('wbtn').classList.toggle('dis',GS.waveActive);
+    if(this.selTwr&&this._dc('mid-info').classList.contains('show'))
       this._showTowerInfo(this.selTwr);
   },
 
@@ -2525,26 +2540,32 @@ const G={
   },
 
   _upd(dt){
-    if(dt<=0)return;GS.time+=dt;    if(GS.waveActive&&GS.oreQ.length>0){
+    if(dt<=0)return;GS.time+=dt;
+    if(GS.waveActive&&GS.oreQIdx<GS.oreQ.length){
       GS.spawnT+=dt;
-      while(GS.oreQ.length>0&&GS.spawnT>=GS.oreQ[0].delay)GS.ores.push(new Ore(GS.oreQ.shift().type,GS.wave));
+      while(GS.oreQIdx<GS.oreQ.length&&GS.spawnT>=GS.oreQ[GS.oreQIdx].delay)
+        GS.ores.push(new Ore(GS.oreQ[GS.oreQIdx++].type,GS.wave));
     }
     if(GS.autoActive){
-      GS.autoTimer-=dt;const cd=document.getElementById('acd');
+      GS.autoTimer-=dt;const cd=UI._dc('acd');
       if(GS.autoTimer>0)cd.textContent=`다음까지 ${Math.ceil(GS.autoTimer)}초`;
       else{cd.textContent='';GS.autoActive=false;this.nextWave();}
     }
     for(const o of GS.ores)o.update(dt);
-    for(let i=GS.ores.length-1;i>=0;i--){
-      const o=GS.ores[i];
-      if(o.escaped){GS.stability-=o.escapeDmg;GS.popups.push(new Popup(R.tx(EXIT.c),R.ty(EXIT.r),'-'+o.escapeDmg,'#EF5350'));GS.ores.splice(i,1);UI.updHUD();if(GS.stability<=0){GS.stability=0;GS.running=false;SFX.gameOver();UI.showResult();return;}}
+    let anyEscaped=false;
+    for(const o of GS.ores){
+      if(!o.escaped)continue;
+      GS.stability-=o.escapeDmg;
+      GS.popups.push(new Popup(R.tx(EXIT.c),R.ty(EXIT.r),'-'+o.escapeDmg,'#EF5350'));
+      anyEscaped=true;
+      if(GS.stability<=0){GS.stability=0;sweepArr(GS.ores,o=>o.alive);GS.running=false;SFX.gameOver();UI.showResult();return;}
     }
+    if(anyEscaped)UI.updHUD();
     sweepArr(GS.ores,o=>o.alive);
-    if(GS.waveActive&&GS.oreQ.length===0&&GS.ores.length===0){
+    if(GS.waveActive&&GS.oreQIdx>=GS.oreQ.length&&GS.ores.length===0){
       GS.waveActive=false;
-      // 클리어 보상: 초반엔 넉넉히, 후반엔 크게
-      const bonus=Math.floor(300+GS.wave*165+Math.pow(GS.wave,1.5)*6.0);
-      GS.port+=bonus;GS.totalPort+=bonus;GS.portHist.push({t:GS.time,v:bonus});
+      const bonus=Math.floor(400+GS.wave*175+Math.pow(GS.wave,1.6)*4.0);
+      GS.port+=bonus;GS.totalPort+=bonus;
       SFX.clear();
       if(GS.wave>=100){GS.running=false;SFX.victory();UI.showResult();return;}
       UI.showBanner(`W${GS.wave} 클리어 +◈${bonus.toLocaleString()}`,'#FF4500');UI.updHUD();
@@ -2552,7 +2573,8 @@ const G={
     }
     for(const t of GS.towers)t.update(dt,GS.ores);
     for(const p of GS.projs)p.update(dt);sweepArr(GS.projs,p=>p.alive);
-    for(let i=GS.echoQ.length-1;i>=0;i--){const e=GS.echoQ[i];e.t-=dt;if(e.t<=0){if(e.ore.alive){e.ore.takeDmg(e.dmg,'single');GS.effects.push(new CoreEchoEff(e.ore.x,e.ore.y,e.col));SFX.shoot('coreShooter');}GS.echoQ.splice(i,1);}}
+    for(const e of GS.echoQ){e.t-=dt;if(e.t<=0&&e.ore.alive){e.ore.takeDmg(e.dmg,'single');if(GS.effects.length<120)GS.effects.push(new CoreEchoEff(e.ore.x,e.ore.y,e.col));SFX.shoot('coreShooter');}}
+    sweepArr(GS.echoQ,e=>e.t>0);
     for(const p of GS.particles)p.update(dt);sweepArr(GS.particles,p=>p.life>0);
     for(const p of GS.popups)p.update(dt);sweepArr(GS.popups,p=>p.life>0);
     for(const e of GS.effects)e.update(dt);sweepArr(GS.effects,e=>e.life>0);
@@ -2561,8 +2583,8 @@ const G={
 
   nextWave(){
     if(!GS.running||GS.waveActive||GS.wave>=100)return;
-    GS.autoActive=false;document.getElementById('acd').textContent='';
-    GS.wave++;GS.oreQ=makeWave(GS.wave);GS.spawnT=0;GS.waveActive=true;
+    GS.autoActive=false;UI._dc('acd').textContent='';
+    GS.wave++;GS.oreQ=makeWave(GS.wave);GS.oreQIdx=0;GS.spawnT=0;GS.waveActive=true;
     SFX.waveStart();
     UI.updHUD();UI.showBanner(`웨이브 ${GS.wave} 시작`,'#FF4500');
   },
@@ -2600,7 +2622,7 @@ const G={
   toggleSpeed(){GS.speed=GS.speed===1?2:1;const btn=document.getElementById('bspd');if(btn){btn.textContent='×'+GS.speed;btn.classList.toggle('on',GS.speed===2);}},
   toggleAuto(){
     GS.autoWave=!GS.autoWave;document.getElementById('abtn').classList.toggle('on',GS.autoWave);
-    if(!GS.autoWave){GS.autoActive=false;document.getElementById('acd').textContent='';}
+    if(!GS.autoWave){GS.autoActive=false;UI._dc('acd').textContent='';}
     UI.showBanner('자동 웨이브 '+(GS.autoWave?'켜짐 (5초)':'꺼짐'),GS.autoWave?'#00E5FF':'#5a7898');
   },
 
@@ -2618,7 +2640,7 @@ const G={
     }
     // 20초: 100웨이브 즉시 클리어
     if(this._eggWindow20){
-      GS.wave=100;GS.waveActive=false;GS.oreQ=[];GS.ores=[];
+      GS.wave=100;GS.waveActive=false;GS.oreQ=[];GS.oreQIdx=0;GS.ores=[];
       GS.running=false;GS.paused=false;
       document.getElementById('pauseovly').classList.remove('show');
       SFX.victory();UI.showResult();return;
@@ -2626,7 +2648,7 @@ const G={
     // 30초: 포트 무한 + 전 유닛 해금 + W49 완료 (다음 웨이브 W50)
     if(GS.running&&this._eggWindow30){
       _unlock();
-      GS.ores=[];GS.projs=[];GS.oreQ=[];GS.echoQ=[];GS.waveActive=false;
+      GS.ores=[];GS.projs=[];GS.oreQ=[];GS.oreQIdx=0;GS.echoQ=[];GS.waveActive=false;
       GS.wave=49;
       UI.showBanner('W50 도전 준비 — 설비 배치 후 웨이브 시작','#FF4500');return;
     }
