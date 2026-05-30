@@ -372,45 +372,45 @@ function getDir(r,c){
 
 // 밸런스
 function getPool(w){
-  if(w<=6) return['normal'];
-  if(w<=12)return['normal','normal','fast'];
-  if(w<=19)return['normal','fast','multi'];
-  if(w<=27)return['normal','fast','multi','dense'];
-  if(w<=37)return['fast','multi','dense','pure'];
-  if(w<=49)return['fast','multi','dense','pure','unstable'];
-  if(w<=63)return['multi','dense','pure','unstable','compres'];
-  if(w<=80)return['dense','pure','unstable','compres'];
+  // W1-9: normal만 (초보 친화), W10부터 점진적으로 고난이도 광물 추가
+  if(w<=9)  return['normal'];
+  if(w<=15) return['normal','normal','fast'];
+  if(w<=22) return['normal','fast','multi'];
+  if(w<=30) return['normal','fast','multi','dense'];
+  if(w<=40) return['fast','multi','dense','pure'];
+  if(w<=52) return['fast','multi','dense','pure','unstable'];
+  if(w<=65) return['multi','dense','pure','unstable','compres'];
+  if(w<=80) return['dense','pure','unstable','compres'];
   return['unstable','compres','dense'];
 }
 function hpS(w){
-  // W10≈2 → W20≈7 → W30≈18 → W50≈100 → W70≈550 → W80≈1700 → W90≈3500 → W100≈6500
-  if(w<=1) return 1.0;
-  if(w<=10)return 1.0+(w-1)*0.111;
-  if(w<=20)return hpS(10)+(w-10)*0.50;
-  if(w<=30)return hpS(20)+(w-20)*1.10;
-  if(w<=50)return hpS(30)+(w-30)*4.10;
-  if(w<=70)return hpS(50)+(w-50)*22.5;
-  if(w<=80)return hpS(70)+(w-70)*115.0;
-  if(w<=90)return hpS(80)+(w-80)*180.0;
-  return hpS(90)+(w-90)*300.0;        // W100≈6500
+  // W1-9:1.0→1.30(쉬움) | W10:1.5(도약시작) | W20:6 | W50:150 | W85:3200 | W100:9000
+  if(w<=9) return 1.0+(w-1)*0.0375;          // W9≈1.30
+  if(w<=20)return 1.5+(w-10)*0.45;           // W10:1.5 → W20:6.0
+  if(w<=30)return hpS(20)+(w-20)*1.40;       // W30:20.0
+  if(w<=50)return hpS(30)+(w-30)*6.50;       // W50:150.0
+  if(w<=70)return hpS(50)+(w-50)*32.5;       // W70:800.0
+  if(w<=85)return hpS(70)+(w-70)*160.0;      // W85:3200.0
+  if(w<=95)return hpS(85)+(w-85)*480.0;      // W95:8000.0
+  return hpS(95)+(w-95)*200.0;               // W100:9000
 }
 function spdS(w){
-  if(w<=10)return 1+Math.min(w-1,9)*0.007;
-  if(w<=20)return spdS(10)+(w-10)*0.012;
-  if(w<=50)return spdS(20)+(w-20)*0.020;
-  if(w<=70)return spdS(50)+(w-50)*0.045;
-  if(w<=90)return spdS(70)+(w-70)*0.090;
-  return spdS(90)+(w-90)*0.200;        // W100≈6.5x
+  // W1-9:1.0→1.05(거의 고정) | W10:1.10(도약) | W20:1.25 | W70:2.80 | W100:7.0x
+  if(w<=9) return 1.0+(w-1)*0.00625;         // W9:1.05
+  if(w<=20)return 1.10+(w-10)*0.015;         // W10:1.10 → W20:1.25
+  if(w<=50)return spdS(20)+(w-20)*0.01833;   // W50:1.80
+  if(w<=70)return spdS(50)+(w-50)*0.05;      // W70:2.80
+  if(w<=90)return spdS(70)+(w-70)*0.10;      // W90:4.80
+  return spdS(90)+(w-90)*0.22;               // W100:7.0x
 }
 function countS(w){
-  if(w<=1) return 14;
-  if(w<=3) return Math.floor(14+(w-1)*13);    // W2:27, W3:40
-  if(w<=5) return Math.floor(40+(w-3)*18);    // W4:58, W5:76
-  if(w<=10)return Math.floor(76+(w-5)*13);    // W6:89→W10:141
-  if(w<=20)return Math.floor(141+(w-10)*12);  // W20:261
-  if(w<=50)return Math.floor(261+(w-20)*12);  // W50:621
-  if(w<=75)return Math.floor(621+(w-50)*18);  // W75:1071
-  return Math.floor(1071+(w-75)*40);           // W100≈2071
+  // W1-5: 1러시로 소수 광물(초보용) | W10부터 본격 증가 | W100≈2007
+  if(w<=5) return Math.floor(10+(w-1)*5.25);  // W1:10 → W5:31
+  if(w<=10)return Math.floor(31+(w-5)*5.2);   // W6:36 → W10:57
+  if(w<=20)return Math.floor(68+(w-11)*5.5);  // W11:68 → W20:117
+  if(w<=50)return Math.floor(117+(w-20)*13);  // W21:130 → W50:507
+  if(w<=75)return Math.floor(507+(w-50)*16);  // W51:523 → W75:907
+  return Math.floor(907+(w-75)*44);            // W76:951 → W100:2007
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1984,10 +1984,10 @@ function checkMerge(){
 // ═══════════════════════════════════════════════════════
 function makeWave(w){
   const pool=getPool(w),totalCount=countS(w),q=[];
-  const rushes=w<=2?1:w<=5?2:w<=25?3:w<=60?4:5;
+  const rushes=w<=5?1:w<=20?2:w<=55?3:w<=75?4:5;
   const perRush=Math.ceil(totalCount/rushes);
-  const interval=w<=2?1.6:w<=5?0.9:w<=20?0.40:w<=50?0.32:w<=75?0.23:0.17;
-  const rushGap=w<=20?10:w<=50?7:w<=75?5:3;
+  const interval=w<=5?1.5:w<=10?1.2:w<=20?1.1:w<=50?0.50:w<=75?0.35:0.22;
+  const rushGap=w<=20?10:w<=50?8:w<=75?6:4;
   let t=0;
   for(let ri=0;ri<rushes;ri++){
     const n=ri<rushes-1?perRush:totalCount-perRush*(rushes-1);
