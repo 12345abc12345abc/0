@@ -75,50 +75,41 @@ const SFX={
     if(_now-(this._shootCd[type]||0)<_minMs)return;
     this._shootCd[type]=_now;
     if(type==='single'||type==='pixelArm'){
-      // 픽셀 로봇암: 짧은 기계 클릭
-      this._osc('square',320,.06,.18);
-      this._osc('sawtooth',180,.08,.10);
+      this._osc('square',320,.06,.12);
+      this._osc('sawtooth',180,.08,.12);
     } else if(type==='coreShooter'){
-      // 코어 슈터: 둔탁한 포탄음
-      this._osc('sawtooth',260,.04,.22);
-      this._osc('sine',90,.14,.28);
-      this._noise(.08,.12,180);
+      this._osc('sawtooth',260,.04,.08);
+      this._osc('sine',90,.14,.08);
+      this._noise(.08,.08,180);
     } else if(type==='magnetCannon'||type==='slow'){
-      // 마그넷 캐논: 전자기 윙~
-      this._osc('sine',440,.03,.15);
-      this._osc('sine',220,.18,.20);
-      this._osc('square',55,.12,.10);
+      this._osc('sine',440,.03,.08);
+      this._osc('sine',220,.18,.08);
+      this._osc('square',55,.12,.08);
     } else if(type==='plasmaCutter'||type==='pierce'){
-      // 플라즈마 커터: 강렬한 레이저 포
-      this._osc('sawtooth',600,.02,.25);
-      this._osc('sawtooth',300,.12,.22);
-      this._osc('sine',80,.2,.28);
-      this._noise(.1,.14,400);
+      this._osc('sawtooth',600,.02,.06);
+      this._osc('sawtooth',300,.12,.06);
+      this._osc('sine',80,.2,.06);
+      this._noise(.1,.06,400);
     } else if(type==='refinery'){
-      // 정제소: 짧은 전격 지직
-      this._noise(.04,.28,2400);
-      this._osc('sawtooth',880,.02,.14);
+      this._noise(.04,.08,2400);
+      this._osc('sawtooth',880,.02,.08);
       this._osc('square',180,.05,.08);
     } else if(type==='drone'){
-      // 레이스 드론: 고주파 윙 + 전자 버즈
-      this._osc('sawtooth',1800,.03,.09,300);
-      this._osc('sine',600,.06,.11);
-      this._noise(.04,.10,4500);
+      this._osc('sawtooth',1800,.03,.08,300);
+      this._osc('sine',600,.06,.08);
+      this._noise(.04,.08,4500);
     } else if(type==='aoe'){
-      // 레이저 그리드: 강렬한 전기 방전
-      this._osc('sawtooth',100,.12,.20);
-      this._osc('square',200,.07,.16);
-      this._noise(.14,.18,700);
+      this._osc('sawtooth',100,.12,.08);
+      this._osc('square',200,.07,.08);
+      this._noise(.14,.08,700);
     } else if(type==='twinhub'){
-      // 트윈 컨트롤러: 부드러운 에너지 필드 파동
-      this._osc('sine',160,.12,.32);
-      this._osc('sine',80,.16,.26);
-      this._osc('triangle',320,.04,.18);
+      this._osc('sine',160,.12,.08);
+      this._osc('sine',80,.16,.08);
+      this._osc('triangle',320,.04,.08);
     } else if(type==='scanner'){
-      // 비전 스캐너: 고주파 타겟팅 스캔
-      this._osc('sine',1400,.02,.18,700);
-      this._osc('sawtooth',480,.06,.22);
-      this._noise(.03,.12,3000);
+      this._osc('sine',1400,.02,.08,700);
+      this._osc('sawtooth',480,.06,.08);
+      this._noise(.03,.08,3000);
     }
   },
 
@@ -128,8 +119,8 @@ const SFX={
     const _n=performance.now();
     if(_n-(this._btnCd||0)<60)return;
     this._btnCd=_n;
-    this._osc('sine',920,.03,.06);
-    this._noise(.008,.04,5000);
+    this._osc('sine',920,.03,.12);
+    this._noise(.008,.12,5000);
   },
 
   // ── 원석 처치음 ─────────────────────────────────
@@ -139,13 +130,11 @@ const SFX={
     if(_hn-(this._hitCd[_hk]||0)<70)return;
     this._hitCd[_hk]=_hn;
     if(isBig){
-      // 큰 원석: 금속 충격 + 잔향
-      this._noise(.06,.28,900);
-      this._osc('sine',140,.18,.22);
-      this._osc('triangle',280,.08,.14);
+      this._noise(.06,.08,900);
+      this._osc('sine',140,.18,.08);
+      this._osc('triangle',280,.08,.08);
     } else {
-      // 일반: 작고 또렷한 틱
-      this._noise(.04,.18,1200);
+      this._noise(.04,.12,1200);
       this._osc('sine',200,.06,.12);
     }
   },
@@ -153,11 +142,10 @@ const SFX={
   // ── 체인볼트 번개음 ──────────────────────────────
   chain(){
     if(!this._on)return;
-    // 지직지직 전기음
-    this._noise(.07,.32,2200);
-    this._noise(.05,.22,800);
-    this._osc('sawtooth',880,.03,.14);
-    this._osc('square',110,.1,.10);
+    this._noise(.07,.06,2200);
+    this._noise(.05,.06,800);
+    this._osc('sawtooth',880,.03,.06);
+    this._osc('square',110,.1,.06);
   },
 
   // ── 웨이브 시작음 ────────────────────────────────
@@ -170,25 +158,25 @@ const SFX={
     const bd=buf.getChannelData(0);
     for(let i=0;i<bd.length;i++){const t=i/ctx.sampleRate;bd[i]=Math.sin(2*Math.PI*160*Math.exp(-t*20)*t*6)*Math.exp(-t*9);}
     const ks=ctx.createBufferSource();ks.buffer=buf;
-    const kg=ctx.createGain();kg.gain.value=.6;
+    const kg=ctx.createGain();kg.gain.value=.10;
     ks.connect(kg);kg.connect(this._master);ks.start(now);
     // 상승 신스
     const o1=ctx.createOscillator(),g1=ctx.createGain();
     o1.type='sawtooth';
     o1.frequency.setValueAtTime(60,now+.04);
     o1.frequency.exponentialRampToValueAtTime(720,now+.28);
-    g1.gain.setValueAtTime(.28,now+.04);
+    g1.gain.setValueAtTime(.10,now+.04);
     g1.gain.exponentialRampToValueAtTime(.0001,now+.42);
     o1.connect(g1);g1.connect(this._master);o1.start(now+.04);o1.stop(now+.45);
     // 금속 노이즈 burst
-    this._noise(.05,.25,3800);
+    this._noise(.05,.10,3800);
     // 경고 비프 ×2
     for(let i=0;i<2;i++){
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type='square';o.frequency.value=330;
       const t=now+.12+i*.17;
-      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.16,t+.02);
-      g.gain.setValueAtTime(.16,t+.07);g.gain.linearRampToValueAtTime(.0001,t+.12);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.10,t+.02);
+      g.gain.setValueAtTime(.10,t+.07);g.gain.linearRampToValueAtTime(.0001,t+.12);
       o.connect(g);g.connect(this._master);o.start(t);o.stop(t+.16);
     }
   },
@@ -196,39 +184,37 @@ const SFX={
   // ── 클리어음 ─────────────────────────────────────
   clear(){
     if(!this._on)return;
-    // 경쾌한 상승 3화음
     const ctx=this._ctx;this._resume();
     const notes=[440,554,659,880];
     notes.forEach((f,i)=>{
       const now=ctx.currentTime+i*.09;
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type='triangle';o.frequency.value=f;
-      g.gain.setValueAtTime(.22,now);g.gain.exponentialRampToValueAtTime(.0001,now+.38);
+      g.gain.setValueAtTime(.10,now);g.gain.exponentialRampToValueAtTime(.0001,now+.38);
       o.connect(g);g.connect(this._master);o.start(now);o.stop(now+.4);
     });
-    this._noise(.06,.1,600);
+    this._noise(.06,.10,600);
   },
 
   // ── 게임오버음 ───────────────────────────────────
   gameOver(){
     if(!this._on)return;this._resume();
     const ctx=this._ctx,now=ctx.currentTime;
-    // 내려가는 음 + 저음 폭발
     [440,330,220,110].forEach((f,i)=>{
       const t=now+i*.18;
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type='sawtooth';o.frequency.value=f;
-      g.gain.setValueAtTime(.3,t);g.gain.exponentialRampToValueAtTime(.0001,t+.35);
+      g.gain.setValueAtTime(.10,t);g.gain.exponentialRampToValueAtTime(.0001,t+.35);
       o.connect(g);g.connect(this._master);o.start(t);o.stop(t+.4);
     });
-    this._noise(.5,.22,60);
+    this._noise(.5,.10,60);
   },
 
   // ── 설치음 ───────────────────────────────────────
   place(){
     if(!this._on)return;
-    this._osc('sine',440,.04,.15);
-    this._osc('sine',660,.07,.12);
+    this._osc('sine',440,.04,.08);
+    this._osc('sine',660,.07,.08);
     this._noise(.04,.08,800);
   },
 
@@ -240,7 +226,7 @@ const SFX={
       const t=now+i*.055;
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type='triangle';o.frequency.value=f;
-      g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.0001,t+.22);
+      g.gain.setValueAtTime(.10,t);g.gain.exponentialRampToValueAtTime(.0001,t+.22);
       o.connect(g);g.connect(this._master);o.start(t);o.stop(t+.25);
     });
   },
@@ -249,24 +235,22 @@ const SFX={
   victory(){
     if(!this._on)return;this._init();this._resume();
     const ctx=this._ctx,now=ctx.currentTime;
-    // 웅장한 팡파레
     const melody=[523,659,784,1047,784,1047,1319];
     melody.forEach((f,i)=>{
       const t=now+i*.13;
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type='triangle';o.frequency.value=f;
-      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.28,t+.04);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.10,t+.04);
       g.gain.exponentialRampToValueAtTime(.0001,t+.55);
       o.connect(g);g.connect(this._master);o.start(t);o.stop(t+.6);
     });
-    // 베이스 화음
     [261,329,392].forEach((f,i)=>{
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type='sine';o.frequency.value=f;
-      g.gain.setValueAtTime(.18,now);g.gain.exponentialRampToValueAtTime(.0001,now+1.2);
+      g.gain.setValueAtTime(.10,now);g.gain.exponentialRampToValueAtTime(.0001,now+1.2);
       o.connect(g);g.connect(this._master);o.start(now);o.stop(now+1.3);
     });
-    this._noise(.08,.18,600);
+    this._noise(.08,.10,600);
   },
 
   toggle(){
@@ -2050,6 +2034,8 @@ const UI={
     if(!GS.unlocked.has(id))return;
     if(this.selCard===id){this.selCard=null;document.querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));this._showPromo();return;}
     if(this.selTwr){this.selTwr=null;this._hideMidInfo();}
+    this._pendAction=null;this._pendRow=null;this._pendCol=null;
+    document.getElementById('mid-confirm').classList.remove('show');
     this.selCard=id;
     document.querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));
     this._cards[id]?.classList.add('sel');
@@ -2114,10 +2100,13 @@ const UI={
     },{passive:false});
     cv.addEventListener('mousemove',e=>{if(!GS.running)return;const p=getP(e);GS.hovR=p.row;GS.hovC=p.col;});
     cv.addEventListener('mouseleave',()=>{GS.hovR=null;GS.hovC=null;});
-    // 전역 버튼 클릭음
+    // 전역 버튼 클릭음 — touchstart 후 합성 mousedown 중복 차단
+    let _lastTouchMs=0;
     const _onBtn=e=>{
       const t=e.target.closest('button,#abtn,#hport-ico,.si,.tc,.mi-cls');
       if(!t||t.disabled||t.classList.contains('dis')||t.classList.contains('locked-card'))return;
+      if(e.type==='touchstart'){_lastTouchMs=performance.now();SFX.btn();return;}
+      if(performance.now()-_lastTouchMs<500)return;
       SFX.btn();
     };
     document.addEventListener('mousedown',_onBtn,{passive:true});
