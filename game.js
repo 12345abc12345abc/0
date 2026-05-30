@@ -1987,6 +1987,11 @@ function makeWave(w){
 // UI
 // ═══════════════════════════════════════════════════════
 window.LANG=localStorage.getItem('lang')||'ko';
+// SVG 아이콘 — 직접 그린 벡터
+const _I={
+  play:`<svg viewBox="0 0 9 12" width="9" height="12" fill="currentColor" style="vertical-align:-2px;margin-right:2px"><polygon points="0,0 9,6 0,12"/></svg>`,
+  back:`<svg viewBox="0 0 14 12" width="14" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><polyline points="5,1 1,6 5,11"/><path d="M1,6H9.5Q13.5,6 13.5,2"/></svg>`,
+};
 function L(ko,en){return LANG==='en'?en:ko;}
 const UI={
   selCard:null,selTwr:null,_cards:{},_bt:null,
@@ -2103,7 +2108,7 @@ const UI={
     // 전역 버튼 클릭음 — touchstart 후 합성 mousedown 중복 차단
     let _lastTouchMs=0;
     const _onBtn=e=>{
-      const t=e.target.closest('button,#abtn,#hport-ico,.si,.tc,.mi-cls');
+      const t=e.target.closest('button,#abtn,.si,.tc,.mi-cls');
       if(!t||t.disabled||t.classList.contains('dis')||t.classList.contains('locked-card'))return;
       if(e.type==='touchstart'){_lastTouchMs=performance.now();SFX.btn();return;}
       if(performance.now()-_lastTouchMs<500)return;
@@ -2298,7 +2303,7 @@ const UI={
   },
   applyLang(){
     const ko=LANG==='ko';
-    const ts=document.getElementById('title-start');if(ts)ts.innerHTML=ko?'▶ &nbsp;공장 가동 시작':'▶ &nbsp;Start Game';
+    const ts=document.getElementById('title-start');if(ts)ts.innerHTML=ko?`${_I.play}&nbsp;공장 가동 시작`:`${_I.play}&nbsp;Start Game`;
     const th=document.getElementById('title-help');if(th)th.textContent=ko?'게임 방법':'How To Play';
     const tlb=document.getElementById('title-lang-btn');if(tlb)tlb.textContent=ko?'English':'한국어';
     const tsb=document.getElementById('title-sfx-btn');if(tsb)tsb.textContent=(ko?'효과음':'SFX')+' '+(SFX._on!==false?'ON':'OFF');
@@ -2314,8 +2319,8 @@ const UI={
     const hs=document.getElementById('hlb-stab');if(hs)hs.textContent=ko?'안정성':'Stability';
     const wbl=document.getElementById('wbtn-lbl');if(wbl)wbl.textContent=ko?'웨이브':'Wave';
     const abl=document.getElementById('abtn-lbl');if(abl)abl.innerHTML=ko?'자동<br>웨이브':'Auto<br>Wave';
-    const pr=document.getElementById('pbtn-resume');if(pr)pr.innerHTML=ko?'▶ &nbsp;계속하기':'▶ &nbsp;Resume';
-    const prs=document.getElementById('pbtn-restart');if(prs)prs.innerHTML=ko?'↩ &nbsp;다시 시작':'↩ &nbsp;Restart';
+    const pr=document.getElementById('pbtn-resume');if(pr)pr.innerHTML=ko?`${_I.play}&nbsp;계속하기`:`${_I.play}&nbsp;Resume`;
+    const prs=document.getElementById('pbtn-restart');if(prs)prs.innerHTML=ko?`${_I.back}&nbsp;다시 시작`:`${_I.back}&nbsp;Restart`;
     const us=document.getElementById('unlk-sub');if(us)us.textContent=ko?'새로운 장비':'New Equipment';
     const ub=document.getElementById('unlk-btn');if(ub)ub.textContent=ko?'확인':'OK';
     if(this.selTwr)this._showTowerInfo(this.selTwr);
@@ -2452,7 +2457,7 @@ const UI={
       <div class="clr-row"><span class="clr-lbl">${ko?'장비 자산':'Tower Assets'}</span><span class="clr-val">◈ ${towerScore.toLocaleString()}</span></div>
       <div class="clr-row"><span class="clr-lbl">${ko?'포트 잔액':'Port Balance'}</span><span class="clr-val">${GS.eggActive?'∞':'◈ '+Math.floor(GS.port).toLocaleString()}</span></div>
     `;
-    document.getElementById('clr-btn').innerHTML=ko?'↩ &nbsp;재가동':'↩ &nbsp;Restart';
+    document.getElementById('clr-btn').innerHTML=ko?`${_I.back}&nbsp;재가동`:`${_I.back}&nbsp;Restart`;
     // Background canvas
     const cv=document.getElementById('clr-canvas');cv.width=480;cv.height=900;
     const cx=cv.getContext('2d');

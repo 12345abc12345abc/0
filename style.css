@@ -289,7 +289,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#020810;
   background:#FF4500;opacity:.7;border-radius:0 0 8px 8px;}
 #wbtn:active{transform:scale(.94);}
 #wbtn.dis{opacity:.3;pointer-events:none;}
-#wbtn .wi{font-size:26px;line-height:1;}
+#wbtn .wi{display:flex;align-items:center;justify-content:center;}
 #wnum{font-size:9px;color:#FF450088;font-weight:700;}
 #abtn{
   height:70px;flex-shrink:0;
